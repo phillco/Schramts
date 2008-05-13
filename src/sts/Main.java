@@ -1,9 +1,11 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * RTS
+ * 
  */
-
 package sts;
+
+import sts.game.Game;
+import sts.gui.MainWindow;
 
 /**
  *
@@ -11,12 +13,16 @@ package sts;
  */
 public class Main
 {
+    static Game game;
+
+    static MainWindow window;
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args)
+    public static void main( String[] args )
     {
-        
+        game = new Game();
+        window = new MainWindow();
     }
 }
