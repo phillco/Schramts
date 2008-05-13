@@ -20,6 +20,16 @@ public class GoldPile extends GameObject
     {
         
     }
+    
+    public void removeGold()
+    {
+        remainingGold-= 10;
+    }
+    
+    public int getGold()
+    {
+        return remainingGold;
+    }
 
     @Override
     public void draw( Graphics g )
