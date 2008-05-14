@@ -4,7 +4,9 @@
  */
 package sts;
 
+import java.awt.Color;
 import sts.game.Game;
+import sts.game.Player;
 import sts.gui.MainWindow;
 
 /**
@@ -22,7 +24,10 @@ public class Main
      */
     public static void main( String[] args )
     {
+        Player local = new Player( Color.red, "Bob" );
         game = new Game();
+        game.addPlayer( local );
+        Local.setLocalPlayer( local );
         window = new MainWindow();
     }
     
