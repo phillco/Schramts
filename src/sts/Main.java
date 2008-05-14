@@ -25,4 +25,9 @@ public class Main
         game = new Game();
         window = new MainWindow();
     }
+    
+    public static void quit()
+    {
+        System.exit( 0);
+    }
 }
