@@ -22,12 +22,9 @@ public class GameCanvas extends Canvas
 
     private Font bigHudFont = new Font( "Tahoma", Font.BOLD, 16 );
 
-    private ExtendedGraphics extendedGraphics;
-
     public GameCanvas()
     {
         setSize( 950, 700 );
-        extendedGraphics = new ExtendedGraphics( this );
         setVisible( true );
     }
 
@@ -36,8 +33,7 @@ public class GameCanvas extends Canvas
     {
         this.createBufferStrategy( 2 );
         BufferStrategy strategy = getBufferStrategy();
-        extendedGraphics.setG( strategy.getDrawGraphics() );
-        draw( extendedGraphics );
+        draw( (Graphics2D) strategy.getDrawGraphics() );
         strategy.show();
         repaint();
     }
@@ -46,19 +42,18 @@ public class GameCanvas extends Canvas
     /**
      * Draws all the game's graphics.
      */
-    private void draw( ExtendedGraphics eg )
+    private void draw( Graphics2D g )
     {
-        eg.getG().setColor( Color.black );
+        g.setColor( Color.black );
         if ( null != Local.getLocalPlayer() )
         {
-            eg.getG().setFont( bigHudFont );
-            eg.drawText( Local.getLocalPlayer().getName(), 5, -15, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
-            eg.getG().setFont( hudFont );
-            eg.drawText( "Gold: " + Local.getLocalPlayer().getGoldAmount(), 5, -1, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );            
+            g.setFont( bigHudFont );
+            ExtendedGraphics.drawText( g, Local.getLocalPlayer().getName(), 5, -15, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
+            g.setFont( hudFont );
+            ExtendedGraphics.drawText( g, "Gold: " + Local.getLocalPlayer().getGoldAmount(), 5, -1, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
         }
-        eg.getG().fillRect( ++x, 50, 150, 150 );
-
-        eg.getG().dispose();
+        g.fillRect( ++x, 50, 150, 150 );
+        g.dispose();
     }
 
     /**

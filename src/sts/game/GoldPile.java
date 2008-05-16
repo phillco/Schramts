@@ -1,6 +1,6 @@
 package sts.game;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 /**
  * A pile of gold.
@@ -32,7 +32,7 @@ public class GoldPile extends GameObject
     }
 
     @Override
-    public void draw( Graphics g )
+    public void draw( Graphics2D g )
     {
         
     }

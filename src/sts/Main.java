@@ -17,7 +17,7 @@ public class Main
 {
     static Game game;
 
-    static MainWindow window;
+    static MainWindow window;   
 
     /**
      * @param args the command line arguments

@@ -1,6 +1,6 @@
 package sts.game;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 /**
  *
@@ -39,7 +39,7 @@ public abstract class GameObject
         y += dy;
     }
     
-    public abstract void draw(Graphics g);
+    public abstract void draw(Graphics2D g);
     
     
     
