@@ -10,9 +10,9 @@ public class GoldPile extends GameObject
 {
     int remainingGold = 500;
 
-    public GoldPile( double x, double y )
+    public GoldPile( double x, double y, Player nature )
     {
-        super( x, y, 0, 0, null );
+        super( x, y, 0, 0, nature );
     }
 
     @Override

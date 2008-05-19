@@ -47,6 +47,12 @@ public class Player
         for ( GameObject go : ownedObjects )
             go.draw( g );
     }
+    
+    public void giveObject(GameObject g)
+    {
+        g.owner = this;
+        ownedObjects.add( g );
+    }
 
     public String getName()
     {

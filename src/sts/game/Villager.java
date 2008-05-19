@@ -15,7 +15,7 @@ public class Villager extends GameObject
 
     //True if the villager has already gathered gold from the mine, false if the villager is on the way to the mine, or nearest is empty
     boolean hasGold = false;
-
+      
     public Villager( double x, double y, Player owner )
     {
         super( x, y, 1, 1, owner );
