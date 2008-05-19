@@ -48,9 +48,9 @@ public class GameCanvas extends Canvas
         if ( null != Local.getLocalPlayer() )
         {
             g.setFont( bigHudFont );
-            ExtendedGraphics.drawText( g, Local.getLocalPlayer().getName(), 5, -15, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
+            ExtendedGraphics.drawText( g, Local.getLocalPlayer().getName(), 5, getHeight() - 15, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
             g.setFont( hudFont );
-            ExtendedGraphics.drawText( g, "Gold: " + Local.getLocalPlayer().getGoldAmount(), 5, -1, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
+            ExtendedGraphics.drawText( g, "Gold: " + Local.getLocalPlayer().getGoldAmount(), 5, getHeight() - 1, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
         }
         g.fillRect( ++x, 50, 150, 150 );
         g.dispose();
