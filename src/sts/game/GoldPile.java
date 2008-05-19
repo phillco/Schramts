@@ -10,7 +10,7 @@ public class GoldPile extends GameObject
 {
     int remainingGold = 500;
 
-    public GoldPile( double x, double y, Player nature )
+    public GoldPile( int x, int y, Player nature )
     {
         super( x, y, 0, 0, nature );
     }

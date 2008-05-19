@@ -23,6 +23,7 @@ public class Game
     public Game( Set<Player> p )
     {
         this.players = new ConcurrentLinkedQueue<Player>( p );
+        prepareLevel();
         runnerThread.startLoop();
     }
 
@@ -53,7 +54,8 @@ public class Game
      */
     private void prepareLevel()
     {
-        throw new UnsupportedOperationException( "Not yet implemented (http://www.assembla.com/spaces/Schramts/tickets/5)." );
+        players.peek().giveObject( new HQ( 90, 90, players.peek()));
+//        throw new UnsupportedOperationException( "Not yet implemented (http://www.assembla.com/spaces/Schramts/tickets/5)." );
     }
 
     /**

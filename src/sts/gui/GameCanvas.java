@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import sts.Local;
+import sts.Main;
 
 /**
  *
@@ -37,7 +38,6 @@ public class GameCanvas extends Canvas
         strategy.show();
         repaint();
     }
-    int x = 9;
 
     /**
      * Draws all the game's graphics.
@@ -45,6 +45,8 @@ public class GameCanvas extends Canvas
     private void draw( Graphics2D g )
     {
         g.setColor( Color.black );
+        Local.getGame().draw( g );
+        
         if ( null != Local.getLocalPlayer() )
         {
             g.setFont( bigHudFont );
@@ -52,7 +54,6 @@ public class GameCanvas extends Canvas
             g.setFont( hudFont );
             ExtendedGraphics.drawText( g, "Gold: " + Local.getLocalPlayer().getGoldAmount(), 5, getHeight() - 1, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
         }
-        g.fillRect( ++x, 50, 150, 150 );
         g.dispose();
     }
 

@@ -10,7 +10,7 @@ public abstract class ProductionBuilding extends GameObject
 {
     protected ConcurrentLinkedQueue<ItemInQueue> productionQueue = new ConcurrentLinkedQueue<ItemInQueue>();
 
-    public ProductionBuilding( double x, double y, Player player )
+    public ProductionBuilding( int x, int y, Player player )
     {
         super( x, y, 0, 0, player );
     }

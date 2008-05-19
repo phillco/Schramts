@@ -17,10 +17,6 @@ import sts.gui.MainWindow;
  */
 public class Main
 {
-    static Game game;
-
-    static MainWindow window;
-
     /**
      * Small counters that are incremented each time <code>warning</code> or <code>fatalError</code> is called.
      */
@@ -35,10 +31,8 @@ public class Main
         HashSet<Player> players = new HashSet<Player>();
         players.add( dummy );
 
-        game = new Game( players );
-        Local.setLocalPlayer( dummy );
-        window = new MainWindow();
-    }
+        Local.setUp( new Game( players ), dummy, new MainWindow() );
+   }
 
     public static void quit()
     {

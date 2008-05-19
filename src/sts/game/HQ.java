@@ -13,7 +13,7 @@ public class HQ extends ProductionBuilding
         NEW_VILLAGER( 200, "Create one new villager" );
 
         final int ticksToCreate;
-        
+
         final String description;
 
         private ProductionOption( int ticksToCreate, String description )
@@ -23,7 +23,7 @@ public class HQ extends ProductionBuilding
         }
     }
 
-    public HQ( double x, double y, Player player )
+    public HQ( int x, int y, Player player )
     {
         super( x, y, player );
     }
@@ -31,6 +31,8 @@ public class HQ extends ProductionBuilding
     @Override
     public void draw( Graphics2D g )
     {
+        g.setColor( owner.getColor() );
+        g.fillRect( getX(), getY(), 40, 40 );
     }
 
     @Override
@@ -39,7 +41,7 @@ public class HQ extends ProductionBuilding
         switch ( (ProductionOption) type )
         {
             case NEW_VILLAGER:
-                getOwner().giveObject( new sts.game.Villager( 0, 0, null ) );
+                getOwner().giveObject( new Villager( 0, 0, null ) );
                 break;
         }
     }

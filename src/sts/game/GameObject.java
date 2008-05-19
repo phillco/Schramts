@@ -11,7 +11,7 @@ public abstract class GameObject
     /**
      * Location and velocity.
      */
-    double x, y, dx, dy;
+    int x, y, dx, dy;
 
     /**
      * Who controls this?
@@ -23,7 +23,7 @@ public abstract class GameObject
      */
     int maxHealth = 100, health = maxHealth;
 
-    public GameObject( double x, double y, double dx, double dy, Player owner )
+    public GameObject( int x, int y, int dx, int dy, Player owner )
     {
         this.x = x;
         this.y = y;
@@ -40,57 +40,57 @@ public abstract class GameObject
 
     public abstract void draw( Graphics2D g );
     
-    public double getDx()
+    public int getDx()
     {
         return dx;
     }
 
-    public void setDx( double dx )
+    public void setDx( int dx )
     {
         this.dx = dx;
     }
 
-    public double getDy()
+    public int getDy()
     {
         return dy;
     }
 
-    public void setDy( double dy )
+    public void setDy( int dy )
     {
         this.dy = dy;
     }
 
-    public double getX()
+    public int getX()
     {
         return x;
     }
 
-    public void setX( double x )
+    public void setX( int x )
     {
         this.x = x;
     }
 
-    public void addToX( double addX )
+    public void addToX( int addX )
     {
         setX( getX() + addX );
     }
 
-    public double getY()
+    public int getY()
     {
         return y;
     }
 
-    public void setY( double y )
+    public void setY( int y )
     {
         this.y = y;
     }
 
-    public void addToY( double addY )
+    public void addToY( int addY )
     {
         setY( getY() + addY );
     }
 
-    public void setLocation( double x, double y )
+    public void setLocation( int x, int y )
     {
         setX( x );
         setY( y );
@@ -102,7 +102,7 @@ public abstract class GameObject
      * @param dx The new x velocity
      * @param dy The new y velocity
      */
-    public void setVelocity( double dx, double dy )
+    public void setVelocity( int dx, int dy )
     {
         setDx( dx );
         setDy( dy );
@@ -115,7 +115,7 @@ public abstract class GameObject
      * @param dx The new magnitude of the x velocity
      * @param dy The new magnitude of the y velocity
      */
-    public void setSpeed( double dx, double dy )
+    public void setSpeed( int dx, int dy )
     {
         int signX = 1, signY = 1;
         if ( getDx() < 0 )
@@ -132,14 +132,14 @@ public abstract class GameObject
      * 
      * @param factor a number between 0.0 and 1.0 representing the amount to slow down.
      */
-    public void decelerate( double factor )
+    public void decelerate( int factor )
     {
         setVelocity( getDx() * factor, getDy() * factor );
     }
 
-    public double getSpeed()
+    public int getSpeed()
     {
-        return Math.sqrt( getDx() * getDx() + getDy() * getDy() );
+        return (int) Math.sqrt( getDx() * getDx() + getDy() * getDy() );
     }
 
     public Player getOwner()

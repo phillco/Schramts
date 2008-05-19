@@ -1,6 +1,8 @@
 package sts;
 
+import sts.game.Game;
 import sts.game.Player;
+import sts.gui.MainWindow;
 
 /**
  *
@@ -8,22 +10,35 @@ import sts.game.Player;
  */
 public class Local
 {
+    
+    private static Game game;
 
     /**
      * The player at this computer.
      */
     private static Player localPlayer;
 
+    private static MainWindow window;
+
+    public static void setUp( Game gameInstance, Player localPlayerInstance, MainWindow windowInstance )
+    {
+        game = gameInstance;
+        localPlayer = localPlayerInstance;
+        window = windowInstance;
+    }
+
+    public static Game getGame()
+    {
+        return game;
+    }
+
     public static Player getLocalPlayer()
     {
         return localPlayer;
     }
 
-    static void setLocalPlayer( Player localPlayer )
+    public static MainWindow getWindow()
     {
-        Local.localPlayer = localPlayer;
+        return window;
     }
-    
-    
-    
 }
