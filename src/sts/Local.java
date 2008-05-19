@@ -20,11 +20,11 @@ public class Local
 
     private static MainWindow window;
 
-    public static void setUp( Game gameInstance, Player localPlayerInstance, MainWindow windowInstance )
+    public static void setUp( Game gameInstance, Player localPlayerInstance )
     {
         game = gameInstance;
         localPlayer = localPlayerInstance;
-        window = windowInstance;
+        window = new MainWindow();
     }
 
     public static Game getGame()

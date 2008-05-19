@@ -31,7 +31,7 @@ public class HQ extends ProductionBuilding
     @Override
     public void draw( Graphics2D g )
     {
-        g.setColor( owner.getColor() );
+        g.setColor( getOwningPlayer().getColor() );
         g.fillRect( getX(), getY(), 40, 40 );
     }
 
@@ -41,7 +41,7 @@ public class HQ extends ProductionBuilding
         switch ( (ProductionOption) type )
         {
             case NEW_VILLAGER:
-                getOwner().giveObject( new Villager( 0, 0, null ) );
+                getOwningPlayer().giveObject( new Villager( 0, 0, null ) );
                 break;
         }
     }

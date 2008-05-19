@@ -50,7 +50,6 @@ public class Player
     
     public void giveObject(GameObject g)
     {
-        g.owner = this;
         ownedObjects.add( g );
     }
 
@@ -68,4 +67,11 @@ public class Player
     {
         return goldAmount;
     }
+
+    public ConcurrentLinkedQueue<GameObject> getOwnedObjects()
+    {
+        return ownedObjects;
+    }
+    
+    
 }

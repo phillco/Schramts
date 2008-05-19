@@ -9,24 +9,29 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import sts.Local;
-import sts.Main;
+import sts.game.GameObject;
 
 /**
  *
  * @author Phillip Cohen
  */
-public class GameCanvas extends Canvas
+public class GameCanvas extends Canvas implements MouseListener
 {
     private Font hudFont = new Font( "Tahoma", Font.PLAIN, 14 );
 
     private Font bigHudFont = new Font( "Tahoma", Font.BOLD, 16 );
 
+    private GameObject selectedObject = null;
+
     public GameCanvas()
     {
         setSize( 950, 700 );
         setVisible( true );
+        addMouseListener( this );
     }
 
     @Override
@@ -44,9 +49,9 @@ public class GameCanvas extends Canvas
      */
     private void draw( Graphics2D g )
     {
-        g.setColor( Color.black );
         Local.getGame().draw( g );
-        
+
+        g.setColor( Color.black );
         if ( null != Local.getLocalPlayer() )
         {
             g.setFont( bigHudFont );
@@ -64,5 +69,29 @@ public class GameCanvas extends Canvas
     public void update( Graphics g )
     {
         paint( g );
+    }
+
+    public void mouseClicked( MouseEvent e )
+    {
+        for ( GameObject go : Local.getGame().getObjectsWithinArea( e.getX(), e.getY(), 50 ) )
+        {
+            System.out.println( "You got the " + go + "!" );
+        }
+    }
+
+    public void mousePressed( MouseEvent e )
+    {
+    }
+
+    public void mouseReleased( MouseEvent e )
+    {
+    }
+
+    public void mouseEntered( MouseEvent e )
+    {
+    }
+
+    public void mouseExited( MouseEvent e )
+    {
     }
 }

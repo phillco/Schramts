@@ -3,6 +3,7 @@ package sts.game;
 import java.util.Set;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import sts.Main;
 
@@ -40,12 +41,21 @@ public class Game
     }
 
     /**
-     * Returns an array of objects in a given area.
-     * @deprecated unfinished
+     * Returns a set of objects whole top-left coordinates are fully within a circle of the given radius.
      */
-    public GameObject[] getObjectsWithinArea( int x, int y, int radius )
+    public Set<GameObject> getObjectsWithinArea( int x, int y, int radius )
     {
-        throw new UnsupportedOperationException( "Not yet implemented (by Phillip)." );
+        Set<GameObject> objects = new HashSet<GameObject>();
+        for ( Player p : players )
+        {
+            for ( GameObject go : p.getOwnedObjects() )
+            {
+                if ( Math.sqrt( Math.pow( go.getX() - x, 2 ) + Math.pow( go.getY() - y, 2 ) ) < radius )
+                    objects.add( go );
+            }
+        }
+
+        return objects;
     }
 
     /**
@@ -54,7 +64,7 @@ public class Game
      */
     private void prepareLevel()
     {
-        players.peek().giveObject( new HQ( 90, 90, players.peek()));
+        players.peek().giveObject( new HQ( 90, 90, players.peek() ) );
 //        throw new UnsupportedOperationException( "Not yet implemented (http://www.assembla.com/spaces/Schramts/tickets/5)." );
     }
 

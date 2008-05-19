@@ -11,17 +11,22 @@ public abstract class GameObject
     /**
      * Location and velocity.
      */
-    int x, y, dx, dy;
+    private int x,  y,  dx,  dy;
+
+    /**
+     * Unit's size.
+     */
+    private int width,  height;
 
     /**
      * Who controls this?
      */
-    Player owner;
+    private Player owningPlayer;
 
     /**
      * The unit's health and maxHealth.
      */
-    int maxHealth = 100, health = maxHealth;
+    private int maxHealth = 100,  health = maxHealth;
 
     public GameObject( int x, int y, int dx, int dy, Player owner )
     {
@@ -29,7 +34,7 @@ public abstract class GameObject
         this.y = y;
         this.dx = dx;
         this.dy = dy;
-        this.owner = owner;
+        this.owningPlayer = owner;
     }
 
     public void act()
@@ -39,7 +44,7 @@ public abstract class GameObject
     }
 
     public abstract void draw( Graphics2D g );
-    
+
     public int getDx()
     {
         return dx;
@@ -142,10 +147,34 @@ public abstract class GameObject
         return (int) Math.sqrt( getDx() * getDx() + getDy() * getDy() );
     }
 
-    public Player getOwner()
+    public Player getOwningPlayer()
     {
-        return owner;
+        return owningPlayer;
     }
-    
-    
+
+    public int getHealth()
+    {
+        return health;
+    }
+
+    public int getMaxHealth()
+    {
+        return maxHealth;
+    }
+
+    public int getHeight()
+    {
+        return height;
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    @Override
+    public String toString()
+    {
+        return super.toString() + " at location [" + getX() + "," + getY() + "]";
+    }
 }
