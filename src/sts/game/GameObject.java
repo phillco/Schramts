@@ -12,12 +12,12 @@ public abstract class GameObject
      * Location and velocity.
      */
     double x, y, dx, dy;
-    
+
     /**
-     * Who controls this? If null, owned by Nature.
+     * Who controls this?
      */
     Player owner;
-    
+
     /**
      * The unit's health and maxHealth.
      */
@@ -31,17 +31,12 @@ public abstract class GameObject
         this.dy = dy;
         this.owner = owner;
     }
-    
-    
+
     public void act()
     {
         x += dx;
         y += dy;
     }
-    
-    public abstract void draw(Graphics2D g);
-    
-    
-    
-    
+
+    public abstract void draw( Graphics2D g );
 }
