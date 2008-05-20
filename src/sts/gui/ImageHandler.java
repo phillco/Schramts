@@ -41,34 +41,34 @@ public class ImageHandler
         gold = Toolkit.getDefaultToolkit().createImage( ImageHandler.class.getResource( "/gold.gif" ) );
     }
 
-    public void drawHQ( Graphics2D g, int x, int y, Color c )
+    public static void drawHQ( Graphics2D g, int x, int y, Color c )
     {
         drawImage( hueShift( hq, c ), g, x, y );
     }
 
-    public void drawBarracks( Graphics2D g, int x, int y, Color c )
+    public static void drawBarracks( Graphics2D g, int x, int y, Color c )
     {
         drawImage( hueShift( barracks, c ), g, x, y );
     }
 
-    public void drawVillager( Graphics2D g, int x, int y, Color c, boolean hasGold )
+    public static void drawVillager( Graphics2D g, int x, int y, Color c, boolean hasGold )
     {
         drawImage( hueShift( hasGold ? villagerWithGold : villager, c ), g, x, y );
     }
 
-    public void drawInfantry( Graphics2D g, int x, int y, Color c )
+    public static void drawInfantry( Graphics2D g, int x, int y, Color c )
     {
         drawImage( hueShift( infantry, c ), g, x, y );
     }
 
-    public void drawGold( Graphics2D g, int x, int y )
+    public static void drawGold( Graphics2D g, int x, int y )
     {
         drawImage( gold, g, x, y );
     }
 
-    private void drawImage( Image i, Graphics2D g, int x, int y )
+    private static void drawImage( Image i, Graphics2D g, int x, int y )
     {
-
+        g.drawImage( i, x, y, null );
     }
 
     private static Image hueShift( Image img, Color target )
@@ -124,7 +124,11 @@ public class ImageHandler
                 Color.RGBtoHSB( red, green, blue, hsb );
 
                 //change the hue, and draw the pixel
-                Color newCol = Color.getHSBColor( ( 9f * targetHue + hsb[0] ) / 10f, hsb[1], hsb[2] );
+                Color newCol;
+                if ( hsb[1] < .01 )
+                    newCol = Color.getHSBColor( targetHue, hsb[1], hsb[2] );
+                else
+                    newCol = new Color( img.getRGB( x, y ) );
                 gimg.setColor( newCol );
                 gimg.drawRect( x, y, 1, 1 );
             }
