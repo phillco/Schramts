@@ -172,6 +172,16 @@ public abstract class GameObject
         return width;
     }
 
+    public void setWidth( int width )
+    {
+        this.width = width;
+    }
+
+    public void setHeight( int height )
+    {
+        this.height = height;
+    }
+
     @Override
     public String toString()
     {

@@ -27,10 +27,12 @@ public class Main
     public static void main( String[] args )
     {
         Player dummy = new Player( Color.red, "Bob" );
+
         HashSet<Player> players = new HashSet<Player>();
         players.add( dummy );
+        players.add( new Player( Color.blue, "Bob" ) );
 
-        Local.setUp( new Game( players ), dummy);
+        Local.setUp( new Game( players ), dummy );
     }
 
     public static void quit()

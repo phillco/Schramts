@@ -25,8 +25,6 @@ public class GameCanvas extends Canvas implements MouseListener
 
     private Font bigHudFont = new Font( "Tahoma", Font.BOLD, 16 );
 
-    private GameObject selectedObject = null;
-
     public GameCanvas()
     {
         setSize( 950, 700 );
@@ -73,14 +71,15 @@ public class GameCanvas extends Canvas implements MouseListener
 
     public void mouseClicked( MouseEvent e )
     {
-        for ( GameObject go : Local.getGame().getObjectsWithinArea( e.getX(), e.getY(), 50 ) )
-        {
-            System.out.println( "You got the " + go + "!" );
-        }
     }
 
     public void mousePressed( MouseEvent e )
     {
+        Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
+        for ( GameObject go : Local.getSelectedObjects() )
+        {
+            System.out.println( "You got the " + go + "!" );
+        }
     }
 
     public void mouseReleased( MouseEvent e )

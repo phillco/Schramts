@@ -41,16 +41,17 @@ public class Game
     }
 
     /**
-     * Returns a set of objects whole top-left coordinates are fully within a circle of the given radius.
+     * Returns a set of objects whose bounding box contains the point.
      */
-    public Set<GameObject> getObjectsWithinArea( int x, int y, int radius )
+    public Set<GameObject> getObjectsWithinArea( int x, int y )
     {
         Set<GameObject> objects = new HashSet<GameObject>();
         for ( Player p : players )
         {
             for ( GameObject go : p.getOwnedObjects() )
             {
-                if ( Math.sqrt( Math.pow( go.getX() - x, 2 ) + Math.pow( go.getY() - y, 2 ) ) < radius )
+                if ( ( x <= go.getX() + go.getWidth() && x >= go.getX() ) &&
+                        ( y <= go.getY() + go.getHeight() && x >= go.getY() ) )
                     objects.add( go );
             }
         }
@@ -64,7 +65,12 @@ public class Game
      */
     private void prepareLevel()
     {
-        players.peek().giveObject( new HQ( 90, 90, players.peek() ) );
+        int x = 50;
+        for ( Player p : players )
+        {
+            p.giveObject( new HQ( x, 90, p ) );
+            x += 200;
+        }
 //        throw new UnsupportedOperationException( "Not yet implemented (http://www.assembla.com/spaces/Schramts/tickets/5)." );
     }
 
