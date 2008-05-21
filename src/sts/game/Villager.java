@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
  *
  * @author Phillip Cohen
  */
-public class Villager extends GameObject
+public class Villager extends Unit
 {
     GameObject goal;
 
@@ -51,5 +51,11 @@ public class Villager extends GameObject
         {
 
         }
+    }
+
+    @Override
+    public int getMaxSpeed()
+    {
+        throw new UnsupportedOperationException( "Not supported yet." );
     }
 }

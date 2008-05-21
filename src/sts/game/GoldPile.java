@@ -12,7 +12,7 @@ public class GoldPile extends GameObject
 
     public GoldPile( int x, int y, Player nature )
     {
-        super( x, y, 0, 0, nature );
+        super( x, y, nature );
     }
 
     @Override

@@ -12,7 +12,7 @@ public abstract class ProductionBuilding extends GameObject
 
     public ProductionBuilding( int x, int y, Player player )
     {
-        super( x, y, 0, 0, player );
+        super( x, y, player );
     }
 
     @Override
