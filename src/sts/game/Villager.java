@@ -15,7 +15,7 @@ public class Villager extends Unit
 
     //True if the villager has already gathered gold from the mine, false if the villager is on the way to the mine, or nearest is empty
     boolean hasGold = false;
-      
+
     public Villager( int x, int y, Player owner )
     {
         super( x, y, 1, 1, owner );
@@ -37,13 +37,12 @@ public class Villager extends Unit
     @Override
     public void draw( Graphics2D g )
     {
-        
     }
 
     private void findNewGold()
     {
-
     }
+
     @Override
     public String toString()
     {
@@ -54,7 +53,6 @@ public class Villager extends Unit
     {
         if ( hasGold )
         {
-
         }
     }
 
@@ -62,5 +60,11 @@ public class Villager extends Unit
     public int getMaxSpeed()
     {
         throw new UnsupportedOperationException( "Not supported yet." );
+    }
+
+    @Override
+    public String getName()
+    {
+        return "Villager";
     }
 }

@@ -36,4 +36,10 @@ public class GoldPile extends GameObject
     {
         
     }
+
+    @Override
+    public String getName()
+    {
+        return "Gold pile";
+    }
 }

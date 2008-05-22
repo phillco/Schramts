@@ -28,6 +28,8 @@ public abstract class GameObject
      */
     private int maxHealth = 100,  health = maxHealth;
 
+    protected Command[] giveableCommands;
+
     public GameObject( int x, int y, Player owner )
     {
         this.x = x;
@@ -40,6 +42,8 @@ public abstract class GameObject
     }
 
     public abstract void draw( Graphics2D g );
+
+    public abstract String getName();
 
     public int getX()
     {
@@ -115,6 +119,24 @@ public abstract class GameObject
     @Override
     public String toString()
     {
-        return " belonging to " + getOwningPlayer().getName() +  " at location [" + getX() + "," + getY() + "]";
+        return getOwningPlayer().getName() + "'s " + getName() + ", at [" + getX() + "," + getY() + "]";
+    }
+
+    public Command[] getGiveableCommands()
+    {
+        return giveableCommands;
+    }
+
+    public boolean canExecute( Command c )
+    {
+        for ( Command giveableC : giveableCommands )
+            if ( giveableC == c )
+                return true;
+
+        return false;
+    }
+
+    public void executeCommand( Command c )
+    {
     }
 }

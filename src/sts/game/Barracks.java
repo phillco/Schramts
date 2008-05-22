@@ -49,4 +49,10 @@ public class Barracks extends ProductionBuilding
             this.description = description;
         }
     }
+
+    @Override
+    public String getName()
+    {
+        return "Barracks";
+    }
 }

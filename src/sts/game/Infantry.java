@@ -36,9 +36,10 @@ public class Infantry extends Unit
     {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
-        @Override
-    public String toString()
+
+    @Override
+    public String getName()
     {
-        return "Infantry" + super.toString();
+        return "Infantry";
     }
 }

@@ -30,7 +30,7 @@ public class Main
 
         HashSet<Player> players = new HashSet<Player>();
         players.add( dummy );
-        players.add( new Player( Color.blue, "Bob" ) );
+        players.add( new Player( Color.blue, "Fantasmal" ) );
 
         Local.setUp( new Game( players ), dummy );
     }
