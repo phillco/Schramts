@@ -78,7 +78,7 @@ public class GameCanvas extends Canvas implements MouseListener
         Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
         for ( GameObject go : Local.getSelectedObjects() )
         {
-            System.out.println( "You got the " + go + "!" );
+            System.out.println( go );
         }
     }
 

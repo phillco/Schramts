@@ -44,6 +44,11 @@ public class Villager extends Unit
     {
 
     }
+    @Override
+    public String toString()
+    {
+        return "Villager" + super.toString();
+    }
 
     private void gatherGold( GoldPile nearest )
     {

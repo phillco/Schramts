@@ -117,4 +117,10 @@ public abstract class Unit extends GameObject
     {
         return (int) Math.sqrt( dx * dx + dy * dy );
     }
+    
+        @Override
+    public String toString()
+    {
+        return super.toString();
+    }
 }

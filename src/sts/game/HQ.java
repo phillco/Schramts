@@ -49,6 +49,11 @@ public class HQ extends ProductionBuilding
                 break;
         }
     }
+    @Override
+    public String toString()
+    {
+        return "HQ" + super.toString();
+    }
 
     public void addToQueue( ProductionOption type )
     {

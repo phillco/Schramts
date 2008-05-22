@@ -115,6 +115,6 @@ public abstract class GameObject
     @Override
     public String toString()
     {
-        return super.toString() + " at location [" + getX() + "," + getY() + "]";
+        return " belonging to " + getOwningPlayer().getName() +  " at location [" + getX() + "," + getY() + "]";
     }
 }
