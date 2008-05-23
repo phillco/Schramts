@@ -7,9 +7,12 @@ package sts.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
+import sts.Main;
 
 /**
  * Loads and stores the game's external graphics resources.
@@ -20,7 +23,7 @@ public class ImageHandler
     /**
      * External images that game objects use.
      */
-    private static Image hq,  barracks,  villager,  villagerWithGold,  infantry,  gold;
+    private static BufferedImage hq,  barracks,  villager,  villagerWithGold,  infantry, gold;
 
     /**
      * The images that have been hue shifted already, so that they aren't recalculated.
@@ -32,13 +35,19 @@ public class ImageHandler
      */
     public static void init()
     {
-        found = new HashMap<ShiftedImage, Image>();
-        hq = Toolkit.getDefaultToolkit().createImage( ImageHandler.class.getResource( "/hq.gif" ) );
-        barracks = Toolkit.getDefaultToolkit().createImage( ImageHandler.class.getResource( "/barracks.gif" ) );
-        villager = Toolkit.getDefaultToolkit().createImage( ImageHandler.class.getResource( "/villager.gif" ) );
-        villagerWithGold = Toolkit.getDefaultToolkit().createImage( ImageHandler.class.getResource( "/villagerWithGold.gif" ) );
-        infantry = Toolkit.getDefaultToolkit().createImage( ImageHandler.class.getResource( "/warrior.gif" ) );
-        gold = Toolkit.getDefaultToolkit().createImage( ImageHandler.class.getResource( "/gold.gif" ) );
+        try {
+            found = new HashMap<ShiftedImage, Image>();
+          //  hq = Toolkit.getDefaultToolkit().createImage(ImageHandler.class.getResource("/hq.gif")); old way with JAR
+            hq = ImageIO.read(new File("res/hq.gif"));
+            barracks = ImageIO.read(new File("res/barracks.gif"));
+            villager = ImageIO.read(new File("res/villager.gif"));
+            villagerWithGold = ImageIO.read(new File("res/villagerWithGold.gif"));
+            infantry = ImageIO.read(new File("res/warrior.gif"));
+            gold = ImageIO.read(new File("res/gold.gif"));
+        } catch (IOException iOException) {
+            Main.fatalError("Failed to init the ImageHandler", iOException);
+        }
+
     }
 
     public static void drawHQ( Graphics2D g, int x, int y, Color c )
@@ -64,6 +73,8 @@ public class ImageHandler
     public static void drawGold( Graphics2D g, int x, int y )
     {
         drawImage( gold, g, x, y );
+        g.setColor(Color.yellow);
+  //      g.drawRect(x,y,5,5);
     }
 
     private static void drawImage( Image i, Graphics2D g, int x, int y )
@@ -71,16 +82,8 @@ public class ImageHandler
         g.drawImage( i, x, y, null );
     }
 
-    private static Image hueShift( Image img, Color target )
-    {
-        if ( found.containsKey( new ShiftedImage( img, target ) ) )
-            return found.get( new ShiftedImage( img, target ) );
-        BufferedImage orig = new BufferedImage( img.getWidth( null ), img.getHeight( null ), BufferedImage.TYPE_INT_ARGB );
-        orig.getGraphics().drawImage( img, 0, 0, null );
-        return hueShift( orig, target );
-    }
 
-    /**
+     /**
      * Takes an image and shifts its hue, preserving the saturation and brightness.
      * @param img
      * @param target
@@ -102,9 +105,7 @@ public class ImageHandler
             int blue = target.getBlue();
             targetHue = Color.RGBtoHSB( red, green, blue, new float[3] )[0];
         }
-        //prepare to draw
-        Graphics2D gimg = ret.createGraphics();
-
+        
         //loop through pixels
         for ( int x = 0; x < img.getWidth(); x++ )
         {
@@ -118,19 +119,20 @@ public class ImageHandler
 
                 //convert to HSB
                 float[] hsb =
-                        {
-                    0f, 0f, 0f
-                };
+                { 0f, 0f, 0f };
+                //hsb now has the hsb representation of the old color
                 Color.RGBtoHSB( red, green, blue, hsb );
-
+				
                 //change the hue, and draw the pixel
-                Color newCol;
-                if ( hsb[1] < .01 )
-                    newCol = Color.getHSBColor( targetHue, hsb[1], hsb[2] );
+                int rgb;//the new argb representation of the current pixel
+                if ( hsb[1] > .01 )//not grayscale, don't change
+                    rgb = img.getRGB(x,y); 
+                else if( red == 255 && red == green && green == blue )//don't change white
+                    rgb = 0;
                 else
-                    newCol = new Color( img.getRGB( x, y ) );
-                gimg.setColor( newCol );
-                gimg.drawRect( x, y, 1, 1 );
+                    rgb = (Color.HSBtoRGB(targetHue, 1f, hsb[2]));
+                ret.setRGB(x, y, rgb);
+           
             }
         }
         found.put( new ShiftedImage( img, target ), ret );
@@ -153,6 +155,14 @@ public class ImageHandler
         public boolean equals( Object other )
         {
             return other instanceof ShiftedImage && ( (ShiftedImage) other ).hue.equals( hue ) && ( (ShiftedImage) other ).img.equals( img );
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 89 * hash + (this.img != null ? this.img.hashCode() : 0);
+            hash = 89 * hash + (this.hue != null ? this.hue.hashCode() : 0);
+            return hash;
         }
     }
 }

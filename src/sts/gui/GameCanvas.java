@@ -35,7 +35,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     public GameCanvas()
     {
-        setSize( 950, 700 );
+        setSize( 1000, 1000 );
         setVisible( true );
         addMouseListener( this );
         addMouseMotionListener( this );
@@ -47,6 +47,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         this.createBufferStrategy( 2 );
         BufferStrategy strategy = getBufferStrategy();
         draw( (Graphics2D) strategy.getDrawGraphics() );
+     //   draw((Graphics2D)g);
         strategy.show();
         repaint();
     }

@@ -1,7 +1,9 @@
 package sts.game;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import sts.Local;
+import sts.gui.ImageHandler;
 
 /**
  * The player's chief building. Creates villagers.
@@ -40,8 +42,9 @@ public class HQ extends ProductionBuilding
     @Override
     public void draw( Graphics2D g )
     {
-        g.setColor( Local.getSelectedObjects().contains( this ) ? getOwningPlayer().getColor() : getOwningPlayer().getColor().darker() );
-        g.fillRect( getX(), getY(), 64, 64 );
+        Color c = Local.getSelectedObjects().contains( this ) ? getOwningPlayer().getColor() : getOwningPlayer().getColor().darker() ;
+        //g.fillRect( getX(), getY(), 64, 64 );
+        ImageHandler.drawHQ(g, getX(), getY(), c);
     }
 
     @Override

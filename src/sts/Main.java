@@ -9,6 +9,7 @@ import java.util.HashSet;
 import javax.swing.JOptionPane;
 import sts.game.Game;
 import sts.game.Player;
+import sts.gui.ImageHandler;
 
 /**
  *
@@ -27,10 +28,12 @@ public class Main
     public static void main( String[] args )
     {
         Player dummy = new Player( Color.red, "Bob" );
+        ImageHandler.init();
 
         HashSet<Player> players = new HashSet<Player>();
         players.add( dummy );
         players.add( new Player( Color.blue, "Fantasmal" ) );
+        players.add( new Player(Color.GREEN, "Third"));
 
         Local.setUp( new Game( players ), dummy );
     }
