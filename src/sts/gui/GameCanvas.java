@@ -35,7 +35,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     public GameCanvas()
     {
-        setSize( 1000, 1000 );
+        setSize( Local.getGame().getLevelWidth(), Local.getGame().getLevelHeight() );
         setVisible( true );
         addMouseListener( this );
         addMouseMotionListener( this );
@@ -47,7 +47,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         this.createBufferStrategy( 2 );
         BufferStrategy strategy = getBufferStrategy();
         draw( (Graphics2D) strategy.getDrawGraphics() );
-     //   draw((Graphics2D)g);
+        //   draw((Graphics2D)g);
         strategy.show();
         repaint();
     }
@@ -89,7 +89,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                 for ( Command c : go.getGiveableCommands() )
                 {
                     x = getButtonX( buttonIndex );
-                    g.setColor( ( selectedButton ==  buttonIndex ? Color.white : Color.lightGray ) );
+                    g.setColor( ( selectedButton == buttonIndex ? Color.white : Color.lightGray ) );
                     g.fillRect( x, y + 40, 45, 45 );
                     g.setColor( Color.darkGray );
                     g.drawRect( x, y + 40, 45, 45 );
@@ -124,7 +124,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         if ( e.getY() > getHeight() - 100 && e.getY() < getHeight() && e.getX() > 440 - ( 53 * 4 ) && e.getX() < 400 )
         {
             // YUCK.
-            Main.fatalError( Local.getSelectedObjects().iterator().next().getGiveableCommands()[(440 - e.getX()) / 53].getName());
+            Main.fatalError( Local.getSelectedObjects().iterator().next().getGiveableCommands()[( 440 - e.getX() ) / 53].getName() );
             return;
         }
         Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
@@ -157,7 +157,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         // Selecting a button?
         if ( e.getY() > getHeight() - 100 && e.getY() < getHeight() && e.getX() > 440 - ( 53 * 4 ) && e.getX() < 400 )
         {
-            selectedButton = (440 - e.getX()) / 53;
+            selectedButton = ( 440 - e.getX() ) / 53;
             return;
         }
     }

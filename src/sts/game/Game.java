@@ -13,7 +13,7 @@ import sts.Main;
  */
 public class Game
 {
-    public final static int LEVEL_WIDTH = 1000,  LEVEL_HEIGHT = 1000;
+    private final static int LEVEL_WIDTH = 900,  LEVEL_HEIGHT = 900;
 
     private ConcurrentLinkedQueue<Player> players;
 
@@ -38,7 +38,7 @@ public class Game
     {
         for ( Player p : players )
             p.draw( g );
-        Nature.draw(g);
+        Nature.draw( g );
     }
 
     /**
@@ -62,58 +62,60 @@ public class Game
 
     /**
      * Sets up the level for the players, including the placement of their HQs and resources.
-     * @deprecated unfinished
+     * @see http://www.assembla.com/spaces/Schramts/tickets/5
      */
     private void prepareLevel()
     {
-    /*    int x = 50;
+        int numPlayers = players.size();
+        int currentPlayer = 0;
         for ( Player p : players )
         {
-            p.giveObject( new HQ( x, 90, p ) );
-            x += 200;
-        }*/
-        
-        int numPlayers=players.size();
-        int currentPlayer=0;
-        for(Player p: players)
-        {
-            double angle= Math.PI*3/4 + 2* Math.PI * currentPlayer / numPlayers;//The angle from the center to the player
-            int x = (int) (Game.LEVEL_WIDTH / 2 + Game.LEVEL_WIDTH * Math.cos(angle) / 3);
-            int y = (int) (Game.LEVEL_HEIGHT/ 2 + Game.LEVEL_HEIGHT* Math.sin(angle) / 3);
+            double angle = Math.PI * 3 / 4 + 2 * Math.PI * currentPlayer / numPlayers;//The angle from the center to the player
+
+            int x = (int) ( Game.LEVEL_WIDTH / 2 + Game.LEVEL_WIDTH * Math.cos( angle ) / 3 );
+            int y = (int) ( Game.LEVEL_HEIGHT / 2 + Game.LEVEL_HEIGHT * Math.sin( angle ) / 3 );
             currentPlayer++;
-            addStuffForPlayer(p, x, y);
+            addStuffForPlayer( p, x, y );
         }
-//        throw new UnsupportedOperationException( "Not yet implemented (http://www.assembla.com/spaces/Schramts/tickets/5)." );
     }
-    
+
     /**
      * Sets up a player with a HQ, 3 villagers, and a gold patch
      * @param p The player to set up
      * @param x The x coord of the HQ
      * @param y The y coord of the HQ
      */
-    private void addStuffForPlayer(Player p, int x, int y)
+    private void addStuffForPlayer( Player p, int x, int y )
     {
-        p.giveObject(new HQ(x, y, p));
-        p.giveObject(new Villager(x+70, y, p));
-        p.giveObject(new Villager(x-70, y, p));
-        p.giveObject(new Villager(x, y+70, p));
-        addGoldPatch(x, y);
+        p.giveObject( new HQ( x, y, p ) );
+        p.giveObject( new Villager( x + 70, y, p ) );
+        p.giveObject( new Villager( x - 70, y, p ) );
+        p.giveObject( new Villager( x, y + 70, p ) );
+        addGoldPatch( x, y );
     }
-    
-    
-    private void addGoldPatch(int x, int y)
+
+    private void addGoldPatch( int x, int y )
     {
-        double angle=Math.random()*2*Math.PI;
-        x+= (int)(120 * Math.cos(angle));
-        y+= (int)(120 * Math.sin(angle));
-        for(int xCoord = x-20; xCoord <= x+20; xCoord+=5)
+        double angle = Math.random() * 2 * Math.PI;
+        x += (int) ( 120 * Math.cos( angle ) );
+        y += (int) ( 120 * Math.sin( angle ) );
+        for ( int xCoord = x - 20; xCoord <= x + 60; xCoord += 9 )
         {
-            for(int yCoord=y-20; yCoord<=y+20; yCoord+=5)
+            for ( int yCoord = y - 20; yCoord <= y + 60; yCoord += 9 )
             {
-                Nature.giveObject(new GoldPile(xCoord, yCoord, Nature));
+                Nature.giveObject( new GoldPile( xCoord, yCoord, Nature ) );
             }
         }
+    }
+
+    public int getLevelWidth()
+    {
+        return LEVEL_WIDTH;
+    }
+
+    public int getLevelHeight()
+    {
+        return LEVEL_HEIGHT;
     }
 
     /**

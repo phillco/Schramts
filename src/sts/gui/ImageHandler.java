@@ -23,7 +23,7 @@ public class ImageHandler
     /**
      * External images that game objects use.
      */
-    private static BufferedImage hq,  barracks,  villager,  villagerWithGold,  infantry, gold;
+    private static BufferedImage hq,  barracks,  villager,  villagerWithGold,  infantry,  gold;
 
     /**
      * The images that have been hue shifted already, so that they aren't recalculated.
@@ -35,17 +35,20 @@ public class ImageHandler
      */
     public static void init()
     {
-        try {
+        try
+        {
             found = new HashMap<ShiftedImage, Image>();
-          //  hq = Toolkit.getDefaultToolkit().createImage(ImageHandler.class.getResource("/hq.gif")); old way with JAR
-            hq = ImageIO.read(new File("res/hq.gif"));
-            barracks = ImageIO.read(new File("res/barracks.gif"));
-            villager = ImageIO.read(new File("res/villager.gif"));
-            villagerWithGold = ImageIO.read(new File("res/villagerWithGold.gif"));
-            infantry = ImageIO.read(new File("res/warrior.gif"));
-            gold = ImageIO.read(new File("res/gold.gif"));
-        } catch (IOException iOException) {
-            Main.fatalError("Failed to init the ImageHandler", iOException);
+            //  hq = Toolkit.getDefaultToolkit().createImage(ImageHandler.class.getResource("/hq.gif")); old way with JAR
+            hq = ImageIO.read( new File( "res/hq.gif" ) );
+            barracks = ImageIO.read( new File( "res/barracks.gif" ) );
+            villager = ImageIO.read( new File( "res/villager.gif" ) );
+            villagerWithGold = ImageIO.read( new File( "res/villagerWithGold.gif" ) );
+            infantry = ImageIO.read( new File( "res/warrior.gif" ) );
+            gold = ImageIO.read( new File( "res/gold.gif" ) );
+        }
+        catch ( IOException iOException )
+        {
+            Main.fatalError( "Failed to init the ImageHandler", iOException );
         }
 
     }
@@ -73,8 +76,6 @@ public class ImageHandler
     public static void drawGold( Graphics2D g, int x, int y )
     {
         drawImage( gold, g, x, y );
-        g.setColor(Color.yellow);
-  //      g.drawRect(x,y,5,5);
     }
 
     private static void drawImage( Image i, Graphics2D g, int x, int y )
@@ -82,8 +83,7 @@ public class ImageHandler
         g.drawImage( i, x, y, null );
     }
 
-
-     /**
+    /**
      * Takes an image and shifts its hue, preserving the saturation and brightness.
      * @param img
      * @param target
@@ -105,7 +105,7 @@ public class ImageHandler
             int blue = target.getBlue();
             targetHue = Color.RGBtoHSB( red, green, blue, new float[3] )[0];
         }
-        
+
         //loop through pixels
         for ( int x = 0; x < img.getWidth(); x++ )
         {
@@ -119,20 +119,23 @@ public class ImageHandler
 
                 //convert to HSB
                 float[] hsb =
-                { 0f, 0f, 0f };
+                {
+                    0f, 0f, 0f
+                };
                 //hsb now has the hsb representation of the old color
                 Color.RGBtoHSB( red, green, blue, hsb );
-				
+
                 //change the hue, and draw the pixel
                 int rgb;//the new argb representation of the current pixel
+
                 if ( hsb[1] > .01 )//not grayscale, don't change
-                    rgb = img.getRGB(x,y); 
-                else if( red == 255 && red == green && green == blue )//don't change white
+                    rgb = img.getRGB( x, y );
+                else if ( red == 255 && red == green && green == blue )//don't change white
                     rgb = 0;
                 else
-                    rgb = (Color.HSBtoRGB(targetHue, 1f, hsb[2]));
-                ret.setRGB(x, y, rgb);
-           
+                    rgb = ( Color.HSBtoRGB( targetHue, 1f, hsb[2] ) );
+                ret.setRGB( x, y, rgb );
+
             }
         }
         found.put( new ShiftedImage( img, target ), ret );
@@ -158,10 +161,11 @@ public class ImageHandler
         }
 
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             int hash = 7;
-            hash = 89 * hash + (this.img != null ? this.img.hashCode() : 0);
-            hash = 89 * hash + (this.hue != null ? this.hue.hashCode() : 0);
+            hash = 89 * hash + ( this.img != null ? this.img.hashCode() : 0 );
+            hash = 89 * hash + ( this.hue != null ? this.hue.hashCode() : 0 );
             return hash;
         }
     }
