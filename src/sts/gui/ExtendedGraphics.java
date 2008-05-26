@@ -25,6 +25,9 @@ public class ExtendedGraphics
         if ( horizontalAlign != HorizontalAlign.LEFT )
             x -= (int) g.getFont().getStringBounds( text, g.getFontRenderContext() ).getWidth() / ( horizontalAlign == HorizontalAlign.CENTER ? 2 : 1 );
 
+        if ( verticalAlign != VerticleAlign.TOP )
+            y -= (int) g.getFont().getStringBounds( text, g.getFontRenderContext() ).getHeight() / ( verticalAlign == VerticleAlign.MIDDLE ? 2 : 1 );
+
         // drawString doesn't support linebreaks, so we do that here.
         String[] lines = text.split( "\n" );
         if ( lines.length > 1 )

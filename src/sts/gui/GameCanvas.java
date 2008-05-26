@@ -29,7 +29,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     private Font bigHudFont = new Font( "Tahoma", Font.BOLD, 16 );
 
-    private GradientPaint gradient = new GradientPaint( 0, 0, new Color( 250, 250, 250 ), 400, 100, new Color( 210, 210, 225 ), true );
+    private GradientPaint hudGradient = new GradientPaint( 0, 0, new Color( 250, 250, 250 ), 400, 100, new Color( 210, 210, 225 ), true );
 
     private int selectedButton = -1;
 
@@ -47,7 +47,6 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         this.createBufferStrategy( 2 );
         BufferStrategy strategy = getBufferStrategy();
         draw( (Graphics2D) strategy.getDrawGraphics() );
-        //   draw((Graphics2D)g);
         strategy.show();
         repaint();
     }
@@ -65,7 +64,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     private void drawHUD( Graphics2D g, int x, int y )
     {
-        g.setPaint( gradient );
+        g.setPaint( hudGradient );
         g.fillRect( x, y, 450, 100 );
         g.setColor( Color.lightGray );
         g.drawRect( x, y, 450, 100 );
@@ -83,26 +82,24 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             if ( Local.getSelectedObjects().size() > 0 )
             {
                 GameObject go = Local.getSelectedObjects().iterator().next();
-                ExtendedGraphics.drawText( g, go.getOwningPlayer().getName() + "'s " + go.getName(), 440, getHeight() - 60, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.TOP );
+                ExtendedGraphics.drawText( g, go.getOwningPlayer().getName() + "'s " + go.getName(), 430, getHeight() - 70, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.TOP );
 
+                // Draw command boxes.
                 int buttonIndex = 0;
                 for ( Command c : go.getGiveableCommands() )
                 {
-                    x = getButtonX( buttonIndex );
+                    x = ( 440 - 53 * ( buttonIndex + 1 ) );
                     g.setColor( ( selectedButton == buttonIndex ? Color.white : Color.lightGray ) );
                     g.fillRect( x, y + 40, 45, 45 );
                     g.setColor( Color.darkGray );
                     g.drawRect( x, y + 40, 45, 45 );
-                    g.drawString( c.getName(), x + 5, y + 45 );
                     buttonIndex++;
                 }
+
+                if ( go != null && selectedButton != -1 && go.getGiveableCommands().length > selectedButton )
+                    ExtendedGraphics.drawText( g, go.getGiveableCommands()[selectedButton].getName(), 350, getHeight() - 1, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.BOTTOM );
             }
         }
-    }
-
-    private int getButtonX( int button )
-    {
-        return ( 440 - 53 * ( button + 1 ) );
     }
 
     /**
@@ -120,22 +117,14 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     public void mousePressed( MouseEvent e )
     {
-        // Selecting a button?
-        if ( e.getY() > getHeight() - 100 && e.getY() < getHeight() && e.getX() > 440 - ( 53 * 4 ) && e.getX() < 400 )
-        {
-            // YUCK.
-            Main.fatalError( Local.getSelectedObjects().iterator().next().getGiveableCommands()[( 440 - e.getX() ) / 53].getName() );
-            return;
-        }
-        Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
-        for ( GameObject go : Local.getSelectedObjects() )
-        {
-            System.out.println( go );
-        }
+        if ( selectedButton == -1 )
+            Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
     }
 
     public void mouseReleased( MouseEvent e )
     {
+        if ( selectedButton != -1 )
+            Main.fatalError( Local.getSelectedObject().getGiveableCommands()[selectedButton].getName() );
     }
 
     public void mouseEntered( MouseEvent e )
@@ -155,7 +144,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         selectedButton = -1;
 
         // Selecting a button?
-        if ( e.getY() > getHeight() - 100 && e.getY() < getHeight() && e.getX() > 440 - ( 53 * 4 ) && e.getX() < 400 )
+        if ( e.getY() > getHeight() - 100 && e.getY() < getHeight() && e.getX() > 440 - ( 53 * 4 ) && e.getX() < 440 )
         {
             selectedButton = ( 440 - e.getX() ) / 53;
             return;

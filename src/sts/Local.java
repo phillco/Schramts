@@ -51,6 +51,22 @@ public class Local
     {
         return selectedObjects;
     }
+    
+    /**
+     * Returns the first of the user's selected objects.
+     * @see Local#getSelectedObjects()
+     */
+    public static GameObject getSelectedObject()
+    {
+        return selectedObjects.iterator().next();
+    }
+    
+    public static boolean isObjectSelected()
+    {
+        return (selectedObjects.size() > 0);
+    }
+    
+    
 
     public static void setSelectedObjects( Set<GameObject> selectedObjects )
     {
