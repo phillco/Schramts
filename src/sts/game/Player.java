@@ -72,6 +72,11 @@ public class Player
     {
         return ownedObjects;
     }
+
+    void addGold( int gold )
+    {
+        goldAmount+=gold;
+    }
     
     
 }

@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
  *
  * @author Phillip Cohen
  */
-public abstract class GameObject
+public abstract class GameObject implements Locatable
 {
     /**
      * Location 
@@ -138,5 +138,10 @@ public abstract class GameObject
 
     public void executeCommand( Command c )
     {
+    }
+    
+    public Location getLoc()
+    {
+        return new Location(getX(), getY());
     }
 }

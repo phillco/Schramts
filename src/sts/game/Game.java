@@ -60,6 +60,11 @@ public class Game
         return objects;
     }
 
+    public ConcurrentLinkedQueue<Player> getPlayers()
+    {
+        return players;
+    }
+
     /**
      * Sets up the level for the players, including the placement of their HQs and resources.
      * @see http://www.assembla.com/spaces/Schramts/tickets/5

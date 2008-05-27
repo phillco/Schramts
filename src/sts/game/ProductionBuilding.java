@@ -14,6 +14,11 @@ public abstract class ProductionBuilding extends GameObject
     {
         super( x, y, player );
     }
+    
+    public boolean isBuilt()
+    {
+         return false;
+    }
 
     @Override
     public void act()

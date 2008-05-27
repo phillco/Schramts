@@ -10,16 +10,26 @@ package sts.game;
  */
 public abstract class Unit extends GameObject
 {
-    private int dx,  dy;
+    /**
+     * What this Unit is working on
+     */
+    GameObject goal;
 
-    // where we're going, -1 if no destination
-    private int destX,  destY;
+    /**
+     * Where this Unit is going
+     */
+    Locatable destination;
+
+    boolean arrived;
+
+    private int dx,  dy;
 
     public Unit( int x, int y, int dx, int dy, Player player )
     {
         super( x, y, player );
         this.dx = dx;
         this.dy = dy;
+        arrived = false;
     }
 
     @Override
@@ -33,15 +43,24 @@ public abstract class Unit extends GameObject
      */
     private void calculateSpeed()
     {
-        double angle = Math.atan2( getX() - destX, getY() - destY );
+        double angle = Math.atan2( getX() - goal.getLoc().getX(), getY() - goal.getLoc().getY() );
         dx = (int) ( getMaxSpeed() * Math.cos( angle ) );
         dy = (int) ( getMaxSpeed() * Math.sin( angle ) );
     }
 
     public void setDestination( int x, int y )
     {
-        destX = x;
-        destY = y;
+        destination = new Location( x, y );
+    }
+
+    public void setDestination( Location l )
+    {
+        this.destination = l;
+    }
+
+    public void setGoal( GameObject go )
+    {
+        goal = go;
     }
 
     /**
@@ -52,14 +71,15 @@ public abstract class Unit extends GameObject
 
     private void move()
     {
-        if ( destX != -1 && destY != -1 )
+        if ( !arrived )
         {
             calculateSpeed();
+            int destX = goal.getLoc().getX(), destY = goal.getLoc().getY();
             if ( Math.sqrt( ( getX() - destX ) * ( getX() - destX ) +
-                            ( getY() - destY ) * ( getY() - destY ) ) < getMaxSpeed() )
+                            ( getY() - destY ) * ( getY() - destY ) ) < getMaxSpeed() + 1 )
             {
-                setLocation( destX, destY );
-                destX = destY = -1;
+                setLocation( goal.getLoc().getX(), goal.getLoc().getY() );
+                arrived = true;
             }
             else
             {
