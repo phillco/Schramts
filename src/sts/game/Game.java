@@ -13,7 +13,7 @@ import sts.Main;
  */
 public class Game
 {
-    private final static int LEVEL_WIDTH = 900,  LEVEL_HEIGHT = 900;
+    private final static int LEVEL_WIDTH = 1000,  LEVEL_HEIGHT = 700;
 
     private ConcurrentLinkedQueue<Player> players;
 

@@ -40,7 +40,7 @@ public class ImageHandler
             found = new HashMap<ShiftedImage, Image>();
             //  hq = Toolkit.getDefaultToolkit().createImage(ImageHandler.class.getResource("/hq.gif")); old way with JAR
             hq = ImageIO.read( new File( "res/hq.gif" ) );
-            barracks = ImageIO.read( new File( "res/barracks.gif" ) );
+//            barracks = ImageIO.read( new File( "res/barracks.gif" ) );
             villager = ImageIO.read( new File( "res/villager.gif" ) );
             villagerWithGold = ImageIO.read( new File( "res/villagerWithGold.gif" ) );
             infantry = ImageIO.read( new File( "res/warrior.gif" ) );
