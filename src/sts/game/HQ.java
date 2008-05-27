@@ -33,10 +33,6 @@ public class HQ extends ProductionBuilding
         giveableCommands[0] = new Command( "Create villager" );
         giveableCommands[1] = new Command( "Create cow" );
         giveableCommands[2] = new Command( "Self destruct" );
-
-        setWidth( 64 );
-        setHeight( 64 );
-
     }
 
     @Override
@@ -60,6 +56,12 @@ public class HQ extends ProductionBuilding
                 break;
         }
     }
+
+    @Override
+    public boolean isClickContained( int x, int y )
+    {
+        return isClickContainedInRectangle( this, x, y, 64, 64 );
+    }        
 
     public void addToQueue( ProductionOption type )
     {

@@ -43,4 +43,10 @@ public class GoldPile extends GameObject
     {
         return "Gold pile";
     }
+    
+    @Override
+    public boolean isClickContained( int x, int y )
+    {
+        return isClickContainedInRectangle( this, x, y, 8, 8 );
+    }        
 }

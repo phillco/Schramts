@@ -33,7 +33,11 @@ public class Main
         HashSet<Player> players = new HashSet<Player>();
         players.add( dummy );
         players.add( new Player( Color.blue, "Fantasmal" ) );
-        players.add( new Player(Color.GREEN, "Third"));
+        players.add( new Player( Color.GREEN, "Third" ) );
+        players.add( new Player( Color.pink, "Forth" ) );
+        players.add( new Player( Color.cyan, "Fifety" ) );
+        
+
 
         Local.setUp( new Game( players ), dummy );
     }

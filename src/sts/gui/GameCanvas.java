@@ -118,7 +118,9 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
     public void mousePressed( MouseEvent e )
     {
         if ( selectedButton == -1 )
+        {
             Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
+        }
     }
 
     public void mouseReleased( MouseEvent e )

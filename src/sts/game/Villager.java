@@ -24,9 +24,6 @@ public class Villager extends Unit
     {
         super( x, y, 0, 0, 100, owner );
         gold = 0;
-
-        setWidth( 8 );
-        setHeight( 10 );
     }
 
     @Override
@@ -161,6 +158,12 @@ public class Villager extends Unit
     {
         return 4;
     }
+    
+    @Override
+    public boolean isClickContained( int x, int y )
+    {
+        return isClickContainedInRectangle( this, x, y, 8, 13 );
+    }        
 
     @Override
     public void draw( Graphics2D g )

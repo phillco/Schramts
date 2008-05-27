@@ -77,6 +77,14 @@ public class Player
     {
         goldAmount+=gold;
     }
+
+    @Override
+    public String toString()
+    {
+        return getName();
+    }
+    
+    
     
     
 }

@@ -51,10 +51,15 @@ public class Game
         {
             for ( GameObject go : p.getOwnedObjects() )
             {
-                if ( ( x <= go.getX() + go.getWidth() && x >= go.getX() ) &&
-                        ( y <= go.getY() + go.getHeight() && x >= go.getY() ) )
+                if ( go.isClickContained( x, y ) )
                     objects.add( go );
             }
+        }
+
+        for ( GameObject go : nature.getOwnedObjects() )
+        {
+            if ( go.isClickContained( x, y ) )
+                objects.add( go );
         }
 
         return objects;
@@ -108,7 +113,7 @@ public class Game
         {
             for ( int yCoord = y - 20; yCoord <= y + 60; yCoord += 9 )
             {
-                nature.giveObject( new GoldPile( xCoord, yCoord, nature  ) );
+                nature.giveObject( new GoldPile( xCoord, yCoord, nature ) );
             }
         }
     }
@@ -122,7 +127,7 @@ public class Game
     {
         return LEVEL_HEIGHT;
     }
-    
+
     public Player getNature()
     {
         return nature;

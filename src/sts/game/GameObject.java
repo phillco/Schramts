@@ -14,11 +14,6 @@ public abstract class GameObject implements Locatable
     protected int x,  y;
 
     /**
-     * Unit's size.
-     */
-    private int width,  height;
-
-    /**
      * Who controls this?
      */
     private Player owningPlayer;
@@ -98,26 +93,6 @@ public abstract class GameObject implements Locatable
         return maxHealth;
     }
 
-    public int getHeight()
-    {
-        return height;
-    }
-
-    public int getWidth()
-    {
-        return width;
-    }
-
-    public void setWidth( int width )
-    {
-        this.width = width;
-    }
-
-    public void setHeight( int height )
-    {
-        this.height = height;
-    }
-
     @Override
     public String toString()
     {
@@ -145,5 +120,17 @@ public abstract class GameObject implements Locatable
     public Location getLoc()
     {
         return new Location( getX(), getY() );
+    }
+
+    public boolean isClickContained( int x, int y )
+    {
+        return false;
+    }
+
+    public static boolean isClickContainedInRectangle( GameObject go, int x, int y, int width, int height )
+    {
+        boolean okX = ( x <= go.getX() + width && x >= go.getX() );
+        boolean okY = ( y <= go.getY() + height && y >= go.getY() );
+        return ( okX && okY );
     }
 }
