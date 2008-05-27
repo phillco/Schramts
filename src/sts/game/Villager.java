@@ -65,11 +65,20 @@ public class Villager extends Unit
         getOwningPlayer().addGold( gold );
         gold = 0;
         destination = goal;//go back to the gold
-
     }
 
     private void findNewGold()
     {
+        GoldPile goldPile = null;
+        for ( GameObject go : Local.getGame().getNature().getOwnedObjects() )
+        {
+            if ( go instanceof GoldPile )
+            {
+                if ( goldPile == null || Location.getDistance( this.getLoc(), goldPile.getLoc() ) > Location.getDistance( this.getLoc(), go.getLoc() ) )
+                    goldPile = (GoldPile) go;
+            }
+        }
+        destination = goal = goldPile;
     }
 
     @Override
@@ -80,28 +89,36 @@ public class Villager extends Unit
 
     private void goldBehavior()
     {
-        assert goal instanceof GoldPile;
+        // :-0 we can't do this
+        if ( !( goal instanceof GoldPile ) )
+            return;
         if ( !arrived )//the super.act() took care of moving, we can't gather yet
             return;
         GoldPile goldPile = (GoldPile) goal;
-        if ( goldPile.getGold() <= 0 )
+
+        //We have gold and have arrived at HQ
+        if ( this.gold == 10 && destination instanceof HQ )
         {
-            findNewGold();
-            return;//that's all we can do
+            //we need to drop off our gold
+            dropOffGold();
+            return;
 
         }
+
         //we know now that we are at the gold pile and we have gold
+        //Return to base
         if ( this.gold == 10 && destination instanceof GoldPile )
         {
             //return to base
             setDestination( getNearestDropoff() );
             return;
         }
-        if ( this.gold == 10 && destination instanceof HQ )
+
+        //The gold Pile is out of gold
+        if ( goldPile.getGold() <= 0 )
         {
-            //we need to drop off our gold
-            dropOffGold();
-            return;
+            findNewGold();
+            return;//that's all we can do
         }
 
         //we are mining!
@@ -129,12 +146,10 @@ public class Villager extends Unit
 
     private void mine()
     {
+        if ( !( goal instanceof GoldPile ) )
+            return;
         if ( timeTillNextMine-- <= 0 )
-        {
-            gold++;
-
-        }
-
+            gold += ( (GoldPile) goal ).removeGold() ? 1 : 0;
     }
 
     private void repairBehavior()

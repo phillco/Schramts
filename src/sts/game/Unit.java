@@ -43,9 +43,14 @@ public abstract class Unit extends GameObject
      */
     private void calculateSpeed()
     {
-//        double angle = Math.atan2( getX() - goal.getLoc().getX(), getY() - goal.getLoc().getY() );
-//        dx = (int) ( getMaxSpeed() * Math.cos( angle ) );
-        //dy = (int) ( getMaxSpeed() * Math.sin( angle ) );
+        if ( destination == null )
+        {
+            dx = dy = 0;
+            return;
+        }
+        double angle = Math.atan2( getX() - goal.getLoc().getX(), getY() - goal.getLoc().getY() );
+        dx = (int) ( getMaxSpeed() * Math.cos( angle ) );
+        dy = (int) ( getMaxSpeed() * Math.sin( angle ) );
     }
 
     public void setDestination( int x, int y )
@@ -56,6 +61,7 @@ public abstract class Unit extends GameObject
     public void setDestination( Location l )
     {
         this.destination = l;
+        goal = null;
     }
 
     public void setGoal( GameObject go )
@@ -137,8 +143,8 @@ public abstract class Unit extends GameObject
     {
         return (int) Math.sqrt( dx * dx + dy * dy );
     }
-    
-        @Override
+
+    @Override
     public String toString()
     {
         return super.toString();

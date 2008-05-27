@@ -17,7 +17,7 @@ public class Game
 
     private ConcurrentLinkedQueue<Player> players;
 
-    private Player Nature = new Player( Color.white, "Nature" );
+    private Player nature = new Player( Color.white, "Nature" );
 
     private RunnerThread runnerThread = new RunnerThread();
 
@@ -38,7 +38,7 @@ public class Game
     {
         for ( Player p : players )
             p.draw( g );
-        Nature.draw( g );
+        nature.draw( g );
     }
 
     /**
@@ -108,7 +108,7 @@ public class Game
         {
             for ( int yCoord = y - 20; yCoord <= y + 60; yCoord += 9 )
             {
-                Nature.giveObject( new GoldPile( xCoord, yCoord, Nature ) );
+                nature.giveObject( new GoldPile( xCoord, yCoord, nature  ) );
             }
         }
     }
@@ -121,6 +121,11 @@ public class Game
     public int getLevelHeight()
     {
         return LEVEL_HEIGHT;
+    }
+    
+    public Player getNature()
+    {
+        return nature;
     }
 
     /**

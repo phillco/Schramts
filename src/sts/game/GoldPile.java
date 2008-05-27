@@ -22,9 +22,9 @@ public class GoldPile extends GameObject
         
     }
     
-    public void removeGold()
+    public boolean removeGold()
     {
-        remainingGold-= 10;
+        return --remainingGold>=0;
     }
     
     public int getGold()
