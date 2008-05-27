@@ -53,7 +53,12 @@ public class ImageHandler
 
     }
 
-    public static void drawHQ( Graphics2D g, int x, int y, Color c )
+    public static Color getOppositeColor( Color c )
+    {
+        return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
+    }
+
+    public static void drawHQ( Graphics2D g, int x, int y, Color c)
     {
         drawImage( hueShift( hq, c ), g, x, y );
     }

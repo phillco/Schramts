@@ -35,6 +35,7 @@ public abstract class GameObject implements Locatable
         this.x = x;
         this.y = y;
         this.owningPlayer = owner;
+        giveableCommands = new Command[0];
     }
 
     public void act()

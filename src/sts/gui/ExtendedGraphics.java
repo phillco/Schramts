@@ -12,13 +12,13 @@ public class ExtendedGraphics
     {
         LEFT, CENTER, RIGHT;
 
-    };
+    }
 
     public enum VerticleAlign
     {
         TOP, MIDDLE, BOTTOM;
 
-    };
+    }
 
     public static void drawText( Graphics2D g, String text, int x, int y, HorizontalAlign horizontalAlign, VerticleAlign verticalAlign )
     {

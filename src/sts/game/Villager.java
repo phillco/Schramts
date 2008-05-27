@@ -1,6 +1,8 @@
 package sts.game;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import sts.Local;
 import sts.gui.ImageHandler;
 
 /**
@@ -22,12 +24,15 @@ public class Villager extends Unit
     {
         super( x, y, 1, 1, owner );
         gold = 0;
+
+        setWidth( 8 );
+        setHeight( 10 );
     }
 
     @Override
     public void act()
     {
-        super.act();//moves if necessary
+//        super.act();//moves if necessary
         if ( goal == null )
         {
             idleBehavior();
@@ -53,14 +58,14 @@ public class Villager extends Unit
 
     private void buildBehavior()
     {
-
     }
 
     private void dropOffGold()
     {
-        getOwningPlayer().addGold(gold);
-        gold=0;
-        destination= goal;//go back to the gold
+        getOwningPlayer().addGold( gold );
+        gold = 0;
+        destination = goal;//go back to the gold
+
     }
 
     private void findNewGold()
@@ -83,21 +88,22 @@ public class Villager extends Unit
         {
             findNewGold();
             return;//that's all we can do
+
         }
         //we know now that we are at the gold pile and we have gold
-        if ( this.gold == 10 && destination instanceof GoldPile)
+        if ( this.gold == 10 && destination instanceof GoldPile )
         {
             //return to base
             setDestination( getNearestDropoff() );
             return;
         }
-        if( this.gold == 10 && destination instanceof HQ )
+        if ( this.gold == 10 && destination instanceof HQ )
         {
             //we need to drop off our gold
             dropOffGold();
             return;
         }
-        
+
         //we are mining!
         mine();
     }
@@ -109,8 +115,7 @@ public class Villager extends Unit
         {
             if ( go instanceof HQ )
             {
-                if ( closest == null || Location.getDistance( this.getLoc(), closest )
-                                      > Location.getDistance( this.getLoc(), go.getLoc() ) )
+                if ( closest == null || Location.getDistance( this.getLoc(), closest ) > Location.getDistance( this.getLoc(), go.getLoc() ) )
                     closest = go.getLoc();
             }
         }
@@ -119,23 +124,21 @@ public class Villager extends Unit
 
     private void idleBehavior()
     {
-
     }
-
     private int timeTillNextMine = 50;
+
     private void mine()
     {
-        if(timeTillNextMine--<=0)
+        if ( timeTillNextMine-- <= 0 )
         {
             gold++;
-            
+
         }
-        
+
     }
 
     private void repairBehavior()
     {
-
     }
 
     @Override
@@ -147,9 +150,13 @@ public class Villager extends Unit
     @Override
     public void draw( Graphics2D g )
     {
-        ImageHandler.drawVillager( g, getX(), getY(), getOwningPlayer().getColor(), gold > 0 );
+        Color c = getOwningPlayer().getColor();
+
+        if ( Local.getSelectedObjects().contains( this ) )
+            c = ImageHandler.getOppositeColor( c );
+        ImageHandler.drawVillager( g, getX(), getY(), c, gold > 0 );
     }
-    
+
     public String getName()
     {
         return "Villager";

@@ -43,9 +43,9 @@ public abstract class Unit extends GameObject
      */
     private void calculateSpeed()
     {
-        double angle = Math.atan2( getX() - goal.getLoc().getX(), getY() - goal.getLoc().getY() );
-        dx = (int) ( getMaxSpeed() * Math.cos( angle ) );
-        dy = (int) ( getMaxSpeed() * Math.sin( angle ) );
+//        double angle = Math.atan2( getX() - goal.getLoc().getX(), getY() - goal.getLoc().getY() );
+//        dx = (int) ( getMaxSpeed() * Math.cos( angle ) );
+        //dy = (int) ( getMaxSpeed() * Math.sin( angle ) );
     }
 
     public void setDestination( int x, int y )

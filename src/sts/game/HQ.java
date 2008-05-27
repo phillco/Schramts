@@ -30,10 +30,10 @@ public class HQ extends ProductionBuilding
     {
         super( x, y, player );
         giveableCommands = new Command[3];
-        giveableCommands[0] = new Command( "Create villager");
-        giveableCommands[1] = new Command( "Create cow");
-        giveableCommands[2] = new Command( "Self destruct");
-        
+        giveableCommands[0] = new Command( "Create villager" );
+        giveableCommands[1] = new Command( "Create cow" );
+        giveableCommands[2] = new Command( "Self destruct" );
+
         setWidth( 64 );
         setHeight( 64 );
 
@@ -42,9 +42,12 @@ public class HQ extends ProductionBuilding
     @Override
     public void draw( Graphics2D g )
     {
-        Color c = Local.getSelectedObjects().contains( this ) ? getOwningPlayer().getColor() : getOwningPlayer().getColor().darker() ;
-        //g.fillRect( getX(), getY(), 64, 64 );
-        ImageHandler.drawHQ(g, getX(), getY(), c);
+        Color c = getOwningPlayer().getColor();
+
+        if ( Local.getSelectedObjects().contains( this ) )
+            c = ImageHandler.getOppositeColor( c );
+
+        ImageHandler.drawHQ( g, getX(), getY(), c );
     }
 
     @Override
@@ -68,5 +71,4 @@ public class HQ extends ProductionBuilding
     {
         return "HQ";
     }
-    
 }
