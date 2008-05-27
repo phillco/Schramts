@@ -10,14 +10,23 @@ public abstract class ProductionBuilding extends GameObject
 {
     protected ConcurrentLinkedQueue<ItemInQueue> productionQueue = new ConcurrentLinkedQueue<ItemInQueue>();
 
-    public ProductionBuilding( int x, int y, Player player )
+    protected int timeToBuild;
+
+    public ProductionBuilding( int x, int y, int timeToBuild, int health, Player player )
     {
-        super( x, y, player );
+        super( x, y, health, player );
+        this.timeToBuild = timeToBuild;
     }
-    
+
     public boolean isBuilt()
     {
-         return false;
+        return timeToBuild <= 0;
+    }
+
+    public void build()
+    {
+        if ( timeToBuild > 0 )
+            timeToBuild--;
     }
 
     @Override

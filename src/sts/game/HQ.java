@@ -28,7 +28,7 @@ public class HQ extends ProductionBuilding
 
     public HQ( int x, int y, Player player )
     {
-        super( x, y, player );
+        super( x, y, 1200, 750, player );
         giveableCommands = new Command[3];
         giveableCommands[0] = new Command( "Create villager" );
         giveableCommands[1] = new Command( "Create cow" );

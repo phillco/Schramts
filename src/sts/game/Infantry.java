@@ -11,7 +11,7 @@ public class Infantry extends Unit
 {
     public Infantry( int x, int y, int dx, int dy, Player owner )
     {
-        super( x, y, dx, dy, owner );
+        super( x, y, dx, dy, 150, owner );
     }
 
     @Override

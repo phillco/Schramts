@@ -30,12 +30,13 @@ public abstract class GameObject implements Locatable
 
     protected Command[] giveableCommands;
 
-    public GameObject( int x, int y, Player owner )
+    public GameObject( int x, int y, int maxHealth, Player owner )
     {
         this.x = x;
         this.y = y;
         this.owningPlayer = owner;
         giveableCommands = new Command[0];
+        this.maxHealth = health = maxHealth;
     }
 
     public void act()
@@ -140,9 +141,9 @@ public abstract class GameObject implements Locatable
     public void executeCommand( Command c )
     {
     }
-    
+
     public Location getLoc()
     {
-        return new Location(getX(), getY());
+        return new Location( getX(), getY() );
     }
 }

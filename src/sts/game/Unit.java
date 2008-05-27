@@ -24,9 +24,9 @@ public abstract class Unit extends GameObject
 
     private int dx,  dy;
 
-    public Unit( int x, int y, int dx, int dy, Player player )
+    public Unit( int x, int y, int dx, int dy, int health, Player player )
     {
-        super( x, y, player );
+        super( x, y, health, player );
         this.dx = dx;
         this.dy = dy;
         arrived = false;
@@ -55,11 +55,13 @@ public abstract class Unit extends GameObject
 
     public void setDestination( int x, int y )
     {
+        arrived=false;
         destination = new Location( x, y );
     }
 
     public void setDestination( Location l )
     {
+        arrived = false;
         this.destination = l;
         goal = null;
     }
@@ -67,6 +69,8 @@ public abstract class Unit extends GameObject
     public void setGoal( GameObject go )
     {
         goal = go;
+        destination= go;
+        arrived=false;
     }
 
     /**

@@ -15,7 +15,7 @@ public class Barracks extends ProductionBuilding
 {
     public Barracks( int x, int y, Player player )
     {
-        super( x, y, player );
+        super( x, y, 800, 500, player );
     }
 
     @Override

@@ -22,7 +22,7 @@ public class Villager extends Unit
 
     public Villager( int x, int y, Player owner )
     {
-        super( x, y, 1, 1, owner );
+        super( x, y, 0, 0, 100, owner );
         gold = 0;
 
         setWidth( 8 );
