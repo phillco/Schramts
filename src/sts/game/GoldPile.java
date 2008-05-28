@@ -24,6 +24,9 @@ public class GoldPile extends GameObject
     
     public boolean removeGold()
     {
+      
+        if(remainingGold==1)//out of Gold
+            getOwningPlayer().removeObject(this);
         return --remainingGold>=0;
     }
     
@@ -41,7 +44,7 @@ public class GoldPile extends GameObject
     @Override
     public String getName()
     {
-        return "Gold pile";
+        return "Gold pile with "+remainingGold +" gold remaining";
     }
     
     @Override

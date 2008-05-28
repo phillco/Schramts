@@ -37,6 +37,11 @@ public abstract class GameObject implements Locatable
     public void act()
     {
     }
+    
+    public void addHealth( int health )
+    {
+        this.health+=health;
+    }
 
     public abstract void draw( Graphics2D g );
 

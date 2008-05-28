@@ -34,7 +34,7 @@ public class Local
 
     public static Game getGame()
     {
-        return game;
+        return Game.getInstance();
     }
 
     public static Player getLocalPlayer()

@@ -40,6 +40,24 @@ public class Location implements Locatable
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Location other = (Location) obj;
+        if (this.x != other.x) {
+            return false;
+        }
+        if (this.y != other.y) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     protected Object clone() throws CloneNotSupportedException
     {
         return super.clone();
@@ -58,5 +76,11 @@ public class Location implements Locatable
     public Location getLoc()
     {
         return this;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "("+x+", "+y+")";
     }
 }

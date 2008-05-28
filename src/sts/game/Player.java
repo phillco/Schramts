@@ -52,6 +52,11 @@ public class Player
     {
         ownedObjects.add( g );
     }
+    
+    public void removeObject(GameObject g)
+    {
+        ownedObjects.remove(g);
+    }
 
     public String getName()
     {
@@ -67,7 +72,7 @@ public class Player
     {
         return goldAmount;
     }
-
+    
     public ConcurrentLinkedQueue<GameObject> getOwnedObjects()
     {
         return ownedObjects;

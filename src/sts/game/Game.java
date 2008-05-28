@@ -20,9 +20,17 @@ public class Game
     private Player nature = new Player( Color.white, "Nature" );
 
     private RunnerThread runnerThread = new RunnerThread();
+    
+    private static Game instance;
+    
+    public static Game getInstance()
+    {
+        return instance;
+    }
 
     public Game( Set<Player> p )
     {
+        instance=this;
         this.players = new ConcurrentLinkedQueue<Player>( p );
         prepareLevel();
         runnerThread.startLoop();
@@ -88,7 +96,7 @@ public class Game
             addStuffForPlayer( p, x, y );
         }
     }
-
+    
     /**
      * Sets up a player with a HQ, 3 villagers, and a gold patch
      * @param p The player to set up
@@ -141,7 +149,7 @@ public class Game
         /**
          * The time in milliseconds between each action loop.
          */
-        private final static int PERIOD = 10;
+        private final static int PERIOD = 50;
 
         /**
          * Whether the thread is enabled. Always true unless the thread is being destroyed.

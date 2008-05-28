@@ -48,7 +48,7 @@ public abstract class Unit extends GameObject
             dx = dy = 0;
             return;
         }
-        double angle = Math.atan2( getX() - goal.getLoc().getX(), getY() - goal.getLoc().getY() );
+        double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() )+Math.PI;
         dx = (int) ( getMaxSpeed() * Math.cos( angle ) );
         dy = (int) ( getMaxSpeed() * Math.sin( angle ) );
     }
@@ -59,11 +59,10 @@ public abstract class Unit extends GameObject
         destination = new Location( x, y );
     }
 
-    public void setDestination( Location l )
+    public void setDestination( Locatable l )
     {
         arrived = false;
         this.destination = l;
-        goal = null;
     }
 
     public void setGoal( GameObject go )
@@ -81,14 +80,20 @@ public abstract class Unit extends GameObject
 
     private void move()
     {
+        if(destination == null)
+        {
+            if(goal==null)
+                return;
+            destination = goal;
+        }
         if ( !arrived )
         {
             calculateSpeed();
-            int destX = goal.getLoc().getX(), destY = goal.getLoc().getY();
+            int destX = destination.getLoc().getX(), destY = destination.getLoc().getY();
             if ( Math.sqrt( ( getX() - destX ) * ( getX() - destX ) +
                             ( getY() - destY ) * ( getY() - destY ) ) < getMaxSpeed() + 1 )
             {
-                setLocation( goal.getLoc().getX(), goal.getLoc().getY() );
+                setLocation( destination.getLoc().getX(), destination.getLoc().getY() );
                 arrived = true;
             }
             else

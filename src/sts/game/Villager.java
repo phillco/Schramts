@@ -29,7 +29,7 @@ public class Villager extends Unit
     @Override
     public void act()
     {
-//        super.act();//moves if necessary
+        super.act();//moves if necessary
         if ( goal == null )
         {
             idleBehavior();
@@ -55,18 +55,22 @@ public class Villager extends Unit
 
     private void buildBehavior()
     {
+        if( !( goal instanceof ProductionBuilding ) )
+            return;
+        if( arrived )
+            ((ProductionBuilding)goal).build();
     }
 
     private void dropOffGold()
     {
         getOwningPlayer().addGold( gold );
         gold = 0;
-        destination = goal;//go back to the gold
+
     }
 
     private void findNewGold()
     {
-        GoldPile goldPile = null;
+        GameObject goldPile = null;
         for ( GameObject go : Local.getGame().getNature().getOwnedObjects() )
         {
             if ( go instanceof GoldPile )
@@ -75,7 +79,9 @@ public class Villager extends Unit
                     goldPile = (GoldPile) go;
             }
         }
-        destination = goal = goldPile;
+        if(goldPile==null)//E.T. go home
+            goldPile=getNearestDropoff();
+        setGoal(goldPile);
     }
 
     @Override
@@ -83,7 +89,7 @@ public class Villager extends Unit
     {
         return "Villager" + super.toString();
     }
-
+    
     private void goldBehavior()
     {
         // :-0 we can't do this
@@ -98,6 +104,7 @@ public class Villager extends Unit
         {
             //we need to drop off our gold
             dropOffGold();
+            setDestination( goal );//go back to the gold
             return;
 
         }
@@ -122,15 +129,15 @@ public class Villager extends Unit
         mine();
     }
 
-    private Location getNearestDropoff()
+    private GameObject getNearestDropoff()
     {
-        Location closest = null;
+        GameObject closest=null;
         for ( GameObject go : getOwningPlayer().getOwnedObjects() )
         {
             if ( go instanceof HQ )
             {
-                if ( closest == null || Location.getDistance( this.getLoc(), closest ) > Location.getDistance( this.getLoc(), go.getLoc() ) )
-                    closest = go.getLoc();
+                if ( closest == null || Location.getDistance( this.getLoc(), closest.getLoc() ) > Location.getDistance( this.getLoc(), go.getLoc() ) )
+                    closest = go;
             }
         }
         return closest;
@@ -138,19 +145,28 @@ public class Villager extends Unit
 
     private void idleBehavior()
     {
+        findNewGold();
     }
-    private int timeTillNextMine = 50;
+    
+    private int timeTillNextMine = 30;
 
     private void mine()
     {
         if ( !( goal instanceof GoldPile ) )
             return;
         if ( timeTillNextMine-- <= 0 )
+        {
             gold += ( (GoldPile) goal ).removeGold() ? 1 : 0;
+            timeTillNextMine=30;
+        }
     }
 
     private void repairBehavior()
     {
+        if( !( goal instanceof ProductionBuilding ) )
+            return;
+        if( arrived )
+            ((ProductionBuilding)goal).repair();
     }
 
     @Override
@@ -177,6 +193,6 @@ public class Villager extends Unit
 
     public String getName()
     {
-        return "Villager";
+        return "Villager with "+gold+" gold";
     }
 }
