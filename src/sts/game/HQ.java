@@ -16,6 +16,7 @@ public class HQ extends ProductionBuilding
         super( x, y, 1200, 750, player );
         giveableCommands = new Command[1];
         giveableCommands[0] = new Command( "Create villager", 20, ImageHandler.getVillager() );
+        
     }
 
     @Override
@@ -36,6 +37,8 @@ public class HQ extends ProductionBuilding
         {
             getOwningPlayer().giveObject( new Villager( getX() + 30, getY() + 54, getOwningPlayer() ) );
         }
+        else if (type == giveableCommands[1])
+            getOwningPlayer().giveObject( new Infantry( getX(), getY() - 10, 0, 0, getOwningPlayer() ) );
     }
 
     @Override

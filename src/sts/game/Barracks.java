@@ -4,7 +4,9 @@
  */
 package sts.game;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import sts.Local;
 import sts.gui.ImageHandler;
 
 /**
@@ -16,46 +18,42 @@ public class Barracks extends ProductionBuilding
     public Barracks( int x, int y, Player player )
     {
         super( x, y, 800, 500, player );
-    }
 
-    @Override
-    protected void doCreation( Command type )
-    {
-        //switch ( (ProductionOption) type )
-        {
-            //  case NEW_WARRIOR:
-            getOwningPlayer().giveObject( new Infantry( 0, 0, 0, 0, null ) );
-        //break;
-        }
+        giveableCommands = new Command[1];
+        giveableCommands[0] = new Command( "Create infantry", 50, ImageHandler.getInfantry() );
     }
 
     @Override
     public void draw( Graphics2D g )
     {
+        Color c = getOwningPlayer().getColor();
+
+        if ( Local.getSelectedObjects().contains( this ) )
+            c = ImageHandler.getOppositeColor( c );
         if ( isBuilt() )
-            ImageHandler.drawBarracks( g, getX(), getY(), getOwningPlayer().getColor() );
+            ImageHandler.drawBarracks( g, getX(), getY(), c );
         else
-            ImageHandler.drawConstructionSite( g, getX(), getY(), getOwningPlayer().getColor() );
-    }
-
-    public enum ProductionOption
-    {
-        NEW_WARRIOR( 300, "Create one new warrior" );
-
-        final int ticksToCreate;
-
-        final String description;
-
-        private ProductionOption( int ticksToCreate, String description )
-        {
-            this.ticksToCreate = ticksToCreate;
-            this.description = description;
-        }
+            ImageHandler.drawConstructionSite( g, getX(), getY(), c );
     }
 
     @Override
     public String getName()
     {
         return "Barracks";
+    }
+
+    @Override
+    protected void doCreation( Command type )
+    {
+        if ( type == giveableCommands[0] )
+        {
+            getOwningPlayer().giveObject( new Infantry( getX(), getY() - 10, 0, 0, getOwningPlayer() ) );
+        }
+    }
+
+    @Override
+    public boolean isClickContained( int x, int y )
+    {
+        return isClickContainedInRectangle( this, x, y, 48, 48 );
     }
 }

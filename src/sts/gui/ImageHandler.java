@@ -114,6 +114,14 @@ public class ImageHandler
         return gold;
     }
 
+    public static BufferedImage getInfantry()
+    {
+        return infantry;
+    }
+    
+    
+
+    
     /**
      * Takes an image and shifts its hue, preserving the saturation and brightness.
      * @param img

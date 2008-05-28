@@ -138,6 +138,12 @@ public class Villager extends Unit
         mine();
     }
 
+    @Override
+    public void giveCommand( Command c )
+    {
+        getOwningPlayer().giveObject( new Barracks( getX(), getY() - 30, getOwningPlayer() ) );
+    }
+
     private GameObject getNearestDropoff()
     {
         GameObject closest = null;

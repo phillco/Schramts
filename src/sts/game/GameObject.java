@@ -1,6 +1,7 @@
 package sts.game;
 
 import java.awt.Graphics2D;
+import sts.game.ProductionBuilding.ItemInQueue;
 
 /**
  *
@@ -105,7 +106,7 @@ public abstract class GameObject implements Locatable
     @Override
     public String toString()
     {
-        return getOwningPlayer().getName() + "'s " + getName() + ", at [" + getX() + "," + getY() + "]";
+        return getOwningPlayer().getName() + "'s " + getName() + ", at [" + getX() + "," + getY() + "], health " + health + "/" + maxHealth;
     }
 
     public Command[] getGiveableCommands()
@@ -141,5 +142,10 @@ public abstract class GameObject implements Locatable
         boolean okX = ( x <= go.getX() + width && x >= go.getX() );
         boolean okY = ( y <= go.getY() + height && y >= go.getY() );
         return ( okX && okY );
+    }
+
+    public void giveCommand( Command c )
+    {
+        
     }
 }

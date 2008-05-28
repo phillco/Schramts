@@ -1,6 +1,7 @@
 package sts;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import sts.game.Game;
 import sts.game.GameObject;
@@ -13,7 +14,6 @@ import sts.gui.MainWindow;
  */
 public class Local
 {
-    
     private static Game game;
 
     /**
@@ -22,7 +22,7 @@ public class Local
     private static Player localPlayer;
 
     private static MainWindow window;
-    
+
     private static Set<GameObject> selectedObjects = new HashSet<GameObject>();
 
     public static void setUp( Game gameInstance, Player localPlayerInstance )
@@ -51,27 +51,27 @@ public class Local
     {
         return selectedObjects;
     }
-    
+
     /**
      * Returns the first of the user's selected objects.
      * @see Local#getSelectedObjects()
      */
     public static GameObject getSelectedObject()
     {
-        return selectedObjects.iterator().next();
+        Iterator<GameObject> i = selectedObjects.iterator();
+        if ( i.hasNext() )
+            return i.next();
+        else
+            return null;
     }
-    
+
     public static boolean isObjectSelected()
     {
-        return (selectedObjects.size() > 0);
+        return ( selectedObjects.size() > 0 );
     }
-    
-    
 
     public static void setSelectedObjects( Set<GameObject> selectedObjects )
     {
         Local.selectedObjects = selectedObjects;
     }
-    
-    
 }

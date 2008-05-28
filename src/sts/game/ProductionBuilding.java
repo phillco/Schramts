@@ -46,8 +46,12 @@ public abstract class ProductionBuilding extends GameObject
     {
         return productionQueue;
     }
-    
-    
+
+    @Override
+    public void giveCommand( Command c )
+    {
+        productionQueue.add( new ItemInQueue( c, c.getTimeToMake() ) );
+    }        
 
     @Override
     public void act()
@@ -63,11 +67,6 @@ public abstract class ProductionBuilding extends GameObject
             }
 
         }
-    }
-
-    public void giveCommand( Command c )
-    {
-        productionQueue.add( new ItemInQueue( c, c.getTimeToMake() ) );
     }
 
     protected abstract void doCreation( Command type );

@@ -85,7 +85,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             if ( Local.getSelectedObjects().size() > 0 )
             {
                 GameObject go = Local.getSelectedObject();
-                ExtendedGraphics.drawText( g, go.getOwningPlayer().getName() + "'s " + go.getName(), 430, getHeight() - 70, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.TOP );
+                ExtendedGraphics.drawText( g, go.toString(), 430, getHeight() - 70, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.TOP );
 
                 if ( go.getOwningPlayer() == Local.getLocalPlayer() )
                 {
@@ -141,13 +141,13 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             if ( e.getButton() == MouseEvent.BUTTON1 )
                 Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
             else //if ( e.getButton() == MouseEvent.BUTTON2 )
+
             {
                 GameObject go = Local.getSelectedObject();
-                if ( go instanceof Unit)
+                if ( go instanceof Unit )
                 {
-                    ((Unit)go).setDestination( e.getX(), e.getY());
-                    ((Unit)go).setGoal(null);
-                    
+                    ( (Unit) go ).setDestination( e.getX(), e.getY() );
+                    ( (Unit) go ).setGoal( null );
                 }
             }
         }
@@ -155,10 +155,9 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     public void mouseReleased( MouseEvent e )
     {
-        if ( selectedButton != -1 )
+        if ( selectedButton != -1 && Local.getSelectedObjects().size() > 0 && Local.getSelectedObject().getGiveableCommands().length > selectedButton )
         {
-            if ( Local.getSelectedObject() instanceof ProductionBuilding )
-                ( (ProductionBuilding) Local.getSelectedObject() ).giveCommand( Local.getSelectedObject().getGiveableCommands()[selectedButton] );
+            Local.getSelectedObject().giveCommand( Local.getSelectedObject().getGiveableCommands()[selectedButton] );
         }
     }
 
