@@ -18,6 +18,7 @@ import sts.Local;
 import sts.Main;
 import sts.game.Command;
 import sts.game.GameObject;
+import sts.game.ProductionBuilding;
 
 /**
  * The hackiness of this class compares favorably with the national debt.
@@ -126,7 +127,10 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
     public void mouseReleased( MouseEvent e )
     {
         if ( selectedButton != -1 )
-            Main.fatalError( Local.getSelectedObject().getGiveableCommands()[selectedButton].getName() );
+        {
+            if ( Local.getSelectedObject() instanceof ProductionBuilding )
+                ( (ProductionBuilding) Local.getSelectedObject() ).giveCommand( Local.getSelectedObject().getGiveableCommands()[selectedButton] );
+        }
     }
 
     public void mouseEntered( MouseEvent e )

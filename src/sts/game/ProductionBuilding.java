@@ -28,24 +28,24 @@ public abstract class ProductionBuilding extends GameObject
         if ( timeToBuild > 0 )
             timeToBuild--;
     }
-    
+
     public void repair()
     {
         if ( getMaxHealth() == getHealth() )
             return;//we don't need no stinking reparations!
+
         if ( getOwningPlayer().getGoldAmount() > 0 )
         {
-            changeHealth(1);
-            if( getHealth() % 10 == 0 )//nothing in this world is free
-                getOwningPlayer().addGold(-1);
+            changeHealth( 1 );
+            if ( getHealth() % 10 == 0 )//nothing in this world is free
+                getOwningPlayer().addGold( -1 );
         }
     }
-    
+
     @Override
     public void act()
     {
         super.act();
-
         if ( productionQueue.peek() != null )
         {
             // Tick the first queued item. Is its time up?
@@ -58,18 +58,23 @@ public abstract class ProductionBuilding extends GameObject
         }
     }
 
-    protected abstract void doCreation( Enum type );
+    public void giveCommand( Command c )
+    {
+        productionQueue.add( new ItemInQueue( c, 50 ) );
+    }
+
+    protected abstract void doCreation( Command type );
 
     protected class ItemInQueue
     {
-        Enum type;
+        Command type;
 
         int timeLeft;
 
-        public ItemInQueue( Enum type, int timeLeft )
+        public ItemInQueue( Command type, int timeLeft )
         {
             this.type = type;
             this.timeLeft = timeLeft;
         }
-    }
+    }    
 }

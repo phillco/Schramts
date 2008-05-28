@@ -19,13 +19,13 @@ public class Barracks extends ProductionBuilding
     }
 
     @Override
-    protected void doCreation( Enum type )
+    protected void doCreation( Command type )
     {
-        switch ( (ProductionOption) type )
+        //switch ( (ProductionOption) type )
         {
-            case NEW_WARRIOR:
+          //  case NEW_WARRIOR:
                 getOwningPlayer().giveObject( new Infantry( 0, 0, 0, 0, null ) );
-                break;
+                //break;
         }
     }
 

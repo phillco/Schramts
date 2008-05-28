@@ -11,28 +11,11 @@ import sts.gui.ImageHandler;
  */
 public class HQ extends ProductionBuilding
 {
-    public enum ProductionOption
-    {
-        NEW_VILLAGER( 200, "Create one new villager" );
-
-        final int ticksToCreate;
-
-        final String description;
-
-        private ProductionOption( int ticksToCreate, String description )
-        {
-            this.ticksToCreate = ticksToCreate;
-            this.description = description;
-        }
-    }
-
     public HQ( int x, int y, Player player )
     {
         super( x, y, 1200, 750, player );
-        giveableCommands = new Command[3];
+        giveableCommands = new Command[1];
         giveableCommands[0] = new Command( "Create villager" );
-        giveableCommands[1] = new Command( "Create cow" );
-        giveableCommands[2] = new Command( "Self destruct" );
     }
 
     @Override
@@ -47,13 +30,11 @@ public class HQ extends ProductionBuilding
     }
 
     @Override
-    protected void doCreation( Enum type )
+    protected void doCreation( Command type )
     {
-        switch ( (ProductionOption) type )
+        if ( type == giveableCommands[0] )
         {
-            case NEW_VILLAGER:
-                getOwningPlayer().giveObject( new Villager( 0, 0, null ) );
-                break;
+            getOwningPlayer().giveObject( new Villager( getX(), getY() - 10, getOwningPlayer() ) );
         }
     }
 
@@ -61,11 +42,6 @@ public class HQ extends ProductionBuilding
     public boolean isClickContained( int x, int y )
     {
         return isClickContainedInRectangle( this, x, y, 64, 64 );
-    }        
-
-    public void addToQueue( ProductionOption type )
-    {
-        productionQueue.add( new ItemInQueue( type, type.ticksToCreate ) );
     }
 
     @Override
