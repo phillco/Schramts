@@ -68,7 +68,7 @@ public abstract class Unit extends GameObject
     public void setGoal( GameObject go )
     {
         goal = go;
-        destination= go;
+        //[PC] destination= go;
         arrived=false;
     }
 

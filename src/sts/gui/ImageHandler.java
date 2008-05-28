@@ -55,10 +55,15 @@ public class ImageHandler
 
     public static Color getOppositeColor( Color c )
     {
-        return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
+        return new Color( 255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue() );
     }
 
-    public static void drawHQ( Graphics2D g, int x, int y, Color c)
+    public static void drawImage( Graphics2D g, int x, int y, Color c, BufferedImage i )
+    {
+        drawImage( hueShift( i, c ), g, x, y );
+    }
+
+    public static void drawHQ( Graphics2D g, int x, int y, Color c )
     {
         drawImage( hueShift( hq, c ), g, x, y );
     }
@@ -88,6 +93,22 @@ public class ImageHandler
         g.drawImage( i, x, y, null );
     }
 
+    public static BufferedImage getVillager()
+    {
+        return villager;
+    }
+
+    public static BufferedImage getBarracks()
+    {
+        return barracks;
+    }
+
+    public static BufferedImage getGold()
+    {
+        return gold;
+    }
+
+    
     /**
      * Takes an image and shifts its hue, preserving the saturation and brightness.
      * @param img

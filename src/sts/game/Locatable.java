@@ -9,7 +9,7 @@ package sts.game;
  *
  * @author AK90454
  */
-interface Locatable {
+public interface Locatable {
     
     public Location getLoc();
 

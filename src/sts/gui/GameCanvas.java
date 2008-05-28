@@ -15,10 +15,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import sts.Local;
-import sts.Main;
 import sts.game.Command;
 import sts.game.GameObject;
 import sts.game.ProductionBuilding;
+import sts.game.Unit;
 
 /**
  * The hackiness of this class compares favorably with the national debt.
@@ -70,6 +70,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         g.setColor( Color.lightGray );
         g.drawRect( x, y, 450, 100 );
 
+        // Draw HUD.
         if ( null != Local.getLocalPlayer() )
         {
             x += 10;
@@ -80,25 +81,42 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             g.setColor( Color.darkGray );
             ExtendedGraphics.drawText( g, Local.getLocalPlayer().getGoldAmount() + " gold", x + 4, y + 42, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
 
+            // Draw the selected object's properties.
             if ( Local.getSelectedObjects().size() > 0 )
             {
-                GameObject go = Local.getSelectedObjects().iterator().next();
+                GameObject go = Local.getSelectedObject();
                 ExtendedGraphics.drawText( g, go.getOwningPlayer().getName() + "'s " + go.getName(), 430, getHeight() - 70, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.TOP );
 
-                // Draw command boxes.
-                int buttonIndex = 0;
-                for ( Command c : go.getGiveableCommands() )
+                if ( go.getOwningPlayer() == Local.getLocalPlayer() )
                 {
-                    x = ( 440 - 53 * ( buttonIndex + 1 ) );
-                    g.setColor( ( selectedButton == buttonIndex ? Color.white : Color.lightGray ) );
-                    g.fillRect( x, y + 40, 45, 45 );
-                    g.setColor( Color.darkGray );
-                    g.drawRect( x, y + 40, 45, 45 );
-                    buttonIndex++;
-                }
+                    // Draw command buttons.
+                    int buttonIndex = 0;
+                    for ( Command c : go.getGiveableCommands() )
+                    {
+                        x = ( 440 - 53 * ( buttonIndex + 1 ) );
+                        g.setColor( ( selectedButton == buttonIndex ? Color.white : Color.lightGray ) );
+                        g.fillRect( x, y + 40, 45, 45 );
+                        g.setColor( Color.darkGray );
+                        g.drawRect( x, y + 40, 45, 45 );
+                        buttonIndex++;
+                    }
 
-                if ( go != null && selectedButton != -1 && go.getGiveableCommands().length > selectedButton )
-                    ExtendedGraphics.drawText( g, go.getGiveableCommands()[selectedButton].getName(), 350, getHeight() - 1, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.BOTTOM );
+                    // Draw button's tooltip.
+                    if ( go != null && selectedButton != -1 && go.getGiveableCommands().length > selectedButton )
+                        ExtendedGraphics.drawText( g, go.getGiveableCommands()[selectedButton].getName(), 350, getHeight() - 1, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.BOTTOM );
+
+                    // Draw queued units.
+                    if ( go instanceof ProductionBuilding )
+                    {
+                        x -= 15;
+                        ProductionBuilding b = (ProductionBuilding) go;
+                        for ( ProductionBuilding.ItemInQueue i : b.getProductionQueue() )
+                        {
+                            ImageHandler.drawImage( g, x, y + 30, go.getOwningPlayer().getColor(), i.type.getQueuedImage() );
+                            x -= 15;
+                        }
+                    }
+                }
             }
         }
     }
@@ -120,7 +138,18 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
     {
         if ( selectedButton == -1 )
         {
-            Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
+            if ( e.getButton() == MouseEvent.BUTTON1 )
+                Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
+            else //if ( e.getButton() == MouseEvent.BUTTON2 )
+            {
+                GameObject go = Local.getSelectedObject();
+                if ( go instanceof Unit)
+                {
+                    ((Unit)go).setDestination( e.getX(), e.getY());
+                    ((Unit)go).setGoal(null);
+                    
+                }
+            }
         }
     }
 

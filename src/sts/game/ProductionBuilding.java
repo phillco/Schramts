@@ -42,6 +42,13 @@ public abstract class ProductionBuilding extends GameObject
         }
     }
 
+    public Iterable<ItemInQueue> getProductionQueue()
+    {
+        return productionQueue;
+    }
+    
+    
+
     @Override
     public void act()
     {
@@ -60,16 +67,16 @@ public abstract class ProductionBuilding extends GameObject
 
     public void giveCommand( Command c )
     {
-        productionQueue.add( new ItemInQueue( c, 50 ) );
+        productionQueue.add( new ItemInQueue( c, c.getTimeToMake() ) );
     }
 
     protected abstract void doCreation( Command type );
 
-    protected class ItemInQueue
+    public class ItemInQueue
     {
-        Command type;
+        public Command type;
 
-        int timeLeft;
+        public int timeLeft;
 
         public ItemInQueue( Command type, int timeLeft )
         {

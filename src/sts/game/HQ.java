@@ -15,7 +15,7 @@ public class HQ extends ProductionBuilding
     {
         super( x, y, 1200, 750, player );
         giveableCommands = new Command[1];
-        giveableCommands[0] = new Command( "Create villager" );
+        giveableCommands[0] = new Command( "Create villager", 20, ImageHandler.getVillager() );
     }
 
     @Override

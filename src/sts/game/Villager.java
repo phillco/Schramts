@@ -23,6 +23,9 @@ public class Villager extends Unit
     public Villager( int x, int y, Player owner )
     {
         super( x, y, 0, 0, 100, owner );
+
+        giveableCommands = new Command[1];
+        giveableCommands[0] = new Command( "Build barracks", 90, ImageHandler.getBarracks() );
         gold = 0;
     }
 
@@ -30,6 +33,7 @@ public class Villager extends Unit
     public void act()
     {
         super.act();//moves if necessary
+
         if ( goal == null )
         {
             idleBehavior();
@@ -55,10 +59,10 @@ public class Villager extends Unit
 
     private void buildBehavior()
     {
-        if( !( goal instanceof ProductionBuilding ) )
+        if ( !( goal instanceof ProductionBuilding ) )
             return;
-        if( arrived )
-            ((ProductionBuilding)goal).build();
+        if ( arrived )
+            ( (ProductionBuilding) goal ).build();
     }
 
     private void dropOffGold()
@@ -79,9 +83,9 @@ public class Villager extends Unit
                     goldPile = (GoldPile) go;
             }
         }
-        if(goldPile==null)//E.T. go home
+        if ( goldPile == null )//E.T. go home
             return false;
-        setGoal(goldPile);
+        setGoal( goldPile );
         return true;
     }
 
@@ -90,7 +94,7 @@ public class Villager extends Unit
     {
         return "Villager" + super.toString();
     }
-    
+
     private void goldBehavior()
     {
         // :-0 we can't do this
@@ -106,6 +110,7 @@ public class Villager extends Unit
             //we need to drop off our gold
             dropOffGold();
             setDestination( goal );//go back to the gold
+
             return;
 
         }
@@ -125,6 +130,7 @@ public class Villager extends Unit
             if ( !findNewGold() )
                 setDestination( getNearestDropoff() );
             return;//that's all we can do
+
         }
 
         //we are mining!
@@ -133,7 +139,7 @@ public class Villager extends Unit
 
     private GameObject getNearestDropoff()
     {
-        GameObject closest=null;
+        GameObject closest = null;
         for ( GameObject go : getOwningPlayer().getOwnedObjects() )
         {
             if ( go instanceof HQ )
@@ -149,7 +155,6 @@ public class Villager extends Unit
     {
         findNewGold();
     }
-    
     private int timeTillNextMine = 30;
 
     private void mine()
@@ -159,16 +164,16 @@ public class Villager extends Unit
         if ( timeTillNextMine-- <= 0 )
         {
             gold += ( (GoldPile) goal ).removeGold() ? 1 : 0;
-            timeTillNextMine=30;
+            timeTillNextMine = 30;
         }
     }
 
     private void repairBehavior()
     {
-        if( !( goal instanceof ProductionBuilding ) )
+        if ( !( goal instanceof ProductionBuilding ) )
             return;
-        if( arrived )
-            ((ProductionBuilding)goal).repair();
+        if ( arrived )
+            ( (ProductionBuilding) goal ).repair();
     }
 
     @Override
@@ -176,12 +181,12 @@ public class Villager extends Unit
     {
         return 4;
     }
-    
+
     @Override
     public boolean isClickContained( int x, int y )
     {
         return isClickContainedInRectangle( this, x, y, 8, 13 );
-    }        
+    }
 
     @Override
     public void draw( Graphics2D g )
@@ -195,6 +200,6 @@ public class Villager extends Unit
 
     public String getName()
     {
-        return "Villager with "+gold+" gold";
+        return "Villager with " + gold + " gold";
     }
 }
