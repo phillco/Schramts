@@ -20,9 +20,9 @@ public class Game
     private Player nature = new Player( Color.white, "Nature" );
 
     private RunnerThread runnerThread = new RunnerThread();
-    
+
     private static Game instance;
-    
+
     public static Game getInstance()
     {
         return instance;
@@ -30,7 +30,7 @@ public class Game
 
     public Game( Set<Player> p )
     {
-        instance=this;
+        instance = this;
         this.players = new ConcurrentLinkedQueue<Player>( p );
         prepareLevel();
         runnerThread.startLoop();
@@ -38,8 +38,16 @@ public class Game
 
     public void act()
     {
-        for ( Player p : players )
-            p.act();
+        for ( Player p : players ){
+            
+        p.act();
+        
+        for(GameObject go: p.getOwnedObjects())
+        {
+            if(go.getName().equals("HQ") && go.getHealth() <= 0)
+                   lose(p); 
+        }
+        }
     }
 
     public void draw( Graphics2D g )
@@ -78,6 +86,22 @@ public class Game
         return players;
     }
 
+    void lose( Player loser )
+    {
+        System.out.println( loser.getName() + " loses!" );
+        for(GameObject go: loser.getOwnedObjects())
+        {
+            loser.removeObject(go);
+        }
+        for ( Player p : players )
+        {
+            if ( p == loser )
+            {
+                players.remove( p );
+            }
+        }
+    }
+
     /**
      * Sets up the level for the players, including the placement of their HQs and resources.
      * @see http://www.assembla.com/spaces/Schramts/tickets/5
@@ -96,7 +120,7 @@ public class Game
             addStuffForPlayer( p, x, y );
         }
     }
-    
+
     /**
      * Sets up a player with a HQ, 3 villagers, and a gold patch
      * @param p The player to set up
