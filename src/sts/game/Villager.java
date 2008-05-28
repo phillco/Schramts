@@ -68,7 +68,7 @@ public class Villager extends Unit
 
     }
 
-    private void findNewGold()
+    private boolean findNewGold()
     {
         GameObject goldPile = null;
         for ( GameObject go : Local.getGame().getNature().getOwnedObjects() )
@@ -80,8 +80,9 @@ public class Villager extends Unit
             }
         }
         if(goldPile==null)//E.T. go home
-            goldPile=getNearestDropoff();
+            return false;
         setGoal(goldPile);
+        return true;
     }
 
     @Override
@@ -121,7 +122,8 @@ public class Villager extends Unit
         //The gold Pile is out of gold
         if ( goldPile.getGold() <= 0 )
         {
-            findNewGold();
+            if ( !findNewGold() )
+                setDestination( getNearestDropoff() );
             return;//that's all we can do
         }
 

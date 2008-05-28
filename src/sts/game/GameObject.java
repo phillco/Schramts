@@ -21,7 +21,7 @@ public abstract class GameObject implements Locatable
     /**
      * The unit's health and maxHealth.
      */
-    private int maxHealth = 100,  health = maxHealth;
+    private int maxHealth ,  health;
 
     protected Command[] giveableCommands;
 
@@ -38,9 +38,13 @@ public abstract class GameObject implements Locatable
     {
     }
     
-    public void addHealth( int health )
+    public void changeHealth( int change )
     {
-        this.health+=health;
+        this.health+=change;
+        if(health > maxHealth )
+            health=maxHealth;
+        if(health <= 0 )
+            owningPlayer.removeObject(this);
     }
 
     public abstract void draw( Graphics2D g );

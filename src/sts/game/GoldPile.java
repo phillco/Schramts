@@ -9,7 +9,7 @@ import sts.gui.ImageHandler;
  */
 public class GoldPile extends GameObject
 {
-    int remainingGold = 500;
+    int remainingGold = 10;
 
     public GoldPile( int x, int y, Player nature )
     {

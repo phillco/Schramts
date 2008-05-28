@@ -35,7 +35,7 @@ public abstract class ProductionBuilding extends GameObject
             return;//we don't need no stinking reparations!
         if ( getOwningPlayer().getGoldAmount() > 0 )
         {
-            addHealth(1);
+            changeHealth(1);
             if( getHealth() % 10 == 0 )//nothing in this world is free
                 getOwningPlayer().addGold(-1);
         }

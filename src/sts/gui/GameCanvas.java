@@ -35,7 +35,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     public GameCanvas()
     {
-        setSize( Local.getGame().getLevelWidth(), Local.getGame().getLevelHeight() );
+        setSize( Local.getGame().getLevelWidth(), Local.getGame().getLevelHeight() + 100 );
         setVisible( true );
         addMouseListener( this );
         addMouseMotionListener( this );
@@ -146,7 +146,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         selectedButton = -1;
 
         // Selecting a button?
-        if ( e.getY() > getHeight() - 100 && e.getY() < getHeight() && e.getX() > 440 - ( 53 * 4 ) && e.getX() < 440 )
+        if ( e.getY() > getHeight() - 60 && e.getY() < getHeight() - 15 && e.getX() > 440 - ( 53 * 4 ) && e.getX() < 440 )
         {
             selectedButton = ( 440 - e.getX() ) / 53;
             return;
