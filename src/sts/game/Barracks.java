@@ -23,16 +23,19 @@ public class Barracks extends ProductionBuilding
     {
         //switch ( (ProductionOption) type )
         {
-          //  case NEW_WARRIOR:
-                getOwningPlayer().giveObject( new Infantry( 0, 0, 0, 0, null ) );
-                //break;
+            //  case NEW_WARRIOR:
+            getOwningPlayer().giveObject( new Infantry( 0, 0, 0, 0, null ) );
+        //break;
         }
     }
 
     @Override
     public void draw( Graphics2D g )
     {
-        ImageHandler.drawBarracks( g, getX(), getY(), getOwningPlayer().getColor() );
+        if ( isBuilt() )
+            ImageHandler.drawBarracks( g, getX(), getY(), getOwningPlayer().getColor() );
+        else
+            ImageHandler.drawConstructionSite( g, getX(), getY(), getOwningPlayer().getColor() );
     }
 
     public enum ProductionOption

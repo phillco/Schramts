@@ -86,6 +86,7 @@ public class Villager extends Unit
         if ( goldPile == null )//E.T. go home
             return false;
         setGoal( goldPile );
+        setDestination( goldPile );
         return true;
     }
 
@@ -105,7 +106,7 @@ public class Villager extends Unit
         GoldPile goldPile = (GoldPile) goal;
 
         //We have gold and have arrived at HQ
-        if ( this.gold == 10 && destination instanceof HQ )
+        if ( this.gold > 0 && destination instanceof HQ )
         {
             //we need to drop off our gold
             dropOffGold();

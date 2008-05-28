@@ -34,7 +34,7 @@ public class HQ extends ProductionBuilding
     {
         if ( type == giveableCommands[0] )
         {
-            getOwningPlayer().giveObject( new Villager( getX(), getY() - 10, getOwningPlayer() ) );
+            getOwningPlayer().giveObject( new Villager( getX() + 30, getY() + 54, getOwningPlayer() ) );
         }
     }
 
@@ -48,5 +48,11 @@ public class HQ extends ProductionBuilding
     public String getName()
     {
         return "HQ";
+    }
+
+    @Override
+    public Location getLoc()
+    {
+        return new Location( getX() + 32, getY() + 44 );
     }
 }

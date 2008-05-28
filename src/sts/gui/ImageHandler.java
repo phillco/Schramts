@@ -23,7 +23,7 @@ public class ImageHandler
     /**
      * External images that game objects use.
      */
-    private static BufferedImage hq,  barracks,  villager,  villagerWithGold,  infantry,  gold;
+    private static BufferedImage hq,  barracks,  villager,  villagerWithGold,  infantry,  gold,  constructionSite;
 
     /**
      * The images that have been hue shifted already, so that they aren't recalculated.
@@ -40,11 +40,12 @@ public class ImageHandler
             found = new HashMap<ShiftedImage, Image>();
             //  hq = Toolkit.getDefaultToolkit().createImage(ImageHandler.class.getResource("/hq.gif")); old way with JAR
             hq = ImageIO.read( new File( "res/hq.gif" ) );
-//            barracks = ImageIO.read( new File( "res/barracks.gif" ) );
+            barracks = ImageIO.read( new File( "res/barracks.gif" ) );
             villager = ImageIO.read( new File( "res/villager.gif" ) );
             villagerWithGold = ImageIO.read( new File( "res/villagerWithGold.gif" ) );
             infantry = ImageIO.read( new File( "res/warrior.gif" ) );
             gold = ImageIO.read( new File( "res/gold.gif" ) );
+            constructionSite = ImageIO.read( new File( "res/half_built_building.gif" ) );
         }
         catch ( IOException iOException )
         {
@@ -88,6 +89,11 @@ public class ImageHandler
         drawImage( gold, g, x, y );
     }
 
+    public static void drawConstructionSite( Graphics2D g, int x, int y, Color color )
+    {
+        drawImage( hueShift( constructionSite, color ), g, x, y );
+    }
+
     private static void drawImage( Image i, Graphics2D g, int x, int y )
     {
         g.drawImage( i, x, y, null );
@@ -108,7 +114,6 @@ public class ImageHandler
         return gold;
     }
 
-    
     /**
      * Takes an image and shifts its hue, preserving the saturation and brightness.
      * @param img
@@ -145,7 +150,7 @@ public class ImageHandler
 
                 //convert to HSB
                 float[] hsb =
-                {
+                        {
                     0f, 0f, 0f
                 };
                 //hsb now has the hsb representation of the old color
