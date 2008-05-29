@@ -88,6 +88,11 @@ public abstract class ProductionBuilding extends GameObject
 
         }
     }
+    
+    public int queueLength()
+    {
+        return this.productionQueue.size();
+    }
 
     protected abstract void doCreation( Command type );
 

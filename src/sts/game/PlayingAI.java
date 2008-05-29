@@ -45,6 +45,8 @@ public class PlayingAI extends AI
 
     public void act()
     {
+        if(owner.hasLost())
+            return;// :-(
         checkState();
         updateEnemies();
         if ( villagerCount() < state.villagerThreshhold )
@@ -75,7 +77,7 @@ public class PlayingAI extends AI
 
     private void assignVillagersToBuild()
     {
-        if(owner.getGoldAmount()<750)//ok, so I hard coded the value.  So shoot me
+        if(owner.getGoldAmount()<800)//ok, so I hard coded a value.  So shoot me
             return;//don't bother trying to build, 
         if(carpenter==null)
         {
@@ -83,10 +85,15 @@ public class PlayingAI extends AI
             carpenter.setGoal((GameObject)null);
             carpenter.setDestination(owner.getHQ().getLoc().translate(0, -75));
         }
-        if(carpenter.arrived)
+        if(owner.getBarracks().isEmpty())
         {
-            carpenter.executeCommand(carpenter.giveableCommands[0]);
+            if(carpenter.arrived )
+            {
+                carpenter.giveCommand(carpenter.giveableCommands[0]);
+            }
         }
+        else
+            carpenter.setGoal(owner.getBarracks().iterator().next());
     }
 
     private void assignVillagersToGold()
@@ -111,12 +118,13 @@ public class PlayingAI extends AI
             if(b.needsRepair())
                 needsRepair.add(b);
         }
-        if(owner.getHQ().needsRepair())
+        if(owner.getHQ()!=null && owner.getHQ().needsRepair())
             needsRepair.add(owner.getHQ());
         if(needsRepair.isEmpty())
         {
             for(Villager v : owner.getVillagers())
                 v.findNewGold();
+            return;
         }
         int count = 0;
         ArrayList<ProductionBuilding> linearAccess = new ArrayList<ProductionBuilding>(needsRepair);
@@ -260,24 +268,17 @@ public class PlayingAI extends AI
     {
         if(owner.getGoldAmount()<100)
             return;
-        HQ hq = null;
-        for ( GameObject go : owner.getOwnedObjects() )
-        {
-            if ( go instanceof HQ )
-            {
-                hq = (HQ) go;
-                break;
-            }
-        }
+        HQ hq = owner.getHQ();
         if(hq == null)//uh-oh, no hq
             return;
-        hq.giveCommand(hq.getGiveableCommands()[0]);
+        if(hq.queueLength()<1)
+            hq.giveCommand(hq.getGiveableCommands()[0]);
     }
 
     private void sellVillagers() {
         Villager v =owner.getVillagers().iterator().next();
         if(v!=null)
-            v.executeCommand(v.giveableCommands[1]);
+            v.giveCommand(v.giveableCommands[1]);
     }
 
     private void updateEnemies() {
