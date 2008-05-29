@@ -185,7 +185,7 @@ public class Game
 
     public int getSlaveryGold()
     {
-        return (int) ( 0.1 * Math.pow( villagersSoldToSlavery, 2 ) + 3 * villagersSoldToSlavery + 100 );
+        return (int) Math.max( 5, -0.1 * Math.pow( villagersSoldToSlavery, 2 ) + 3 * villagersSoldToSlavery + 100 );
     }
 
     public int sellIntoSlavery( Villager v )

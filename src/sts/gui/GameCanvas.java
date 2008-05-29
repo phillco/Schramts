@@ -104,7 +104,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
 
 
-                if ( go.getOwningPlayer() == Local.getLocalPlayer() )
+                if ( go.getOwningPlayer() == Local.getLocalPlayer() && !(go instanceof ProductionBuilding && !((ProductionBuilding) go).isBuilt()))
                 {
                     // Draw command buttons.
                     int buttonIndex = 0;
@@ -122,7 +122,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                     // Draw button's tooltip.
                     if ( go != null && selectedButton != -1 && go.getGiveableCommands().length > selectedButton )
                     {
-                        ExtendedGraphics.drawText( g, go.getGiveableCommands()[selectedButton].getName() + ( Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() > 0 ? " (costs " : " (gives " ) + Math.abs( Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost()) + " gold)", 350, getHeight() - 1, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.BOTTOM );
+                        ExtendedGraphics.drawText( g, go.getGiveableCommands()[selectedButton].getName() + ( Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() > 0 ? " (costs " : " (gives " ) + Math.abs( Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() ) + " gold)", 350, getHeight() - 1, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.BOTTOM );
                     }
 
                     // Draw queued units.
@@ -207,8 +207,8 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         // Button pushed.
         if ( selectedButton != -1 && Local.getSelectedObjects().size() > 0 && Local.getSelectedObject().getGiveableCommands().length > selectedButton )
         {
-       //     if ( Local.getLocalPlayer().getGoldAmount() >= Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() )
-                Local.getSelectedObject().giveCommand( Local.getSelectedObject().getGiveableCommands()[selectedButton] );
+            //     if ( Local.getLocalPlayer().getGoldAmount() >= Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() )
+            Local.getSelectedObject().giveCommand( Local.getSelectedObject().getGiveableCommands()[selectedButton] );
         }
 
         // Box dragged!
