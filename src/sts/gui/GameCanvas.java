@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
+import java.util.Set;
 import sts.Local;
 import sts.game.Command;
 import sts.game.GameObject;
@@ -141,14 +142,30 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             if ( e.getButton() == MouseEvent.BUTTON1 )
                 Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
             else //if ( e.getButton() == MouseEvent.BUTTON2 )
-
             {
-                GameObject go = Local.getSelectedObject();
-                if ( go instanceof Unit )
+                Set<GameObject> targets = Local.getGame().getObjectsWithinArea(e.getX(), e.getY());
+                if(targets.isEmpty())
                 {
-                    ( (Unit) go ).setDestination( e.getX(), e.getY() );
-                    ( (Unit) go ).setGoal( null );
+                    for(GameObject go : Local.getSelectedObjects())
+                    {
+                        if ( go instanceof Unit )
+                        {
+                            ( (Unit) go ).setDestination( e.getX(), e.getY() );
+                            ( (Unit) go ).setGoal( (GameObject) null );
+                        }
+                    }
                 }
+                else
+                {
+                    for(GameObject go : Local.getSelectedObjects())
+                    {
+                        if ( go instanceof Unit )
+                        {
+                            ( (Unit) go ).setGoal( targets );
+                        }
+                    }
+                }
+                    
             }
         }
     }

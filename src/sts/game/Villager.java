@@ -2,6 +2,8 @@ package sts.game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.HashSet;
+import java.util.Set;
 import sts.Local;
 import sts.gui.ImageHandler;
 
@@ -34,7 +36,7 @@ public class Villager extends Unit
     {
         super.act();//moves if necessary
 
-        if ( goal == null )
+        if ( goal == null && destination == null )//nowhere to go and nothing to do
         {
             idleBehavior();
             return;
@@ -208,5 +210,58 @@ public class Villager extends Unit
     public String getName()
     {
         return "Villager with " + gold + " gold";
+    }
+
+    @Override
+    public void setGoal(Set<GameObject> possible) {
+        if(possible==null || possible.isEmpty() )
+        {
+            setGoal((GameObject)null);
+            setDestination(null);
+            return;//don't bother...
+        }   
+        Set<GameObject> goldMines = new HashSet<GameObject>();
+        Set<GameObject> constructionSites = new HashSet<GameObject>();
+        Set<GameObject> repair = new HashSet<GameObject>();
+        for(GameObject go : possible)
+        {
+            if(go instanceof GoldPile)
+            {
+                goldMines.add(go);
+                continue;
+            }
+            if(go instanceof ProductionBuilding)
+            {
+                if(!((ProductionBuilding)go).isBuilt())
+                {
+                    constructionSites.add(go);
+                    continue;
+                }
+                if(((ProductionBuilding)go).needsRepair())
+                {
+                    repair.add(go);
+                    continue;
+                }
+            }
+        }
+        if(goldMines.size()>0)
+        {
+            setGoal(goldMines.iterator().next());
+            setDestination(goal);
+            return;
+        }
+        if(constructionSites.size()>0)
+        {
+            setGoal(constructionSites.iterator().next());
+            setDestination(goal);
+            return;
+        }
+        if(repair.size()>0)
+        {
+            setGoal(repair.iterator().next());
+            setDestination(goal);
+            return;
+        }
+        
     }
 }

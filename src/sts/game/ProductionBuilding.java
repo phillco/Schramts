@@ -22,6 +22,11 @@ public abstract class ProductionBuilding extends GameObject
     {
         return timeToBuild <= 0;
     }
+    
+    public boolean needsRepair()
+    {
+        return isBuilt() && getHealth() < getMaxHealth();
+    }
 
     public void build()
     {

@@ -34,7 +34,7 @@ public class Main
         players.add( dummy );
         players.add( new Player( Color.blue, "Fantasmal" ) );
         players.add( new Player( Color.GREEN, "Third" ) );
-        players.add( new Player( Color.orange, "Forth" ) );
+        players.add( new Player( Color.pink, "Forth" ) );
         players.add( new Player( Color.cyan, "Fifety" ) );
         
 

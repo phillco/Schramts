@@ -4,6 +4,8 @@
  */
 package sts.game;
 
+import java.util.Set;
+
 /**
  *
  * @author AK90454
@@ -71,6 +73,8 @@ public abstract class Unit extends GameObject
         //[PC] destination= go;
         arrived=false;
     }
+    
+    public abstract void setGoal( Set<GameObject> possible );
 
     /**
      * Returns how fast this object can travel.  Abstract so that each type of unit

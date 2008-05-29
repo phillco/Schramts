@@ -136,13 +136,15 @@ public class ImageHandler
         BufferedImage ret = new BufferedImage( img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB );
 
         //figure out what color you want
-        float targetHue;
+        float targetHue, targetSat;
         {//I want these variables to go out of scope soon so I can reuse names
 
             int red = target.getRed();
             int green = target.getGreen();
             int blue = target.getBlue();
-            targetHue = Color.RGBtoHSB( red, green, blue, new float[3] )[0];
+            float[] dummy = {0f,0f,0f};
+            targetHue = Color.RGBtoHSB( red, green, blue, dummy )[0];
+            targetSat = dummy[1];
         }
 
         //loop through pixels
@@ -172,7 +174,7 @@ public class ImageHandler
                 else if ( red == 255 && red == green && green == blue )//don't change white
                     rgb = 0;
                 else
-                    rgb = ( Color.HSBtoRGB( targetHue, 1f, hsb[2] ) );
+                    rgb = ( Color.HSBtoRGB( targetHue, targetSat, hsb[2] ) );
                 ret.setRGB( x, y, rgb );
 
             }
