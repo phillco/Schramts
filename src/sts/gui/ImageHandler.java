@@ -23,7 +23,7 @@ public class ImageHandler
     /**
      * External images that game objects use.
      */
-    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite;
+    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite,  rallyPoint;
 
     /**
      * The images that have been hue shifted already, so that they aren't recalculated.
@@ -47,6 +47,8 @@ public class ImageHandler
             infantry = ImageIO.read( new File( "res/warrior.gif" ) );
             gold = ImageIO.read( new File( "res/gold.gif" ) );
             constructionSite = ImageIO.read( new File( "res/half_built_building.gif" ) );
+            rallyPoint = ImageIO.read( new File( "res/rallyPoint.gif" ) );
+
         }
         catch ( IOException iOException )
         {
@@ -83,6 +85,11 @@ public class ImageHandler
     public static void drawInfantry( Graphics2D g, int x, int y, Color c )
     {
         drawImage( hueShift( infantry, c ), g, x, y );
+    }
+
+    public static void drawRalleyPoint( Graphics2D g, int x, int y, Color c )
+    {
+        drawImage( hueShift( rallyPoint, c ), g, x, y );
     }
 
     public static void drawGold( Graphics2D g, int x, int y )
@@ -124,8 +131,6 @@ public class ImageHandler
     {
         return barracksButton;
     }
-    
-    
 
     /**
      * Takes an image and shifts its hue, preserving the saturation and brightness.
@@ -141,7 +146,7 @@ public class ImageHandler
         BufferedImage ret = new BufferedImage( img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB );
 
         //figure out what color you want
-        float targetHue,  targetSat;
+        float targetHue, targetSat;
         {//I want these variables to go out of scope soon so I can reuse names
 
             int red = target.getRed();

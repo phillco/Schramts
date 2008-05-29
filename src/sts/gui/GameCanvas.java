@@ -197,6 +197,13 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                             ( (Unit) go ).setDestination( e.getX(), e.getY() );
                             ( (Unit) go ).setGoal( (GameObject) null );
                         }
+                        
+                        else if ( go instanceof ProductionBuilding && go.getOwningPlayer() == Local.getLocalPlayer() )
+                        {
+                            ( (ProductionBuilding) go ).setRalleyPoint( e.getX(), e.getY());
+                        }
+                        
+                        
                     }
                 }
                 else

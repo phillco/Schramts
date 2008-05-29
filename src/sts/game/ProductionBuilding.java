@@ -1,5 +1,6 @@
 package sts.game;
 
+import java.awt.Graphics2D;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -11,6 +12,8 @@ public abstract class ProductionBuilding extends GameObject
     protected ConcurrentLinkedQueue<ItemInQueue> productionQueue = new ConcurrentLinkedQueue<ItemInQueue>();
 
     protected int timeToBuild,  healthRate;
+
+    protected RallyPoint rallyPoint = null;
 
     public ProductionBuilding( int x, int y, int timeToBuild, int health, Player player )
     {
@@ -50,6 +53,7 @@ public abstract class ProductionBuilding extends GameObject
         {
             changeHealth( 1 );
             if ( getHealth() % 10 == 0 )//nothing in this world is free
+
                 getOwningPlayer().addGold( -1 );
         }
     }
@@ -73,6 +77,22 @@ public abstract class ProductionBuilding extends GameObject
         getOwningPlayer().addGold( -c.getCost() );
     }
 
+    public void setRalleyPoint( int x, int y )
+    {
+        rallyPoint = new RallyPoint( x, y, getOwningPlayer() );
+    }
+    
+    public void createAndAssignUnit( Unit u )
+    {
+        if ( rallyPoint != null )
+        {
+            u.setGoal( rallyPoint );
+            u.setDestination( rallyPoint );
+        }
+        
+        getOwningPlayer().giveObject( u );
+    }
+
     @Override
     public void act()
     {
@@ -92,6 +112,13 @@ public abstract class ProductionBuilding extends GameObject
     public int queueLength()
     {
         return this.productionQueue.size();
+    }
+
+    @Override
+    public void draw( Graphics2D g )
+    {
+        if ( rallyPoint != null )
+            rallyPoint.draw( g );
     }
 
     protected abstract void doCreation( Command type );

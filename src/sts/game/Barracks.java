@@ -20,21 +20,22 @@ public class Barracks extends ProductionBuilding
         super( x, y, 300, 500, player );
 
     }
-    
+
     @Override
     public void build()
     {
         super.build();
-        if(isBuilt())
+        if ( isBuilt() )
         {
             giveableCommands = new Command[1];
-            giveableCommands[0] = new Command( "Create infantry", 50, 150, ImageHandler.getInfantry());
+            giveableCommands[0] = new Command( "Create infantry", 50, 150, ImageHandler.getInfantry() );
         }
     }
 
     @Override
     public void draw( Graphics2D g )
     {
+        super.draw( g );
         Color c = getOwningPlayer().getColor();
 
         if ( Local.getSelectedObjects().contains( this ) )
@@ -55,9 +56,7 @@ public class Barracks extends ProductionBuilding
     protected void doCreation( Command type )
     {
         if ( type == giveableCommands[0] )
-        {
-            getOwningPlayer().giveObject( new Infantry( getX(), getY() - 10, 0, 0, getOwningPlayer() ) );
-        }
+            createAndAssignUnit( new Infantry( getX(), getY() - 10, 0, 0, getOwningPlayer() ) );
     }
 
     @Override

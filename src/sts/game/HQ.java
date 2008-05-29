@@ -28,6 +28,7 @@ public class HQ extends ProductionBuilding
     @Override
     public void draw( Graphics2D g )
     {
+        super.draw( g );
         Color c = getOwningPlayer().getColor();
 
         if ( Local.getSelectedObjects().contains( this ) )
@@ -40,7 +41,7 @@ public class HQ extends ProductionBuilding
     protected void doCreation( Command type )
     {
         if ( type == giveableCommands[0] )
-            getOwningPlayer().giveObject( new Villager( getX() + 30, getY() + 54, getOwningPlayer() ) );
+            createAndAssignUnit( new Villager( getX() + 30, getY() + 54, getOwningPlayer() ) );
     }
 
     @Override
