@@ -63,7 +63,7 @@ public class Infantry extends Unit
             return;
 
         getOwningPlayer().giveObject( new Bullet( getX(), getY(), this, other ));
-        other.changeHealth( -damage );
+        other.changeHealth( -damage, this );
     }
 
     @Override

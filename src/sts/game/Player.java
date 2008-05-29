@@ -101,4 +101,11 @@ public class Player
     {
         return getName();
     }
+
+    public AI getHelper()
+    {
+        return helper;
+    }
+    
+    
 }
