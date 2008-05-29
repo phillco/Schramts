@@ -149,6 +149,20 @@ public class Player
     }
 
     /**
+     * Returns a set of all of this player's barracks. Could be an empty set, but not null.
+     */
+    public Set<Barracks> getBarracks()
+    {
+        Set<Barracks> theSet = new HashSet<Barracks>();
+
+        for ( GameObject go : ownedObjects )
+            if ( go instanceof Barracks )
+                theSet.add( (Barracks) go );
+
+        return theSet;
+    }
+
+    /**
      * Returns a set of all of this player's gold piles. Could be an empty set, but not null.
      * (Useful only for Nature).
      * @see Game#nature
