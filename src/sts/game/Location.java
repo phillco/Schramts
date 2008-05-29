@@ -83,4 +83,9 @@ public class Location implements Locatable
     {
         return "("+x+", "+y+")";
     }
+    
+    public Location translate(int x, int y)
+    {
+        return new Location(this.x+x, this.y+y);
+    }
 }

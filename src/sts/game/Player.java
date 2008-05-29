@@ -133,7 +133,7 @@ public class Player
 
         return theSet;
     }
-
+    
     /**
      * Returns a set of all of this player's infantry. Could be an empty set, but not null.
      */
