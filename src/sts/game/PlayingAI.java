@@ -2,25 +2,24 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package sts.game;
 
 /**
  *
  * @author Owner
  */
-public class PlayingAI extends AI {
-    
+public class PlayingAI extends AI
+{
     private Player owner;
-    
-    public PlayingAI(Player owner)
+
+    public PlayingAI( Player owner )
     {
         this.owner = owner;
     }
 
-    public void act() 
+    public void act()
     {
-        if(villagerCount()<10)
+        if ( villagerCount() < 10 )
         {
             assignVillagersToGold();
             purchaseVillagers();
@@ -30,13 +29,13 @@ public class PlayingAI extends AI {
 
     private void assignVillagersToGold()
     {
-        for(GameObject go : owner.getOwnedObjects())
+        for ( GameObject go : owner.getOwnedObjects() )
         {
-            if(go instanceof Villager)
+            if ( go instanceof Villager )
             {
-                if(! ( ((Unit)go).getGoal() instanceof GoldPile ) )
+                if ( !( ( (Unit) go ).getGoal() instanceof GoldPile ) )
                 {
-                    ((Villager)go).findNewGold();
+                    ( (Villager) go ).findNewGold();
                 }
             }
         }
@@ -44,27 +43,27 @@ public class PlayingAI extends AI {
 
     private void purchaseVillagers()
     {
-        while(owner.getGoldAmount()>=100)
+        if(owner.getGoldAmount()<100)
+            return;
+        HQ hq = null;
+        for ( GameObject go : owner.getOwnedObjects() )
         {
-            HQ hq = null;
-            for(GameObject go : owner.getOwnedObjects())
+            if ( go instanceof HQ )
             {
-                if(go instanceof HQ)
-                {
-                    hq = (HQ)go;
-                    break;
-                }
+                hq = (HQ) go;
+                break;
             }
-            hq.giveCommand(hq.getGiveableCommands()[0]);
         }
+        hq.giveCommand( hq.getGiveableCommands()[0] );
+
     }
 
     private int villagerCount()
     {
         int count = 0;
-        for(GameObject go : owner.getOwnedObjects() )
+        for ( GameObject go : owner.getOwnedObjects() )
         {
-            if(go instanceof Villager)
+            if ( go instanceof Villager )
                 ++count;
         }
         return count;
