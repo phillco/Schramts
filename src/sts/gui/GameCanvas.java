@@ -38,6 +38,8 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     private Location box1 = null,  box2 = null;
 
+    private int youAreHereTimer = 90;
+
     public GameCanvas()
     {
         setSize( Local.getGame().getLevelWidth(), Local.getGame().getLevelHeight() + 100 );
@@ -80,6 +82,14 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             g.drawRect( Math.min( box1.getX(), box2.getX() ), Math.min( box1.getY(), box2.getY() ),
                         Math.abs( box2.getX() - box1.getX() ), Math.abs( box2.getY() - box1.getY() ) );
         }
+
+        if ( --youAreHereTimer > 0 )
+        {
+            g.setColor( Local.getLocalPlayer().getColor() );
+            g.setFont( bigHudFont );
+            ExtendedGraphics.drawText( g, "You are here!", Local.getLocalPlayer().getHQ().getX(), Local.getLocalPlayer().getHQ().getY(), this );
+        }
+
         // Draw HUD.
         if ( null != Local.getLocalPlayer() )
         {
@@ -104,7 +114,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
 
 
-                if ( go.getOwningPlayer() == Local.getLocalPlayer() && !(go instanceof ProductionBuilding && !((ProductionBuilding) go).isBuilt()))
+                if ( go.getOwningPlayer() == Local.getLocalPlayer() && !( go instanceof ProductionBuilding && !( (ProductionBuilding) go ).isBuilt() ) )
                 {
                     // Draw command buttons.
                     int buttonIndex = 0;

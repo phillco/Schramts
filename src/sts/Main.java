@@ -6,11 +6,14 @@ package sts;
 
 import java.awt.Color;
 import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import sts.game.Game;
 import sts.game.InertAI;
 import sts.game.Player;
 import sts.gui.ImageHandler;
+import sts.gui.MainForm;
 
 /**
  *
@@ -28,19 +31,49 @@ public class Main
      */
     public static void main( String[] args )
     {
-        Player dummy = new Player( Color.red, "Bob", new InertAI() );
         ImageHandler.init();
+        // Quick start!
+        for ( String arg : args )
+        {
+            if ( arg.equalsIgnoreCase( "-quickSetup" ) )
+            {
+                Player defaultPlayer = new Player( Color.red, "You", new InertAI() );
+                HashSet<Player> players = new HashSet<Player>();
+                players.add( defaultPlayer );
+                players.add( new Player( Color.blue, "Fantasmal" ) );
+                players.add( new Player( Color.green, "Third" ) );
+                players.add( new Player( Color.pink, "Forth" ) );
 
-        HashSet<Player> players = new HashSet<Player>();
-        players.add( dummy );
-        players.add( new Player( Color.blue, "Fantasmal" ) );
-        players.add( new Player( Color.GREEN, "Third" ) );
-        players.add( new Player( Color.pink, "Forth" ) );
-        players.add( new Player( Color.cyan, "Fifety" ) );
-        
+                startGame( players, defaultPlayer );
+                return;
+            }
+        }
+
+        // Make swing dialogs like the local operating system.
+        try
+        {
+            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+        }
+        catch ( Exception ex )
+        {
+        }
+        new MainForm();
+
+    }
+
+    public static void startGame( Set<Player> players, Player defaultPlayer )
+    {
+//
+//        HashSet<Player> players = new HashSet<Player>();
+//        players.add( dummy );
+//        players.add( new Player( Color.blue, "Fantasmal" ) );
+//        players.add( new Player( Color.GREEN, "Third" ) );
+//        players.add( new Player( Color.pink, "Forth" ) );
+//        players.add( new Player( Color.cyan, "Fifety" ) );
 
 
-        Local.setUp( new Game( players ), dummy );
+
+        Local.setUp( new Game( players ), defaultPlayer );
     }
 
     public static void quit()

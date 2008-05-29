@@ -1,5 +1,6 @@
 package sts.gui;
 
+import java.awt.Canvas;
 import java.awt.Graphics2D;
 
 /**
@@ -18,6 +19,20 @@ public class ExtendedGraphics
     {
         TOP, MIDDLE, BOTTOM;
 
+    }
+
+    public static void drawText( Graphics2D g, String text, int x, int y, Canvas boundary )
+    {
+        HorizontalAlign ha = HorizontalAlign.LEFT;
+
+        if ( x + g.getFont().getStringBounds( text, g.getFontRenderContext() ).getWidth() > boundary.getWidth() )
+            ha = HorizontalAlign.CENTER;
+
+        if ( g.getFont().getStringBounds( text, g.getFontRenderContext() ).getWidth() / 2 > boundary.getWidth() &&
+                ( x + g.getFont().getStringBounds( text, g.getFontRenderContext() ).getWidth() / 2 - boundary.getWidth() > g.getFont().getStringBounds( text, g.getFontRenderContext() ).getWidth() / 2 - x ) )
+            ha = HorizontalAlign.RIGHT;
+
+        drawText( g, text, x, y, HorizontalAlign.LEFT, VerticleAlign.TOP );
     }
 
     public static void drawText( Graphics2D g, String text, int x, int y, HorizontalAlign horizontalAlign, VerticleAlign verticalAlign )
