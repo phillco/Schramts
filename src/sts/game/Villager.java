@@ -143,10 +143,11 @@ public class Villager extends Unit
     @Override
     public void giveCommand( Command c )
     {
-        if(getOwningPlayer().getGoldAmount()<c.getCost())
+        if ( getOwningPlayer().getGoldAmount() < c.getCost() )
             return;//can't afford
+
         getOwningPlayer().giveObject( new Barracks( getX(), getY() - 30, getOwningPlayer() ) );
-        getOwningPlayer().addGold(-c.getCost());
+        getOwningPlayer().addGold( -c.getCost() );
     }
 
     private GameObject getNearestDropoff()
@@ -195,9 +196,9 @@ public class Villager extends Unit
     }
 
     @Override
-    public boolean isClickContained( int x, int y )
+    public boolean isClickContained( int x, int y, int width, int height )
     {
-        return isClickContainedInRectangle( this, x, y, 8, 13 );
+        return isClickContainedInRectangle( this, x, y, 8 + width, 13 + height );
     }
 
     @Override
@@ -216,55 +217,57 @@ public class Villager extends Unit
     }
 
     @Override
-    public void setGoal(Set<GameObject> possible) {
-        if(possible==null || possible.isEmpty() )
+    public void setGoal( Set<GameObject> possible )
+    {
+        if ( possible == null || possible.isEmpty() )
         {
-            setGoal((GameObject)null);
-            setDestination(null);
+            setGoal( (GameObject) null );
+            setDestination( null );
             return;//don't bother...
-        }   
+
+        }
         Set<GameObject> goldMines = new HashSet<GameObject>();
         Set<GameObject> constructionSites = new HashSet<GameObject>();
         Set<GameObject> repair = new HashSet<GameObject>();
-        for(GameObject go : possible)
+        for ( GameObject go : possible )
         {
-            if(go instanceof GoldPile)
+            if ( go instanceof GoldPile )
             {
-                goldMines.add(go);
+                goldMines.add( go );
                 continue;
             }
-            if(go instanceof ProductionBuilding)
+            if ( go instanceof ProductionBuilding )
             {
-                if(!((ProductionBuilding)go).isBuilt())
+                if ( !( (ProductionBuilding) go ).isBuilt() )
                 {
-                    constructionSites.add(go);
+                    constructionSites.add( go );
                     continue;
                 }
-                if(((ProductionBuilding)go).needsRepair())
+                if ( ( (ProductionBuilding) go ).needsRepair() )
                 {
-                    repair.add(go);
+                    repair.add( go );
                     continue;
                 }
             }
         }
-        if(goldMines.size()>0)
+        if ( goldMines.size() > 0 )
         {
-            setGoal(goldMines.iterator().next());
-            setDestination(goal);
+            setGoal( goldMines.iterator().next() );
+            setDestination( goal );
             return;
         }
-        if(constructionSites.size()>0)
+        if ( constructionSites.size() > 0 )
         {
-            setGoal(constructionSites.iterator().next());
-            setDestination(goal);
+            setGoal( constructionSites.iterator().next() );
+            setDestination( goal );
             return;
         }
-        if(repair.size()>0)
+        if ( repair.size() > 0 )
         {
-            setGoal(repair.iterator().next());
-            setDestination(goal);
+            setGoal( repair.iterator().next() );
+            setDestination( goal );
             return;
         }
-        
+
     }
 }

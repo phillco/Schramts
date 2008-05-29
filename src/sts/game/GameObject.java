@@ -131,7 +131,7 @@ public abstract class GameObject implements Locatable
         return new Location( getX(), getY() );
     }
 
-    public boolean isClickContained( int x, int y )
+    public boolean isClickContained( int x, int y, int width, int height )
     {
         return false;
     }

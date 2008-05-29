@@ -42,9 +42,9 @@ public class HQ extends ProductionBuilding
     }
 
     @Override
-    public boolean isClickContained( int x, int y )
+    public boolean isClickContained( int x, int y, int width, int height )
     {
-        return isClickContainedInRectangle( this, x, y, 64, 64 );
+        return isClickContainedInRectangle( this, x, y, 64 + width, 64 + height);
     }
 
     @Override

@@ -20,6 +20,7 @@ import sts.game.Command;
 import sts.game.GameObject;
 import sts.game.ProductionBuilding;
 import sts.game.Unit;
+import sts.game.Location;
 
 /**
  * The hackiness of this class compares favorably with the national debt.
@@ -34,6 +35,8 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
     private GradientPaint hudGradient = new GradientPaint( 0, 0, new Color( 250, 250, 250 ), 400, 100, new Color( 210, 210, 225 ), true );
 
     private int selectedButton = -1;
+
+    private Location box1 = null,  box2 = null;
 
     public GameCanvas()
     {
@@ -71,6 +74,12 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         g.setColor( Color.lightGray );
         g.drawRect( x, y, 450, 100 );
 
+        if ( box1 != null && box2 != null )
+        {
+            g.setColor( Local.getLocalPlayer().getColor() );
+            g.drawRect( Math.min( box1.getX(), box2.getX() ), Math.min( box1.getY(), box2.getY() ),
+                        Math.abs( box2.getX() - box1.getX() ), Math.abs( box2.getY() - box1.getY() ) );
+        }
         // Draw HUD.
         if ( null != Local.getLocalPlayer() )
         {
@@ -86,7 +95,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             if ( Local.getSelectedObjects().size() > 0 )
             {
                 GameObject go = Local.getSelectedObject();
-                ExtendedGraphics.drawText( g, go.toString(), 430, getHeight() - 70, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.TOP );
+                ExtendedGraphics.drawText( g, go.getOwningPlayer().getName() + "'s " + go.getName(), 430, getHeight() - 70, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.TOP );
 
                 if ( go.getOwningPlayer() == Local.getLocalPlayer() )
                 {
@@ -99,6 +108,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                         g.fillRect( x, y + 40, 45, 45 );
                         g.setColor( Color.darkGray );
                         g.drawRect( x, y + 40, 45, 45 );
+                        ImageHandler.drawImage( g, x + 9, y + 49, go.getOwningPlayer().getColor(), c.getQueuedImage() );
                         buttonIndex++;
                     }
 
@@ -140,13 +150,16 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         if ( selectedButton == -1 )
         {
             if ( e.getButton() == MouseEvent.BUTTON1 )
-                Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY() ) );
-            else //if ( e.getButton() == MouseEvent.BUTTON2 )
             {
-                Set<GameObject> targets = Local.getGame().getObjectsWithinArea(e.getX(), e.getY());
-                if(targets.isEmpty())
+                Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY(), 8, 8 ) );
+                box1 = new Location( e.getX(), e.getY() );
+            }
+            else
+            {
+                Set<GameObject> targets = Local.getGame().getObjectsWithinArea( e.getX(), e.getY(), 8, 8 );
+                if ( targets.isEmpty() )
                 {
-                    for(GameObject go : Local.getSelectedObjects())
+                    for ( GameObject go : Local.getSelectedObjects() )
                     {
                         if ( go instanceof Unit )
                         {
@@ -157,25 +170,27 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                 }
                 else
                 {
-                    for(GameObject go : Local.getSelectedObjects())
+                    for ( GameObject go : Local.getSelectedObjects() )
                     {
                         if ( go instanceof Unit )
-                        {
                             ( (Unit) go ).setGoal( targets );
-                        }
                     }
                 }
-                    
+
             }
         }
     }
 
     public void mouseReleased( MouseEvent e )
     {
+        // Button pushed.
         if ( selectedButton != -1 && Local.getSelectedObjects().size() > 0 && Local.getSelectedObject().getGiveableCommands().length > selectedButton )
-        {
             Local.getSelectedObject().giveCommand( Local.getSelectedObject().getGiveableCommands()[selectedButton] );
-        }
+
+        // Box dragged!
+        if ( box1 != null && box2 != null )
+            Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( Math.max( box1.getX(), box2.getX() ), Math.max( box1.getY(), box2.getY() ), Math.abs( box2.getX() - box1.getX() ), Math.abs( box2.getY() - box1.getY() ) ) );
+        box1 = box2 = null;
     }
 
     public void mouseEntered( MouseEvent e )
@@ -188,6 +203,8 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     public void mouseDragged( MouseEvent e )
     {
+        // Dragging a box.
+        box2 = new Location( e.getX(), e.getY() );
     }
 
     public void mouseMoved( MouseEvent e )
@@ -200,5 +217,6 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             selectedButton = ( 440 - e.getX() ) / 53;
             return;
         }
+
     }
 }

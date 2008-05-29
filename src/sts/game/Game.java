@@ -4,7 +4,9 @@ import java.util.Set;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import sts.Local;
 import sts.Main;
 
 /**
@@ -38,15 +40,16 @@ public class Game
 
     public void act()
     {
-        for ( Player p : players ){
-            
-        p.act();
-        
-        for(GameObject go: p.getOwnedObjects())
+        for ( Player p : players )
         {
-            if(go.getName().equals("HQ") && go.getHealth() <= 0)
-                   lose(p); 
-        }
+
+            p.act();
+
+            for ( GameObject go : p.getOwnedObjects() )
+            {
+                if ( go.getName().equals( "HQ" ) && go.getHealth() <= 0 )
+                    lose( p );
+            }
         }
     }
 
@@ -60,22 +63,47 @@ public class Game
     /**
      * Returns a set of objects whose bounding box contains the point.
      */
-    public Set<GameObject> getObjectsWithinArea( int x, int y )
+    public Set<GameObject> getObjectsWithinArea( int x, int y, int width, int height )
     {
+        boolean hasLocalPlayer = false;
         Set<GameObject> objects = new HashSet<GameObject>();
         for ( Player p : players )
         {
             for ( GameObject go : p.getOwnedObjects() )
             {
-                if ( go.isClickContained( x, y ) )
+                if ( go.isClickContained( x, y, width, height ) )
+                {
+                    // If this belongs to us, mark it...
+                    if ( p == Local.getLocalPlayer() )
+                        hasLocalPlayer = true;
+                    // ...and skip all other players.
+                    else if ( hasLocalPlayer )
+                        continue;
+
                     objects.add( go );
+                }
             }
         }
 
-        for ( GameObject go : nature.getOwnedObjects() )
+        // Remove other players' units if any of ours are selected.
+        if ( hasLocalPlayer )
         {
-            if ( go.isClickContained( x, y ) )
-                objects.add( go );
+            for ( Iterator<GameObject> itr = objects.iterator(); itr.hasNext();)
+            {
+                GameObject go = itr.next();
+                if ( go.getOwningPlayer() != Local.getLocalPlayer() )
+                    itr.remove();
+            }
+        }
+
+        // Add nature units if nothing else.
+        if ( objects.isEmpty() )
+        {
+            for ( GameObject go : nature.getOwnedObjects() )
+            {
+                if ( go.isClickContained( x, y, width, height ) )
+                    objects.add( go );
+            }
         }
 
         return objects;
@@ -89,9 +117,9 @@ public class Game
     void lose( Player loser )
     {
         System.out.println( loser.getName() + " loses!" );
-        for(GameObject go: loser.getOwnedObjects())
+        for ( GameObject go : loser.getOwnedObjects() )
         {
-            loser.removeObject(go);
+            loser.removeObject( go );
         }
         for ( Player p : players )
         {

@@ -59,7 +59,7 @@ public class Infantry extends Unit
 
     public void attack( GameObject other )
     {
-        if(other==null)
+        if ( other == null )
             return;
         other.changeHealth( -damage );
     }
@@ -122,8 +122,8 @@ public class Infantry extends Unit
                     inRange.add( go );
             }
         }
-        attack( getBestTarget(inRange) );
-        
+        attack( getBestTarget( inRange ) );
+
         switch ( inRange.size() )
         {
             case 0://nobody in range
@@ -165,22 +165,24 @@ public class Infantry extends Unit
         attack( inRange.get( 0 ) );
         return;
     }
-    
-    public GameObject getBestTarget(ArrayList<GameObject> possible)
+
+    public GameObject getBestTarget( ArrayList<GameObject> possible )
     {
         switch ( possible.size() )
         {
             case 0://nobody to shoot
+
                 return null;
             case 1://only one choice, avoid the mess below
-                return possible.get( 0 ) ;
+
+                return possible.get( 0 );
         }
         //shoot at infantry first; they shoot back
         for ( GameObject go : possible )
         {
             if ( go instanceof Infantry )
             {
-                return go ;
+                return go;
             }
         }
         //shoot at villagers second, they run away
@@ -188,7 +190,7 @@ public class Infantry extends Unit
         {
             if ( go instanceof Villager )
             {
-                return go ;
+                return go;
             }
         }
         //shoot at production buildings third.  This should be all that's left
@@ -202,30 +204,31 @@ public class Infantry extends Unit
         //shoot at anything else, just in case you missed something
         return possible.get( 0 );
     }
-    
 
     @Override
-    public boolean isClickContained( int x, int y )
+    public boolean isClickContained( int x, int y, int width, int height )
     {
-        return isClickContainedInRectangle( this, x, y, 8, 13 );
+        return isClickContainedInRectangle( this, x, y, 8 + width, 13 + height );
     }
 
     @Override
-    public void setGoal(Set<GameObject> possible) {
-        if(possible==null || possible.isEmpty())
+    public void setGoal( Set<GameObject> possible )
+    {
+        if ( possible == null || possible.isEmpty() )
         {
-            setGoal((GameObject)null);
-            setDestination(null);
+            setGoal( (GameObject) null );
+            setDestination( null );
             return;//don't bother...
+
         }
-        setGoal(getBestTarget( new ArrayList<GameObject>(possible)));
-        if(goal!=null)//we found a target
+        setGoal( getBestTarget( new ArrayList<GameObject>( possible ) ) );
+        if ( goal != null )//we found a target
         {
-            setDestination(goal);
+            setDestination( goal );
             return;
         }
         //we only had friendly units, choose one to guard.
-        setGoal(possible.iterator().next());
-        setDestination(goal);
+        setGoal( possible.iterator().next() );
+        setDestination( goal );
     }
 }

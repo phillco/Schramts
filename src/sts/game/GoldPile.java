@@ -48,8 +48,8 @@ public class GoldPile extends GameObject
     }
     
     @Override
-    public boolean isClickContained( int x, int y )
+    public boolean isClickContained( int x, int y, int width, int height )
     {
-        return isClickContainedInRectangle( this, x, y, 8, 8 );
+        return isClickContainedInRectangle( this, x, y, 8 + width, 8 + height );
     }        
 }
