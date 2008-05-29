@@ -27,7 +27,7 @@ public class Villager extends Unit
         super( x, y, 0, 0, 100, owner );
 
         giveableCommands = new Command[1];
-        giveableCommands[0] = new Command( "Build barracks", 90, ImageHandler.getBarracks() );
+        giveableCommands[0] = new Command( "Build barracks", 90, 750, ImageHandler.getBarracks() );
         gold = 0;
     }
 
@@ -143,7 +143,10 @@ public class Villager extends Unit
     @Override
     public void giveCommand( Command c )
     {
+        if(getOwningPlayer().getGoldAmount()<c.getCost())
+            return;//can't afford
         getOwningPlayer().giveObject( new Barracks( getX(), getY() - 30, getOwningPlayer() ) );
+        getOwningPlayer().addGold(-c.getCost());
     }
 
     private GameObject getNearestDropoff()

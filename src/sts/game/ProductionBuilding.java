@@ -55,7 +55,10 @@ public abstract class ProductionBuilding extends GameObject
     @Override
     public void giveCommand( Command c )
     {
+        if(getOwningPlayer().getGoldAmount()<c.getCost())
+            return;//can't afford.
         productionQueue.add( new ItemInQueue( c, c.getTimeToMake() ) );
+        getOwningPlayer().addGold(- c.getCost() );
     }        
 
     @Override

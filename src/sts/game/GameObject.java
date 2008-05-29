@@ -1,7 +1,6 @@
 package sts.game;
 
 import java.awt.Graphics2D;
-import sts.game.ProductionBuilding.ItemInQueue;
 
 /**
  *
