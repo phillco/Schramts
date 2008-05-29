@@ -4,6 +4,9 @@
  */
 package sts.game;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import sts.Local;
 import java.util.Stack;
 
@@ -30,16 +33,20 @@ public class PlayingAI extends AI
 
     private Stack<GameObject> enemies;//everyone we want to kill, because they attacked us first.
     
+    private Player targetPlayer;
+    
     public PlayingAI( Player owner )
     {
         this.owner = owner;
         waiting = state = earlyEconomic;
         enemies = new Stack<GameObject>();
+        targetPlayer= null;
     }
 
     public void act()
     {
         checkState();
+        updateEnemies();
         if ( villagerCount() < state.villagerThreshhold )
             purchaseVillagers();
         else if( villagerCount() - state.villagerThreshhold > 2 )
@@ -98,7 +105,28 @@ public class PlayingAI extends AI
 
     private void assignVillagersToRepair()
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        Set<ProductionBuilding> needsRepair = new HashSet<ProductionBuilding>();
+        for(Barracks b : owner.getBarracks())
+        {
+            if(b.needsRepair())
+                needsRepair.add(b);
+        }
+        if(owner.getHQ().needsRepair())
+            needsRepair.add(owner.getHQ());
+        if(needsRepair.isEmpty())
+        {
+            for(Villager v : owner.getVillagers())
+                v.findNewGold();
+        }
+        int count = 0;
+        ArrayList<ProductionBuilding> linearAccess = new ArrayList<ProductionBuilding>(needsRepair);
+        for(Villager v: owner.getVillagers())
+        {
+            v.setGoal(linearAccess.get(count));
+            count++;
+            count%=needsRepair.size();
+        }
+       
     }
 
     private void checkState() 
@@ -148,9 +176,39 @@ public class PlayingAI extends AI
         }
     }
 
+    private void chooseTargetPlayer()
+    {
+        ArrayList<Player> possible = new ArrayList<Player>(Local.getGame().getPlayers());
+        possible.remove(owner);
+        targetPlayer = possible.get((int)(Math.random()*possible.size()));
+    }
+
+    private GameObject getBestTarget(Player player)
+    {
+        if(!player.getInfantry().isEmpty())
+            return player.getInfantry().iterator().next();
+        if(!player.getVillagers().isEmpty())
+            return player.getVillagers().iterator().next();
+        if(!player.getBarracks().isEmpty())
+            return player.getBarracks().iterator().next();
+        return player.getHQ();
+    }
+
     private void infantryAttack()
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        if(targetPlayer==null || targetPlayer.hasLost())
+            chooseTargetPlayer();
+        GameObject target = getBestTarget(targetPlayer);
+        if(target==null)
+        {
+            infantryDefend();
+            return;
+        }
+        for(Infantry i : owner.getInfantry())
+        {
+            i.setGoal(target);
+        }
+        
     }
 
     private int infantryCount()
@@ -160,7 +218,24 @@ public class PlayingAI extends AI
 
     private void infantryDefend()
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        if(enemies.isEmpty())
+        {
+            int count=0;
+            for(Infantry i : owner.getInfantry())
+            {
+                if(count%2==0)
+                    i.setGoal(owner.getHQ());
+                else
+                    i.setGoal(owner.getBarracks().iterator().next());
+                count ++;
+            }
+            return;
+        }
+        
+        for(Infantry i : owner.getInfantry())
+        {
+            i.setGoal(enemies.peek());
+        }
     }
 
     private void purchaseInfantry() 
@@ -203,6 +278,11 @@ public class PlayingAI extends AI
         Villager v =owner.getVillagers().iterator().next();
         if(v!=null)
             v.executeCommand(v.giveableCommands[1]);
+    }
+
+    private void updateEnemies() {
+        while(!enemies.isEmpty() && enemies.peek().getHealth()<=0)
+            enemies.pop();
     }
 
     private int villagerCount()

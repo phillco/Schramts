@@ -46,11 +46,8 @@ public class Game
         {
             p.act();
 
-            for ( GameObject go : p.getOwnedObjects() )
-            {
-                if ( go instanceof HQ && go.getHealth() <= 0 )
-                    lose( p );
-            }
+            if(p.getHQ()==null)
+                lose(p);
         }
     }
 
@@ -122,6 +119,7 @@ public class Game
         {
             loser.removeObject( go );
         }
+        loser.lose();
         for ( Player p : players )
         {
             if ( p == loser )

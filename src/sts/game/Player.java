@@ -34,11 +34,17 @@ public class Player
      * All of the objects (villagers, buildings, etc) that belong to this player.
      */
     private ConcurrentLinkedQueue<GameObject> ownedObjects = new ConcurrentLinkedQueue<GameObject>();
+    
+    /**
+     * If this player has lost the game
+     */
+    private boolean lost;
 
     public Player( Color color, String name )
     {
         this.color = color;
         this.name = name;
+        lost = false;
         helper = new PlayingAI( this );
     }
 
@@ -46,6 +52,7 @@ public class Player
     {
         this.color = color;
         this.name = name;
+        lost = false;
         this.helper = helper;
     }
 
@@ -96,6 +103,11 @@ public class Player
     void addGold( int gold )
     {
         goldAmount += gold;
+    }
+    
+    public void lose()
+    {
+        lost = true;
     }
 
     @Override
@@ -176,5 +188,9 @@ public class Player
                 theSet.add( (GoldPile) go );
 
         return theSet;
+    }
+
+    public boolean hasLost() {
+        return lost;
     }
 }
