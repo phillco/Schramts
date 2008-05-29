@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.util.HashSet;
 import javax.swing.JOptionPane;
 import sts.game.Game;
+import sts.game.InertAI;
 import sts.game.Player;
 import sts.gui.ImageHandler;
 
@@ -27,7 +28,7 @@ public class Main
      */
     public static void main( String[] args )
     {
-        Player dummy = new Player( Color.red, "Bob" );
+        Player dummy = new Player( Color.red, "Bob", new InertAI() );
         ImageHandler.init();
 
         HashSet<Player> players = new HashSet<Player>();

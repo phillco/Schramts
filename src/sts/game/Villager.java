@@ -74,7 +74,7 @@ public class Villager extends Unit
 
     }
 
-    private boolean findNewGold()
+    public boolean findNewGold()//start mining
     {
         GameObject goldPile = null;
         for ( GameObject go : Local.getGame().getNature().getOwnedObjects() )

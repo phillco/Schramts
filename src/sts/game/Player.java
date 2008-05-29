@@ -24,6 +24,8 @@ public class Player
      * The player's name.
      */
     private String name;
+    
+    private AI helper;
 
     /**
      * All of the objects (villagers, buildings, etc) that belong to this player.
@@ -32,12 +34,21 @@ public class Player
 
     public Player( Color color, String name )
     {
+        this.color=color;
+        this.name= name;
+        helper = new PlayingAI(this);
+    }
+    
+    public Player( Color color, String name, AI helper)
+    {
         this.color = color;
-        this.name = name;
+        this.name = name;  
+        this.helper = helper;
     }
 
     public void act()
     {
+        helper.act();
         for ( GameObject go : ownedObjects )
             go.act();
     }
@@ -88,8 +99,4 @@ public class Player
     {
         return getName();
     }
-    
-    
-    
-    
 }

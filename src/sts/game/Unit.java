@@ -110,6 +110,10 @@ public abstract class Unit extends GameObject
 
     }
 
+    public GameObject getGoal() {
+        return goal;
+    }
+
     /**
      * Gives <code>this</code> a new velocity, disregarding the old velocity.
      * 
