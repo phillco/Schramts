@@ -170,15 +170,8 @@ public class Infantry extends Unit
 
     public GameObject getBestTarget( ArrayList<GameObject> possible )
     {
-        switch ( possible.size() )
-        {
-            case 0://nobody to shoot
-
-                return null;
-            case 1://only one choice, avoid the mess below
-
-                return possible.get( 0 );
-        }
+        if(possible.isEmpty())
+            return null;//don't bother.
         //shoot at infantry first; they shoot back
         for ( GameObject go : possible )
         {
@@ -203,8 +196,8 @@ public class Infantry extends Unit
                 return go;
             }
         }
-        //shoot at anything else, just in case you missed something
-        return possible.get( 0 );
+        //don't shoot at anything else, otherwise you'd shoot bullets.
+        return null;
     }
 
     @Override

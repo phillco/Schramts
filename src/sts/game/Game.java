@@ -44,7 +44,6 @@ public class Game
     {
         for ( Player p : players )
         {
-
             p.act();
 
             for ( GameObject go : p.getOwnedObjects() )
