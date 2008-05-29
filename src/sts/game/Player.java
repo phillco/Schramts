@@ -3,6 +3,7 @@ package sts.game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import sts.Local;
 
 /**
  *
@@ -67,6 +68,7 @@ public class Player
     public void removeObject(GameObject g)
     {
         ownedObjects.remove(g);
+        Local.getSelectedObjects().remove( g );
     }
 
     public String getName()

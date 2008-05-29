@@ -14,7 +14,7 @@ public class Command
 {
     private String name;
 
-    private int timeToMake, cost;
+    private int timeToMake,  cost;
 
     private BufferedImage queuedImage;
 
@@ -41,7 +41,20 @@ public class Command
         return timeToMake;
     }
 
-    public int getCost() {
+    public int getCost()
+    {
         return cost;
     }
+
+    public void setCost( int cost )
+    {
+        this.cost = cost;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+    
+    
 }

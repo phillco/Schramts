@@ -121,7 +121,9 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
                     // Draw button's tooltip.
                     if ( go != null && selectedButton != -1 && go.getGiveableCommands().length > selectedButton )
-                        ExtendedGraphics.drawText( g, go.getGiveableCommands()[selectedButton].getName(), 350, getHeight() - 1, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.BOTTOM );
+                    {
+                        ExtendedGraphics.drawText( g, go.getGiveableCommands()[selectedButton].getName() + ( Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() > 0 ? " (costs " : " (gives " ) + Math.abs( Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost()) + " gold)", 350, getHeight() - 1, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.BOTTOM );
+                    }
 
                     // Draw queued units.
                     if ( go instanceof ProductionBuilding )
@@ -137,9 +139,9 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                                 0f, 0f, 0f
                             };
                             targetHue = Color.RGBtoHSB( go.getOwningPlayer().getColor().getRed(), go.getOwningPlayer().getColor().getGreen(), go.getOwningPlayer().getColor().getBlue(), dummy )[0];
-                            targetSat = 1 - ((float)i.timeLeft) / i.type.getTimeToMake();
+                            targetSat = 1 - ( (float) i.timeLeft ) / i.type.getTimeToMake();
 
-                            Color c = Color.getHSBColor( targetHue, targetSat, ( ((float)i.timeLeft) / i.type.getTimeToMake() ) );
+                            Color c = Color.getHSBColor( targetHue, targetSat, ( ( (float) i.timeLeft ) / i.type.getTimeToMake() ) );
 
                             ImageHandler.drawImage( g, x, y + 30, c, i.type.getQueuedImage() );
                             x -= 15;
@@ -204,7 +206,10 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
     {
         // Button pushed.
         if ( selectedButton != -1 && Local.getSelectedObjects().size() > 0 && Local.getSelectedObject().getGiveableCommands().length > selectedButton )
-            Local.getSelectedObject().giveCommand( Local.getSelectedObject().getGiveableCommands()[selectedButton] );
+        {
+       //     if ( Local.getLocalPlayer().getGoldAmount() >= Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() )
+                Local.getSelectedObject().giveCommand( Local.getSelectedObject().getGiveableCommands()[selectedButton] );
+        }
 
         // Box dragged!
         if ( box1 != null && box2 != null )

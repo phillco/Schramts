@@ -25,6 +25,8 @@ public class Game
 
     private static Game instance;
 
+    private int villagersSoldToSlavery = 0;
+
     public static Game getInstance()
     {
         return instance;
@@ -179,6 +181,21 @@ public class Game
                 nature.giveObject( new GoldPile( xCoord, yCoord, nature ) );
             }
         }
+    }
+
+    public int getSlaveryGold()
+    {
+        return (int) ( 0.1 * Math.pow( villagersSoldToSlavery, 2 ) + 3 * villagersSoldToSlavery + 100 );
+    }
+
+    public int sellIntoSlavery( Villager v )
+    {
+        int gold = getSlaveryGold();
+        villagersSoldToSlavery++;
+
+        v.getOwningPlayer().removeObject( v );
+
+        return gold;
     }
 
     public int getLevelWidth()

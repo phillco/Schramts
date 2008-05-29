@@ -26,8 +26,10 @@ public class Villager extends Unit
     {
         super( x, y, 0, 0, 100, owner );
 
-        giveableCommands = new Command[1];
+        giveableCommands = new Command[2];
         giveableCommands[0] = new Command( "Build barracks", 90, 750, ImageHandler.getBarracksButton() );
+        giveableCommands[1] = new Command( "Sell into slavery", 20, 0, ImageHandler.getGold() );
+
         gold = 0;
     }
 
@@ -36,6 +38,9 @@ public class Villager extends Unit
     {
         super.act();//moves if necessary
 
+        // Reflect global slave trade market.
+        giveableCommands[1].setCost( -Game.getInstance().getSlaveryGold() );
+        
         if ( goal == null && destination == null )//nowhere to go and nothing to do
         {
             idleBehavior();
@@ -146,8 +151,13 @@ public class Villager extends Unit
         if ( getOwningPlayer().getGoldAmount() < c.getCost() )
             return;//can't afford
 
-        getOwningPlayer().giveObject( new Barracks( getX(), getY() - 30, getOwningPlayer() ) );
-        getOwningPlayer().addGold( -c.getCost() );
+        if ( c == giveableCommands[0] )
+        {
+            getOwningPlayer().giveObject( new Barracks( getX(), getY() - 30, getOwningPlayer() ) );
+            getOwningPlayer().addGold( -c.getCost() );
+        }
+        else
+            getOwningPlayer().addGold( Game.getInstance().sellIntoSlavery( this ) );
     }
 
     private GameObject getNearestDropoff()
