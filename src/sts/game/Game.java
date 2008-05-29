@@ -47,7 +47,7 @@ public class Game
 
             for ( GameObject go : p.getOwnedObjects() )
             {
-                if ( go.getName().equals( "HQ" ) && go.getHealth() <= 0 )
+                if ( go instanceof HQ && go.getHealth() <= 0 )
                     lose( p );
             }
         }
@@ -157,13 +157,13 @@ public class Game
      */
     private void addStuffForPlayer( Player p, int x, int y )
     {
-        p.giveObject( new HQ( x, y, p ) );
+        p.giveObject( new HQ( x, y, p, true ) );
         p.giveObject( new Villager( x + 70, y, p ) );
         p.giveObject( new Villager( x - 70, y, p ) );
-        p.giveObject( new Villager( x, y + 70,p ) );
+        p.giveObject( new Villager( x, y + 70, p ) );
         p.giveObject( new Infantry( x + 70, y + 70, 0, 0, p ) );
-        
-        
+
+
         addGoldPatch( x, y );
     }
 

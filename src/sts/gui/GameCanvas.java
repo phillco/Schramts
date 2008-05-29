@@ -130,7 +130,18 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                         ProductionBuilding b = (ProductionBuilding) go;
                         for ( ProductionBuilding.ItemInQueue i : b.getProductionQueue() )
                         {
-                            ImageHandler.drawImage( g, x, y + 30, go.getOwningPlayer().getColor(), i.type.getQueuedImage() );
+                            //figure out what color you want
+                            float targetHue, targetSat;
+                            float[] dummy =
+                            {
+                                0f, 0f, 0f
+                            };
+                            targetHue = Color.RGBtoHSB( go.getOwningPlayer().getColor().getRed(), go.getOwningPlayer().getColor().getGreen(), go.getOwningPlayer().getColor().getBlue(), dummy )[0];
+                            targetSat = 1 - ((float)i.timeLeft) / i.type.getTimeToMake();
+
+                            Color c = Color.getHSBColor( targetHue, targetSat, ( ((float)i.timeLeft) / i.type.getTimeToMake() ) );
+
+                            ImageHandler.drawImage( g, x, y + 30, c, i.type.getQueuedImage() );
                             x -= 15;
                         }
                     }
@@ -180,7 +191,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                 {
                     for ( GameObject go : Local.getSelectedObjects() )
                     {
-                        if ( go instanceof Unit && go.getOwningPlayer() == Local.getLocalPlayer())
+                        if ( go instanceof Unit && go.getOwningPlayer() == Local.getLocalPlayer() )
                             ( (Unit) go ).setGoal( targets );
                     }
                 }

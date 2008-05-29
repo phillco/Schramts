@@ -17,7 +17,7 @@ public class Barracks extends ProductionBuilding
 {
     public Barracks( int x, int y, Player player )
     {
-        super( x, y, 800, 500, player );
+        super( x, y, 300, 500, player );
 
         giveableCommands = new Command[1];
         giveableCommands[0] = new Command( "Create infantry", 50, 150, ImageHandler.getInfantry());

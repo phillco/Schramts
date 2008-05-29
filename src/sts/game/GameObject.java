@@ -47,6 +47,13 @@ public abstract class GameObject implements Locatable
             owningPlayer.removeObject(this);
     }
 
+    protected void setHealth( int health )
+    {
+        this.health = health;
+    }
+    
+    
+
     public abstract void draw( Graphics2D g );
 
     public abstract String getName();
