@@ -66,10 +66,10 @@ public abstract class ProductionBuilding extends GameObject
         if ( !isBuilt() )
             return;
 
-  //      if ( getOwningPlayer().getGoldAmount() < c.getCost() )
-    //        return;//can't afford.
+        if ( getOwningPlayer().getGoldAmount() < c.getCost() )
+            return;//can't afford.
 
-//       productionQueue.add( new ItemInQueue( c, c.getTimeToMake() ) );
+        productionQueue.add( new ItemInQueue( c, c.getTimeToMake() ) );
         getOwningPlayer().addGold( -c.getCost() );
     }
 

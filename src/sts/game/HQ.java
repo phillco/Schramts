@@ -14,10 +14,13 @@ public class HQ extends ProductionBuilding
     public HQ( int x, int y, Player player, boolean preBuilt )
     {
         super( x, y, 1200, 750, player );
+
+        if ( preBuilt )
+            timeToBuild = 0;
         giveableCommands = new Command[2];
         giveableCommands[0] = new Command( "Create villager", 20, 100, ImageHandler.getVillager() );
         giveableCommands[1] = new Command( "Give gold (devkey)", 0, -10000, ImageHandler.getGold() );
-        
+
         if ( preBuilt )
             setHealth( 700 );
     }
