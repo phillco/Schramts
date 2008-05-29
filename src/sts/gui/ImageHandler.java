@@ -23,7 +23,7 @@ public class ImageHandler
     /**
      * External images that game objects use.
      */
-    private static BufferedImage hq,  barracks,  villager,  villagerWithGold,  infantry,  gold,  constructionSite;
+    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite;
 
     /**
      * The images that have been hue shifted already, so that they aren't recalculated.
@@ -41,6 +41,7 @@ public class ImageHandler
             //  hq = Toolkit.getDefaultToolkit().createImage(ImageHandler.class.getResource("/hq.gif")); old way with JAR
             hq = ImageIO.read( new File( "res/hq.gif" ) );
             barracks = ImageIO.read( new File( "res/barracks.gif" ) );
+            barracksButton = ImageIO.read( new File( "res/barracksButton.gif" ) );
             villager = ImageIO.read( new File( "res/villager.gif" ) );
             villagerWithGold = ImageIO.read( new File( "res/villagerWithGold.gif" ) );
             infantry = ImageIO.read( new File( "res/warrior.gif" ) );
@@ -118,10 +119,14 @@ public class ImageHandler
     {
         return infantry;
     }
+
+    public static BufferedImage getBarracksButton()
+    {
+        return barracksButton;
+    }
     
     
 
-    
     /**
      * Takes an image and shifts its hue, preserving the saturation and brightness.
      * @param img
@@ -136,13 +141,16 @@ public class ImageHandler
         BufferedImage ret = new BufferedImage( img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB );
 
         //figure out what color you want
-        float targetHue, targetSat;
+        float targetHue,  targetSat;
         {//I want these variables to go out of scope soon so I can reuse names
 
             int red = target.getRed();
             int green = target.getGreen();
             int blue = target.getBlue();
-            float[] dummy = {0f,0f,0f};
+            float[] dummy =
+            {
+                0f, 0f, 0f
+            };
             targetHue = Color.RGBtoHSB( red, green, blue, dummy )[0];
             targetSat = dummy[1];
         }
@@ -160,7 +168,7 @@ public class ImageHandler
 
                 //convert to HSB
                 float[] hsb =
-                        {
+                {
                     0f, 0f, 0f
                 };
                 //hsb now has the hsb representation of the old color
