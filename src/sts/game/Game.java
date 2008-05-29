@@ -160,7 +160,10 @@ public class Game
         p.giveObject( new HQ( x, y, p ) );
         p.giveObject( new Villager( x + 70, y, p ) );
         p.giveObject( new Villager( x - 70, y, p ) );
-        p.giveObject( new Villager( x, y + 70, p ) );
+        p.giveObject( new Villager( x, y + 70,p ) );
+        p.giveObject( new Infantry( x + 70, y + 70, 0, 0, p ) );
+        
+        
         addGoldPatch( x, y );
     }
 

@@ -97,6 +97,13 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                 GameObject go = Local.getSelectedObject();
                 ExtendedGraphics.drawText( g, go.getOwningPlayer().getName() + "'s " + go.getName(), 430, getHeight() - 70, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.TOP );
 
+
+                // Draw healthbar.
+                g.fillRect( 300, getHeight() - 10, (int) ( 130 * ( (double) go.getHealth() ) / go.getMaxHealth() ), 8 );
+                g.drawRect( 300, getHeight() - 10, 130, 8 );
+
+
+
                 if ( go.getOwningPlayer() == Local.getLocalPlayer() )
                 {
                     // Draw command buttons.
@@ -128,6 +135,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                         }
                     }
                 }
+
             }
         }
     }
@@ -161,7 +169,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                 {
                     for ( GameObject go : Local.getSelectedObjects() )
                     {
-                        if ( go instanceof Unit )
+                        if ( go instanceof Unit && go.getOwningPlayer() == Local.getLocalPlayer() )
                         {
                             ( (Unit) go ).setDestination( e.getX(), e.getY() );
                             ( (Unit) go ).setGoal( (GameObject) null );
@@ -172,7 +180,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                 {
                     for ( GameObject go : Local.getSelectedObjects() )
                     {
-                        if ( go instanceof Unit )
+                        if ( go instanceof Unit && go.getOwningPlayer() == Local.getLocalPlayer())
                             ( (Unit) go ).setGoal( targets );
                     }
                 }
