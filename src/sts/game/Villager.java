@@ -153,8 +153,11 @@ public class Villager extends Unit
 
         if ( c == giveableCommands[0] )
         {
-            getOwningPlayer().giveObject( new Barracks( getX(), getY() - 30, getOwningPlayer() ) );
+            Barracks b = new Barracks( getX(), getY() - 30, getOwningPlayer() );
+            getOwningPlayer().giveObject( b );
             getOwningPlayer().addGold( -c.getCost() );
+            setDestination(b);
+            setGoal(b);
         }
         else
             getOwningPlayer().addGold( Game.getInstance().sellIntoSlavery( this ) );
