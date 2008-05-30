@@ -44,7 +44,7 @@ public class Main
                 players.add( new Player( Color.green, "Third" ) );
                 players.add( new Player( Color.pink, "Forth" ) );
 
-                startGame( players, defaultPlayer );
+                startGame( players, defaultPlayer, false );
                 return;
             }
         }
@@ -61,7 +61,7 @@ public class Main
 
     }
 
-    public static void startGame( Set<Player> players, Player defaultPlayer )
+    public static void startGame( Set<Player> players, Player defaultPlayer, boolean isTurbo )
     {
 //
 //        HashSet<Player> players = new HashSet<Player>();
@@ -73,7 +73,7 @@ public class Main
 
 
 
-        Local.setUp( new Game( players ), defaultPlayer );
+        Local.setUp( new Game( players, isTurbo ), defaultPlayer );
     }
 
     public static void quit()

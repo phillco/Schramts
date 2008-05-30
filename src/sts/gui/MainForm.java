@@ -53,10 +53,11 @@ public class MainForm extends javax.swing.JFrame
         human = new javax.swing.JRadioButton();
         CPU = new javax.swing.JRadioButton();
         playerName = new javax.swing.JTextField();
+        turbo = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        title.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        title.setFont(new java.awt.Font("Tahoma", 1, 36));
         title.setText("Schramts!");
 
         startGame.setText("Start game");
@@ -144,6 +145,8 @@ public class MainForm extends javax.swing.JFrame
                     .add(add)))
         );
 
+        turbo.setText("Turbo");
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -151,7 +154,9 @@ public class MainForm extends javax.swing.JFrame
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(exit)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 311, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 252, Short.MAX_VALUE)
+                .add(turbo)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(startGame)
                 .addContainerGap())
             .add(layout.createSequentialGroup()
@@ -173,7 +178,9 @@ public class MainForm extends javax.swing.JFrame
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 31, Short.MAX_VALUE)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, exit)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, startGame))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(startGame)
+                        .add(turbo)))
                 .addContainerGap())
         );
 
@@ -202,7 +209,7 @@ private void startGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         }
     }
 
-    Main.startGame( players, localPlayer );
+    Main.startGame( players, localPlayer, turbo.isSelected() );
 }//GEN-LAST:event_startGameActionPerformed
 
 private void CPUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CPUActionPerformed
@@ -236,6 +243,7 @@ private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:eve
     private javax.swing.JButton remove;
     private javax.swing.JButton startGame;
     private javax.swing.JLabel title;
+    private javax.swing.JCheckBox turbo;
     // End of variables declaration//GEN-END:variables
 
 }

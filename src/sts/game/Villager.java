@@ -199,7 +199,7 @@ public class Villager extends Unit
         if ( timeTillNextMine-- <= 0 )
         {
             gold += ( (GoldPile) goal ).removeGold() ? 1 : 0;
-            timeTillNextMine = 30;
+            timeTillNextMine = Game.getInstance().isTurbo() ? 1 : 30;
         }
     }
 

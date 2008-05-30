@@ -28,7 +28,9 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="exit" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="311" max="32767" attributes="0"/>
+              <EmptySpace pref="252" max="32767" attributes="0"/>
+              <Component id="turbo" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="startGame" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -54,7 +56,10 @@
               <EmptySpace pref="31" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="exit" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="startGame" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                      <Component id="startGame" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="turbo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -198,5 +203,10 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JCheckBox" name="turbo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Turbo"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

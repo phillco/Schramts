@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.JOptionPane;
 import sts.Local;
 import sts.Main;
+import sts.Util;
 import sts.gui.ImageHandler;
 
 /**
@@ -29,17 +30,22 @@ public class Game
 
     private int villagersSoldToSlavery = 0;
 
-    private ConcurrentLinkedQueue<Corpse> deadStuff = new ConcurrentLinkedQueue<Corpse>();
+    private boolean isTurbo;
 
     public static Game getInstance()
     {
         return instance;
     }
 
-    public Game( Set<Player> p )
+    public Game( Set<Player> players, boolean isTurbo )
     {
         instance = this;
-        this.players = new ConcurrentLinkedQueue<Player>( p );
+        this.players = new ConcurrentLinkedQueue<Player>( players );
+        this.isTurbo = isTurbo;
+
+        if ( isTurbo )
+            for ( Player pl : this.players )
+                pl.addGold( 1900 );
         prepareLevel();
         runnerThread.startLoop();
     }
@@ -143,10 +149,10 @@ public class Game
                 players.remove( p );
             }
         }
-        if ( players.size() == 1)//only one remains
+        if ( players.size() == 1 )//only one remains
         {
-            Main.log("GAME OVER!! "+players.peek().getName() + " wins");
-            JOptionPane.showMessageDialog(null, players.peek().getName() + " wins", "GAME_OVER", JOptionPane.INFORMATION_MESSAGE);
+            Main.log( "GAME OVER!! " + players.peek().getName() + " won!" );
+            JOptionPane.showMessageDialog( null, players.peek().getName() + " has WON!\nThanks for playing SCHRAMTS!", "Game over!", JOptionPane.INFORMATION_MESSAGE );
         }
     }
 
@@ -167,6 +173,8 @@ public class Game
             currentPlayer++;
             addStuffForPlayer( p, x, y );
         }
+
+        addGoldPatch( Game.LEVEL_WIDTH / 2 - 30, Game.LEVEL_HEIGHT / 2 - 30, 90 );
     }
 
     /**
@@ -183,22 +191,18 @@ public class Game
         p.giveObject( new Villager( x, y + 70, p ) );
         p.giveObject( new Infantry( x + 70, y + 70, 0, 0, p ) );
 
-
-        addGoldPatch( x, y );
-    }
-
-    private void addGoldPatch( int x, int y )
-    {
-        double angle = Math.random() * 2 * Math.PI;
+        double angle = Util.getRandomGenerator().nextAngle();
         x += (int) ( 120 * Math.cos( angle ) );
         y += (int) ( 120 * Math.sin( angle ) );
-        for ( int xCoord = x - 20; xCoord <= x + 60; xCoord += 9 )
-        {
-            for ( int yCoord = y - 20; yCoord <= y + 60; yCoord += 9 )
-            {
+        addGoldPatch( x, y, 40 );
+
+    }
+
+    private void addGoldPatch( int x, int y, int size )
+    {
+        for ( int xCoord = x - 20; xCoord <= x + size; xCoord += 9 )
+            for ( int yCoord = y - 20; yCoord <= y + size; yCoord += 9 )
                 nature.giveObject( new GoldPile( xCoord, yCoord, nature ) );
-            }
-        }
     }
 
     public int getSlaveryGold()
@@ -240,6 +244,11 @@ public class Game
     public Player getNature()
     {
         return nature;
+    }
+
+    public boolean isTurbo()
+    {
+        return isTurbo;
     }
 
     /**

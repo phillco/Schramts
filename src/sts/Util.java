@@ -16,7 +16,7 @@ public class Util
      */
     private static ExtendedRandom[] instances =
     {
-        new ExtendedRandom(), new ExtendedRandom(), new ExtendedRandom()
+        new ExtendedRandom()
     };
 
     /**
