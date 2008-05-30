@@ -40,7 +40,7 @@ public class Infantry extends Unit
         {
             shootAtAnyoneInRange();
         }
-        if ( goal.getHealth() <= 0 )//we win!
+        if ( goal == null || goal.getHealth() <= 0 )//we win!
         {
             findNewTarget();
             return;

@@ -16,7 +16,7 @@ public class Player
     /**
      * How much gold this player has stockpiled.
      */
-    private int goldAmount = 10000;
+    private int goldAmount = 100;
 
     /**
      * Color of the player's units and buildings.

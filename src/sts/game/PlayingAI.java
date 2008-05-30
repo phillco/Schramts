@@ -27,6 +27,7 @@ public class PlayingAI extends AI
     private static State earlyEconomic = new State(10, 0, false, VillagerState.MINE);
     private static State defensive = new State(7, 3, false, VillagerState.REPAIR);
     private static State branchingOut = new State(10, 0, false, VillagerState.BUILD);
+    private static State buildingUp = new State(10, 5, false, VillagerState.MINE);
     private static State offensive = new State(8, 8, true, VillagerState.MINE);
     private static State endGame = new State(3, 20, true, VillagerState.REPAIR);
     private static State panicDefense = new State(8, 20, false, VillagerState.REPAIR);
@@ -61,7 +62,7 @@ public class PlayingAI extends AI
                 assignVillagersToGold();  
                 break;
             case BUILD:
-                assignVillagersToBuild();
+                assignVillagerToBuild();
                 break;
             case REPAIR:
                 assignVillagersToRepair();
@@ -71,21 +72,32 @@ public class PlayingAI extends AI
             infantryAttack();
         else
             infantryDefend();
+        actForState();
     }
     
     private Villager carpenter;
 
-    private void assignVillagersToBuild()
+    private void actForState() {
+        if(state==earlyEconomic)
+            return;//everything is taken care of
+        if(state == buildingUp || state == offensive || state == endGame)
+        {
+            if(owner.getBarracks().isEmpty() || ! owner.getBarracks().iterator().next().isBuilt())
+                assignVillagerToBuild();
+        }
+    }
+
+    private void assignVillagerToBuild()
     {
         if(owner.getGoldAmount()<800)//ok, so I hard coded a value.  So shoot me
             return;//don't bother trying to build, 
-        if(carpenter==null)
+        if(carpenter==null||carpenter.getHealth()<=0)
         {
             carpenter=owner.getVillagers().iterator().next();
             carpenter.setGoal((GameObject)null);
             carpenter.setDestination(owner.getHQ().getLoc().translate(0, -75));
         }
-        if(owner.getBarracks().isEmpty())
+        if(owner.getBarracks().isEmpty())//no barracks, build one.
         {
             if(carpenter.arrived )
             {
@@ -147,17 +159,27 @@ public class PlayingAI extends AI
                 return;
             }
         }
+        
         if(state == branchingOut )
         {
             for(Barracks b :owner.getBarracks())
             {
                 if(b.isBuilt())
                 {
-                    state = offensive;
+                    state = buildingUp;
                     return;
                 }
             }
         }
+        
+        if(state == buildingUp)
+        {
+            if(owner.getInfantry().size()>=buildingUp.infantryThreshhold)
+            {
+                state = offensive;
+            }
+        }
+        
         if(state == offensive)
         {
             if(Local.getGame().getNature().getGoldPiles().isEmpty())
@@ -169,14 +191,17 @@ public class PlayingAI extends AI
         if(state == panicDefense)
         {
             if(enemies.isEmpty())
-                state = this.waiting;
+                state = waiting;
         }
     }
     
     @Override
     public void notifyAboutAttack(int x, int y, GameObject attacker)
     {
+        System.out.println("ouch!");
         enemies.push(attacker);
+        if(state == panicDefense )
+            return;//we're already fighting back
         if(enemies.size()>2)
         {
             waiting = state;
@@ -261,7 +286,8 @@ public class PlayingAI extends AI
         }
         if(b==null)
             return;//nowhere to build
-        b.executeCommand(b.giveableCommands[0]);
+        if(b.queueLength()==0)
+            b.giveCommand(b.giveableCommands[0]);
     }
 
     private void purchaseVillagers()

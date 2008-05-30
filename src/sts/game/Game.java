@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.swing.JOptionPane;
 import sts.Local;
 import sts.Main;
 
@@ -126,6 +127,11 @@ public class Game
             {
                 players.remove( p );
             }
+        }
+        if ( players.size() == 1)//only one remains
+        {
+            Main.log("GAME OVER!! "+players.peek().getName() + " wins");
+            JOptionPane.showMessageDialog(null, players.peek().getName() + " wins", "GAME_OVER", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
