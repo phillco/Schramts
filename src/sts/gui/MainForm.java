@@ -243,7 +243,7 @@ private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_addActionPerformed
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-new WhatForm();
+new HelpAboutForm();
 }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
