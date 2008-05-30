@@ -4,7 +4,10 @@
  */
 package sts.game;
 
+import java.awt.Graphics2D;
 import java.util.Set;
+import sts.Local;
+import sts.gui.ImageHandler;
 
 /**
  *
@@ -39,6 +42,16 @@ public abstract class Unit extends GameObject
     {
         move();
     }
+
+    @Override
+    public void draw( Graphics2D g )
+    {
+        // Draw a flag if we're moving to a specific spot.
+        if ( destination != null && goal == null && !arrived && getOwningPlayer() == Local.getLocalPlayer())
+            ImageHandler.drawDestination( g, destination.getLoc().getX(), destination.getLoc().getY(), getOwningPlayer().getColor() );
+    }
+    
+    
 
     /**
      * figures out what dx and dy to have to make it to the destination

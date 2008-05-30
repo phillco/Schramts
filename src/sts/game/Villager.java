@@ -226,6 +226,11 @@ public class Villager extends Unit
     @Override
     public void draw( Graphics2D g )
     {
+        super.draw( g );
+        
+        // Draw a flag if we're moving to a specific spot, even if we're dropping off gold first.
+        if ( deferredDestination != null && getOwningPlayer() == Local.getLocalPlayer())
+            ImageHandler.drawDestination( g, deferredDestination.getLoc().getX(), deferredDestination.getLoc().getY(), getOwningPlayer().getColor() );
         Color c = getOwningPlayer().getColor();
 
         if ( Local.getSelectedObjects().contains( this ) )

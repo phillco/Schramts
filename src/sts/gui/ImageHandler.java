@@ -23,7 +23,7 @@ public class ImageHandler
     /**
      * External images that game objects use.
      */
-    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite,  rallyPoint;
+    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite,  rallyPoint, destination;
 
     /**
      * The images that have been hue shifted already, so that they aren't recalculated.
@@ -48,7 +48,7 @@ public class ImageHandler
             gold = ImageIO.read( new File( "res/gold.gif" ) );
             constructionSite = ImageIO.read( new File( "res/half_built_building.gif" ) );
             rallyPoint = ImageIO.read( new File( "res/rallyPoint.gif" ) );
-
+            destination = ImageIO.read( new File( "res/destination.gif" ) );            
         }
         catch ( IOException iOException )
         {
@@ -91,6 +91,13 @@ public class ImageHandler
     {
         drawImage( hueShift( rallyPoint, c ), g, x, y );
     }
+    
+    public static void drawDestination( Graphics2D g, int x, int y, Color c )
+    {
+        drawImage( hueShift( destination, c ), g, x, y );
+    }
+    
+    
 
     public static void drawGold( Graphics2D g, int x, int y )
     {

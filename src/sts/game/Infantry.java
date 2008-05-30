@@ -62,13 +62,14 @@ public class Infantry extends Unit
         if ( other == null )
             return;
 
-        getOwningPlayer().giveObject( new Bullet( getX(), getY(), this, other ));
+        getOwningPlayer().giveObject( new Bullet( getX(), getY(), this, other ) );
         other.changeHealth( -damage, this );
     }
 
     @Override
     public void draw( Graphics2D g )
     {
+        super.draw( g );
         Color c = getOwningPlayer().getColor();
 
         if ( Local.getSelectedObjects().contains( this ) )
@@ -170,9 +171,10 @@ public class Infantry extends Unit
 
     public GameObject getBestTarget( ArrayList<GameObject> possible )
     {
-        if(possible.isEmpty())
+        if ( possible.isEmpty() )
             return null;//don't bother.
         //shoot at infantry first; they shoot back
+
         for ( GameObject go : possible )
         {
             if ( go instanceof Infantry )
