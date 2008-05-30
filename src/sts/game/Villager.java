@@ -13,14 +13,15 @@ import sts.gui.ImageHandler;
  */
 public class Villager extends Unit
 {
-
-    //GoldPile nearest to the villager
-    GoldPile nearest = null;
-
     /**
-     * How much gold this Villager is carrying
+     * How much gold this Villager is carrying.
      */
     private int gold;
+
+    /**
+     * Where to go after dropping off gold.
+     */
+    private Location deferredDestination = null;
 
     public Villager( int x, int y, Player owner )
     {
@@ -40,7 +41,7 @@ public class Villager extends Unit
 
         // Reflect global slave trade market.
         giveableCommands[1].setCost( -Game.getInstance().getSlaveryGold() );
-        
+
         if ( goal == null && destination == null )//nowhere to go and nothing to do
         {
             idleBehavior();
@@ -117,7 +118,15 @@ public class Villager extends Unit
         {
             //we need to drop off our gold
             dropOffGold();
-            setDestination( goal );//go back to the gold
+            if ( deferredDestination == null )
+                setDestination( goal );//go back to the gold
+            else
+            {
+                // Just a step on the route.
+                setDestination( deferredDestination );
+                deferredDestination = null;
+                goal = null;
+            }
 
             return;
 
@@ -156,8 +165,8 @@ public class Villager extends Unit
             Barracks b = new Barracks( getX(), getY() - 30, getOwningPlayer() );
             getOwningPlayer().giveObject( b );
             getOwningPlayer().addGold( -c.getCost() );
-            setDestination(b);
-            setGoal(b);
+            setDestination( b );
+            setGoal( b );
         }
         else
             getOwningPlayer().addGold( Game.getInstance().sellIntoSlavery( this ) );
@@ -227,6 +236,18 @@ public class Villager extends Unit
     public String getName()
     {
         return "Villager with " + gold + " gold";
+    }
+
+    @Override
+    public void setDestination( int x, int y )
+    {
+        if ( gold > 0 && deferredDestination == null )
+        {
+            super.setDestination( getNearestDropoff() );
+            deferredDestination = new Location( x, y );
+        }
+        else
+            super.setDestination( x, y );
     }
 
     @Override
