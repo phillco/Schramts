@@ -189,7 +189,6 @@ public class Game
         p.giveObject( new Villager( x + 70, y, p ) );
         p.giveObject( new Villager( x - 70, y, p ) );
         p.giveObject( new Villager( x, y + 70, p ) );
-        p.giveObject( new Infantry( x + 70, y + 70, 0, 0, p ) );
 
         double angle = Util.getRandomGenerator().nextAngle();
         x += (int) ( 120 * Math.cos( angle ) );
