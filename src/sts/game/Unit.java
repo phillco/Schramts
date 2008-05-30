@@ -41,17 +41,23 @@ public abstract class Unit extends GameObject
     public void act()
     {
         move();
+
+        // [PC] Funny but ugly code. Try it and then queue up a bunch of infantry.
+        /*
+        Set<GameObject> onMe = Game.getInstance().getObjectsWithinArea( getX(), getY(), 5, 5 );
+        onMe.remove( this );
+        if ( !onMe.isEmpty() )
+            x += Util.getRandomGenerator().nextMidpointDouble( 16 );
+*/
     }
 
     @Override
     public void draw( Graphics2D g )
     {
         // Draw a flag if we're moving to a specific spot.
-        if ( destination != null && goal == null && !arrived && getOwningPlayer() == Local.getLocalPlayer())
+        if ( destination != null && goal == null && !arrived && getOwningPlayer() == Local.getLocalPlayer() )
             ImageHandler.drawDestination( g, destination.getLoc().getX(), destination.getLoc().getY(), getOwningPlayer().getColor() );
     }
-    
-    
 
     /**
      * figures out what dx and dy to have to make it to the destination
@@ -63,14 +69,14 @@ public abstract class Unit extends GameObject
             dx = dy = 0;
             return;
         }
-        double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() )+Math.PI;
-        dx =  ( getMaxSpeed() * Math.cos( angle ) );
-        dy =  ( getMaxSpeed() * Math.sin( angle ) );
+        double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() ) + Math.PI;
+        dx = ( getMaxSpeed() * Math.cos( angle ) );
+        dy = ( getMaxSpeed() * Math.sin( angle ) );
     }
 
     public void setDestination( int x, int y )
     {
-        arrived=false;
+        arrived = false;
         destination = new Location( x, y );
     }
 
@@ -84,9 +90,9 @@ public abstract class Unit extends GameObject
     {
         goal = go;
         //[PC] destination= go;
-        arrived=false;
+        arrived = false;
     }
-    
+
     public abstract void setGoal( Set<GameObject> possible );
 
     /**
@@ -97,9 +103,9 @@ public abstract class Unit extends GameObject
 
     private void move()
     {
-        if(destination == null)
+        if ( destination == null )
         {
-            if(goal==null)
+            if ( goal == null )
                 return;
             destination = goal;
         }
@@ -123,7 +129,8 @@ public abstract class Unit extends GameObject
 
     }
 
-    public GameObject getGoal() {
+    public GameObject getGoal()
+    {
         return goal;
     }
 

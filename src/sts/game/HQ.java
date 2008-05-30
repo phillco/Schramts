@@ -3,6 +3,7 @@ package sts.game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import sts.Local;
+import sts.Util;
 import sts.gui.ImageHandler;
 
 /**
@@ -41,7 +42,7 @@ public class HQ extends ProductionBuilding
     protected void doCreation( Command type )
     {
         if ( type == giveableCommands[0] )
-            createAndAssignUnit( new Villager( getX() + 30, getY() + 54, getOwningPlayer() ) );
+            createAndAssignUnit( new Villager( getX() + 30 + Util.getRandomGenerator().nextInt( 30 ) - 15, getY() + 54, getOwningPlayer() ) );
     }
 
     @Override

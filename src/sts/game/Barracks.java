@@ -7,6 +7,7 @@ package sts.game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import sts.Local;
+import sts.Util;
 import sts.gui.ImageHandler;
 
 /**
@@ -56,7 +57,7 @@ public class Barracks extends ProductionBuilding
     protected void doCreation( Command type )
     {
         if ( type == giveableCommands[0] )
-            createAndAssignUnit( new Infantry( getX(), getY() - 10, 0, 0, getOwningPlayer() ) );
+            createAndAssignUnit( new Infantry( getX() + Util.getRandomGenerator().nextInt( 48 ), getY() + 50, 0, 0, getOwningPlayer() ) );
     }
 
     @Override

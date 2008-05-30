@@ -64,9 +64,9 @@ public class Game
 
     public void draw( Graphics2D g )
     {
+        nature.draw( g );
         for ( Player p : players )
             p.draw( g );
-        nature.draw( g );
     }
 
     /**
