@@ -9,7 +9,7 @@ import java.util.Set;
  */
 public class Bullet extends Unit
 {
-    public Bullet( int x, int y, Infantry shooter, GameObject target )
+    public Bullet( int x, int y, GameObject shooter, GameObject target )
     {
         super( x, y, 0, 0, 100, shooter.getOwningPlayer() );
         setDestination( target );

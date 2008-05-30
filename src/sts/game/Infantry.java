@@ -16,15 +16,20 @@ public class Infantry extends Unit
     private static int range = 50;
 
     private static int damage = 1;//one per timestep
+    
+    private int timeUntilNextShot;
 
     public Infantry( int x, int y, int dx, int dy, Player owner )
     {
         super( x, y, dx, dy, 150, owner );
+        timeUntilNextShot = 3;
     }
 
     @Override
     public void act()
     {
+        if(timeUntilNextShot>0)
+            --timeUntilNextShot;
         arrived = false;//never assume that you've made it, it could have moved
 
         super.act();//move, if necessary
@@ -59,7 +64,7 @@ public class Infantry extends Unit
 
     public void attack( GameObject other )
     {
-        if ( other == null )
+        if ( other == null || timeUntilNextShot > 0)
             return;
 
         getOwningPlayer().giveObject( new Bullet( getX(), getY(), this, other ) );
@@ -153,46 +158,6 @@ public class Infantry extends Unit
             }
         }
         attack( getBestTarget( inRange ) );
-
-        switch ( inRange.size() )
-        {
-            case 0://nobody in range
-
-                return;
-            case 1://only one choice, avoid the mess below
-
-                attack( inRange.get( 0 ) );
-                return;
-        }
-        //shoot at infantry first; they shoot back
-        for ( GameObject go : inRange )
-        {
-            if ( go instanceof Infantry )
-            {
-                attack( go );
-                return;
-            }
-        }
-        //shoot at villagers second, they run away
-        for ( GameObject go : inRange )
-        {
-            if ( go instanceof Villager )
-            {
-                attack( go );
-                return;
-            }
-        }
-        //shoot at production buildings third.  This should be all that's left
-        for ( GameObject go : inRange )
-        {
-            if ( go instanceof ProductionBuilding )
-            {
-                attack( go );
-                return;
-            }
-        }
-        //shoot at anything else, just in case you missed something
-        attack( inRange.get( 0 ) );
         return;
     }
 

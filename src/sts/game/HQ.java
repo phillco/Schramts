@@ -2,6 +2,7 @@ package sts.game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import sts.Local;
 import sts.Util;
 import sts.gui.ImageHandler;
@@ -12,6 +13,10 @@ import sts.gui.ImageHandler;
  */
 public class HQ extends ProductionBuilding
 {
+    private int timeUntilNextShot;
+
+    private double range = 75;
+    
     public HQ( int x, int y, Player player, boolean preBuilt )
     {
         super( x, y, 1200, 750, player );
@@ -20,10 +25,74 @@ public class HQ extends ProductionBuilding
             timeToBuild = 0;
         giveableCommands = new Command[1];
         giveableCommands[0] = new Command( "Create villager", 20, 100, ImageHandler.getVillager() );
-
+        
+        timeUntilNextShot = 2;
+        
         if ( preBuilt )
             setHealth( 700 );
     }
+    
+    @Override
+    public void act()
+    {
+        super.act();
+        if(timeUntilNextShot>0)
+            --timeUntilNextShot;
+        shootAtAnyoneInRange();
+    }
+
+    private void attack(GameObject other)
+    {
+        if ( other == null || timeUntilNextShot > 0)
+            return;
+
+        getOwningPlayer().giveObject( new Bullet( getLoc().getX(), getLoc().getY(), this, other ) );
+        other.changeHealth( -1 );//don't tell AI, that's only for offensive moves
+    }
+    
+    private void shootAtAnyoneInRange()
+    {
+        ArrayList<GameObject> inRange = new ArrayList<GameObject>();
+        for ( Player p : Local.getGame().getPlayers() )
+        {
+            if ( p == getOwningPlayer() )
+                continue;//don't shoot at friendly units
+
+            for ( GameObject go : p.getOwnedObjects() )
+            {
+                if ( Location.getDistance( this.getLoc(), go.getLoc() ) < range )
+                    inRange.add( go );
+            }
+        }
+        attack( getBestTarget( inRange ) );
+        return;
+    }
+
+    public GameObject getBestTarget( ArrayList<GameObject> possible )
+    {
+        if ( possible.isEmpty() )
+            return null;//don't bother.
+        //shoot at infantry first; they shoot back
+
+        for ( GameObject go : possible )
+        {
+            if ( go instanceof Infantry )
+            {
+                return go;
+            }
+        }
+        //shoot at villagers second, they run away
+        for ( GameObject go : possible )
+        {
+            if ( go instanceof Villager )
+            {
+                return go;
+            }
+        }
+        //don't shoot at anything else, otherwise you'd shoot at bullets.
+        return null;
+    }
+
 
     @Override
     public void draw( Graphics2D g )
