@@ -27,7 +27,7 @@ public abstract class Unit extends GameObject
 
     boolean arrived;
 
-    private int dx,  dy;
+    protected double dx,  dy;
 
     public Unit( int x, int y, int dx, int dy, int health, Player player )
     {
@@ -56,7 +56,7 @@ public abstract class Unit extends GameObject
     /**
      * figures out what dx and dy to have to make it to the destination
      */
-    private void calculateSpeed()
+    protected void calculateSpeed()
     {
         if ( destination == null )
         {
@@ -64,8 +64,8 @@ public abstract class Unit extends GameObject
             return;
         }
         double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() )+Math.PI;
-        dx = (int) ( getMaxSpeed() * Math.cos( angle ) );
-        dy = (int) ( getMaxSpeed() * Math.sin( angle ) );
+        dx =  ( getMaxSpeed() * Math.cos( angle ) );
+        dy =  ( getMaxSpeed() * Math.sin( angle ) );
     }
 
     public void setDestination( int x, int y )
@@ -169,9 +169,9 @@ public abstract class Unit extends GameObject
         dy *= factor;
     }
 
-    public int getSpeed()
+    public double getSpeed()
     {
-        return (int) Math.sqrt( dx * dx + dy * dy );
+        return Math.sqrt( dx * dx + dy * dy );
     }
 
     @Override

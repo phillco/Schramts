@@ -11,7 +11,7 @@ public abstract class GameObject implements Locatable
     /**
      * Location 
      */
-    protected int x,  y;
+    protected double x,  y;
 
     /**
      * Who controls this?
@@ -70,32 +70,32 @@ public abstract class GameObject implements Locatable
 
     public int getX()
     {
-        return x;
+        return (int)x;
     }
 
-    public void setX( int x )
+    public void setX( double x )
     {
         this.x = x;
     }
 
-    public void addToX( int addX )
+    public void addToX( double addX )
     {
-        setX( getX() + addX );
+        setX( x + addX );
     }
 
     public int getY()
     {
-        return y;
+        return (int)y;
     }
 
-    public void setY( int y )
+    public void setY( double y )
     {
         this.y = y;
     }
 
-    public void addToY( int addY )
+    public void addToY( double addY )
     {
-        setY( getY() + addY );
+        setY( y + addY );
     }
 
     public void setLocation( int x, int y )

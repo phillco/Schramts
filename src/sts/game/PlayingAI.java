@@ -24,15 +24,15 @@ public class PlayingAI extends AI
     //The state that is pushed aside for panicDefense
     private State waiting;
     
-    private static State earlyEconomic = new State(10, 0, false, VillagerState.MINE);
-    private static State defensive = new State(7, 3, false, VillagerState.REPAIR);
-    private static State branchingOut = new State(10, 0, false, VillagerState.BUILD);
-    private static State buildingUp = new State(10, 5, false, VillagerState.MINE);
-    private static State offensive = new State(8, 8, true, VillagerState.MINE);
-    private static State endGame = new State(3, 20, true, VillagerState.REPAIR);
-    private static State panicDefense = new State(8, 20, false, VillagerState.REPAIR);
+    private static State earlyEconomic = new State(10, 0, InfantryState.DEFEND, VillagerState.MINE);
+    private static State defensive = new State(7, 3, InfantryState.DEFEND, VillagerState.REPAIR);
+    private static State branchingOut = new State(10, 0, InfantryState.DEFEND, VillagerState.BUILD);
+    private static State buildingUp = new State(10, 5, InfantryState.DEFEND, VillagerState.MINE);
+    private static State offensive = new State(8, 8, InfantryState.ATTACK_OUT, VillagerState.MINE);
+    private static State endGame = new State(3, 20, InfantryState.ATTACK_OUT, VillagerState.REPAIR);
+    private static State panicDefense = new State(8, 20, InfantryState.ATTACK_HOME, VillagerState.REPAIR);
 
-    private Stack<GameObject> enemies;//everyone we want to kill, because they attacked us first.
+    private final Stack<GameObject> enemies;//everyone we want to kill, because they attacked us first.
     
     private Player targetPlayer;
     
@@ -68,11 +68,19 @@ public class PlayingAI extends AI
                 assignVillagersToRepair();
                 break;
         }
-        if(state.infantryAgressive)
-            infantryAttack();
-        else
-            infantryDefend();
+        switch(state.infantryAgressive)
+        {    
+            case ATTACK_OUT:
+                infantryAttack();
+                break;
+            case ATTACK_HOME:
+                infantryAttackHome();
+                break;
+            case DEFEND:
+                infantryDefend();
+        }
         actForState();
+        
     }
     
     private Villager carpenter;
@@ -85,6 +93,7 @@ public class PlayingAI extends AI
             if(owner.getBarracks().isEmpty() || ! owner.getBarracks().iterator().next().isBuilt())
                 assignVillagerToBuild();
         }
+        
     }
 
     private void assignVillagerToBuild()
@@ -198,11 +207,10 @@ public class PlayingAI extends AI
     @Override
     public void notifyAboutAttack(int x, int y, GameObject attacker)
     {
-        System.out.println("ouch!");
         enemies.push(attacker);
         if(state == panicDefense )
             return;//we're already fighting back
-        if(enemies.size()>2)
+     //   if(enemies.size()>2)
         {
             waiting = state;
             state = panicDefense;
@@ -244,6 +252,18 @@ public class PlayingAI extends AI
         
     }
 
+    private void infantryAttackHome()
+    {
+        if(enemies.isEmpty())
+            infantryDefend();
+        GameObject enemy = enemies.size()==0 ? null : enemies.peek();
+        for(Infantry i : owner.getInfantry())
+        {
+            i.setGoal(enemy);
+            i.setDestination(enemy);
+        }
+    }
+
     private int infantryCount()
     {
         return owner.getInfantry().size();
@@ -263,11 +283,6 @@ public class PlayingAI extends AI
                 count ++;
             }
             return;
-        }
-        
-        for(Infantry i : owner.getInfantry())
-        {
-            i.setGoal(enemies.peek());
         }
     }
 
@@ -319,12 +334,14 @@ public class PlayingAI extends AI
     
     private static enum VillagerState {MINE, BUILD, REPAIR};
     
+    private static enum InfantryState {ATTACK_OUT, ATTACK_HOME, DEFEND};
+    
     private static class State
     {
         public final int villagerThreshhold, infantryThreshhold;
-        public final boolean infantryAgressive;
+        public final InfantryState infantryAgressive;
         public final VillagerState villagerState;
-        public State(int villagerThreshhold, int infantryThreshhold, boolean infantryAgressive, VillagerState villagerState)
+        public State(int villagerThreshhold, int infantryThreshhold, InfantryState infantryAgressive, VillagerState villagerState)
         {
             this.villagerThreshhold=villagerThreshhold;
             this.infantryThreshhold=infantryThreshhold;

@@ -53,6 +53,7 @@ public class Game
             if ( p.getHQ() == null )
                 lose( p );
         }
+        nature.act();
     }
 
     public void draw( Graphics2D g )

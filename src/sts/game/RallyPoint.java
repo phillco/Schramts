@@ -17,7 +17,7 @@ public class RallyPoint extends GameObject
     @Override
     public void draw( Graphics2D g )
     {
-        ImageHandler.drawRalleyPoint( g, x, y, getOwningPlayer().getColor() );
+        ImageHandler.drawRalleyPoint( g, getX(), getY(), getOwningPlayer().getColor() );
     }
 
     @Override

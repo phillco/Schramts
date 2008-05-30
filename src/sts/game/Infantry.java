@@ -110,6 +110,33 @@ public class Infantry extends Unit
         shootAtAnyoneInRange();//don't go anywhere, but if anyone strays too close...
 
     }
+    
+    @Override
+    protected void calculateSpeed()
+    {
+        if(goal==null || goal.getOwningPlayer() != getOwningPlayer() || destination instanceof Location)
+        {
+            super.calculateSpeed();
+            return;
+        }
+        //goal is an object belonging to the same player, circle around it.
+        if(Location.getDistance(getLoc(), goal.getLoc())<range-8)
+        {
+            super.calculateSpeed();
+            dx*=-1;
+            dy*=-1;
+            return;
+        }
+        if(Location.getDistance(getLoc(), goal.getLoc())>range+8)
+        {
+            super.calculateSpeed();
+            return;
+        }
+        double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() )+Math.PI/4;
+        dx =  ( getMaxSpeed() * Math.cos( angle ) );
+        dy =  ( getMaxSpeed() * Math.sin( angle ) );
+        
+    }
 
     private void shootAtAnyoneInRange()
     {
@@ -206,6 +233,14 @@ public class Infantry extends Unit
     public boolean isClickContained( int x, int y, int width, int height )
     {
         return isClickContainedInRectangle( this, x, y, 8 + width, 13 + height );
+    }
+    
+    @Override
+    public void setGoal( GameObject newGoal )
+    {
+        if(newGoal != null && newGoal.getOwningPlayer()==Local.getGame().getNature())
+            return;
+        super.setGoal(newGoal);
     }
 
     @Override
