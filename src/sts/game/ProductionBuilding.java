@@ -2,6 +2,7 @@ package sts.game;
 
 import java.awt.Graphics2D;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import sts.Local;
 
 /**
  * A building with a queue of production. Subclasses dictate the types of production availible (such as "Create one Villager").
@@ -117,7 +118,7 @@ public abstract class ProductionBuilding extends GameObject
     @Override
     public void draw( Graphics2D g )
     {
-        if ( rallyPoint != null )
+        if ( rallyPoint != null && Local.getSelectedObjects().contains( this) )
             rallyPoint.draw( g );
     }
 

@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.JOptionPane;
 import sts.Local;
 import sts.Main;
+import sts.gui.ImageHandler;
 
 /**
  *
@@ -27,6 +28,8 @@ public class Game
     private static Game instance;
 
     private int villagersSoldToSlavery = 0;
+
+    private ConcurrentLinkedQueue<Corpse> deadStuff = new ConcurrentLinkedQueue<Corpse>();
 
     public static Game getInstance()
     {
@@ -47,8 +50,8 @@ public class Game
         {
             p.act();
 
-            if(p.getHQ()==null)
-                lose(p);
+            if ( p.getHQ() == null )
+                lose( p );
         }
     }
 
@@ -65,6 +68,7 @@ public class Game
     public Set<GameObject> getObjectsWithinArea( int x, int y, int width, int height )
     {
         boolean hasLocalPlayer = false;
+        boolean hasUnit = false;
         Set<GameObject> objects = new HashSet<GameObject>();
         for ( Player p : players )
         {
@@ -79,18 +83,28 @@ public class Game
                     else if ( hasLocalPlayer )
                         continue;
 
+                    // If it's a movable unit, mark it.
+                    if ( go instanceof Unit )
+                        hasUnit = true;
+
                     objects.add( go );
                 }
             }
         }
 
-        // Remove other players' units if any of ours are selected.
-        if ( hasLocalPlayer )
+        // Priorization of selection.
+        if ( hasLocalPlayer || hasUnit )
         {
             for ( Iterator<GameObject> itr = objects.iterator(); itr.hasNext();)
             {
                 GameObject go = itr.next();
-                if ( go.getOwningPlayer() != Local.getLocalPlayer() )
+
+                // Remove other players' units if any of ours are selected.
+                if ( hasLocalPlayer && go.getOwningPlayer() != Local.getLocalPlayer() )
+                    itr.remove();
+
+                // Remove buildings if units are selected.
+                if ( hasUnit && go instanceof Unit == false )
                     itr.remove();
             }
         }
@@ -199,6 +213,17 @@ public class Game
         v.getOwningPlayer().removeObject( v );
 
         return gold;
+    }
+
+    public void createCorpse( GameObject original )
+    {
+        if ( original instanceof ProductionBuilding )
+            nature.giveObject( new Corpse( original.getX(), original.getY(), ImageHandler.getRazedBuilding(), original.getOwningPlayer().getColor().darker() ) );
+        else if ( original instanceof Infantry )
+            nature.giveObject( new Corpse( original.getX(), original.getY(), ImageHandler.getDeadInfantry(), original.getOwningPlayer().getColor().darker() ) );
+        else if ( original instanceof Villager )
+            nature.giveObject( new Corpse( original.getX(), original.getY(), ImageHandler.getDeadVillager(), original.getOwningPlayer().getColor().darker() ) );
+
     }
 
     public int getLevelWidth()

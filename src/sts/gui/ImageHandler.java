@@ -23,7 +23,7 @@ public class ImageHandler
     /**
      * External images that game objects use.
      */
-    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite,  rallyPoint, destination;
+    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite,  rallyPoint,  destination,  razedBuilding,  deadVillager,  deadInfantry;
 
     /**
      * The images that have been hue shifted already, so that they aren't recalculated.
@@ -48,7 +48,10 @@ public class ImageHandler
             gold = ImageIO.read( new File( "res/gold.gif" ) );
             constructionSite = ImageIO.read( new File( "res/half_built_building.gif" ) );
             rallyPoint = ImageIO.read( new File( "res/rallyPoint.gif" ) );
-            destination = ImageIO.read( new File( "res/destination.gif" ) );            
+            destination = ImageIO.read( new File( "res/destination.gif" ) );
+            deadVillager = ImageIO.read( new File( "res/deadVillager.gif" ) );
+            deadInfantry = ImageIO.read( new File( "res/deadWarrior.gif" ) );
+            razedBuilding = ImageIO.read( new File( "res/razedBuilding.gif" ) );
         }
         catch ( IOException iOException )
         {
@@ -91,13 +94,11 @@ public class ImageHandler
     {
         drawImage( hueShift( rallyPoint, c ), g, x, y );
     }
-    
+
     public static void drawDestination( Graphics2D g, int x, int y, Color c )
     {
         drawImage( hueShift( destination, c ), g, x, y );
     }
-    
-    
 
     public static void drawGold( Graphics2D g, int x, int y )
     {
@@ -112,6 +113,11 @@ public class ImageHandler
     private static void drawImage( Image i, Graphics2D g, int x, int y )
     {
         g.drawImage( i, x, y, null );
+    }
+
+    public static BufferedImage getRazedBuilding()
+    {
+        return razedBuilding;
     }
 
     public static BufferedImage getVillager()
@@ -137,6 +143,16 @@ public class ImageHandler
     public static BufferedImage getBarracksButton()
     {
         return barracksButton;
+    }
+
+    public static BufferedImage getDeadInfantry()
+    {
+        return deadInfantry;
+    }
+
+    public static BufferedImage getDeadVillager()
+    {
+        return deadVillager;
     }
 
     /**

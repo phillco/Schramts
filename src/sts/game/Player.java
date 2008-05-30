@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import sts.Local;
+import sts.gui.ImageHandler;
 
 /**
  *
@@ -34,7 +35,7 @@ public class Player
      * All of the objects (villagers, buildings, etc) that belong to this player.
      */
     private ConcurrentLinkedQueue<GameObject> ownedObjects = new ConcurrentLinkedQueue<GameObject>();
-    
+
     /**
      * If this player has lost the game
      */
@@ -78,6 +79,7 @@ public class Player
     {
         ownedObjects.remove( g );
         Local.getSelectedObjects().remove( g );
+        Game.getInstance().createCorpse( g );
     }
 
     public String getName()
@@ -104,7 +106,7 @@ public class Player
     {
         goldAmount += gold;
     }
-    
+
     public void lose()
     {
         lost = true;
@@ -145,7 +147,7 @@ public class Player
 
         return theSet;
     }
-    
+
     /**
      * Returns a set of all of this player's infantry. Could be an empty set, but not null.
      */
@@ -190,7 +192,8 @@ public class Player
         return theSet;
     }
 
-    public boolean hasLost() {
+    public boolean hasLost()
+    {
         return lost;
     }
 }
