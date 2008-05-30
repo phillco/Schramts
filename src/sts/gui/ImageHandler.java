@@ -23,7 +23,7 @@ public class ImageHandler
     /**
      * External images that game objects use.
      */
-    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite,  rallyPoint,  destination,  razedBuilding,  deadVillager,  deadInfantry;
+    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite,  rallyPoint,  destination,  razedBuilding,  deadVillager,  deadInfantry,  slaveryButton;
 
     /**
      * The images that have been hue shifted already, so that they aren't recalculated.
@@ -52,6 +52,8 @@ public class ImageHandler
             deadVillager = ImageIO.read( new File( "res/deadVillager.gif" ) );
             deadInfantry = ImageIO.read( new File( "res/deadWarrior.gif" ) );
             razedBuilding = ImageIO.read( new File( "res/razedBuilding.gif" ) );
+            slaveryButton = ImageIO.read( new File( "res/slaveryButton.gif" ) );
+
         }
         catch ( IOException iOException )
         {
@@ -143,6 +145,11 @@ public class ImageHandler
     public static BufferedImage getBarracksButton()
     {
         return barracksButton;
+    }
+
+    public static BufferedImage getSlaveryButton()
+    {
+        return slaveryButton;
     }
 
     public static BufferedImage getDeadInfantry()

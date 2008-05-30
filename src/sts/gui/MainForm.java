@@ -54,10 +54,11 @@ public class MainForm extends javax.swing.JFrame
         CPU = new javax.swing.JRadioButton();
         playerName = new javax.swing.JTextField();
         turbo = new javax.swing.JCheckBox();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        title.setFont(new java.awt.Font("Tahoma", 1, 36));
+        title.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         title.setText("Schramts!");
 
         startGame.setText("Start game");
@@ -147,6 +148,13 @@ public class MainForm extends javax.swing.JFrame
 
         turbo.setText("Turbo");
 
+        jButton1.setText("Help / About");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -154,30 +162,34 @@ public class MainForm extends javax.swing.JFrame
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(exit)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 252, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jButton1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 153, Short.MAX_VALUE)
                 .add(turbo)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(startGame)
                 .addContainerGap())
-            .add(layout.createSequentialGroup()
-                .add(108, 108, 108)
-                .add(title, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                .add(110, 110, 110))
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
                 .add(playerPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(18, 18, 18))
+            .add(layout.createSequentialGroup()
+                .add(132, 132, 132)
+                .add(title)
+                .addContainerGap(152, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .addContainerGap()
+                .add(16, 16, 16)
                 .add(title)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(playerPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 31, Short.MAX_VALUE)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, exit)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(exit)
+                        .add(jButton1))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(startGame)
                         .add(turbo)))
@@ -230,12 +242,17 @@ private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:eve
     data.addElement( ( CPU.isSelected() ? "CPU" : playerName.getText() ) );
 }//GEN-LAST:event_addActionPerformed
 
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+new WhatForm();
+}//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton CPU;
     private javax.swing.JButton add;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton exit;
     private javax.swing.JRadioButton human;
+    private javax.swing.JButton jButton1;
     private javax.swing.JList playerList;
     private javax.swing.JScrollPane playerListScroller;
     private javax.swing.JTextField playerName;

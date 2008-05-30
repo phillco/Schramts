@@ -18,9 +18,8 @@ public class HQ extends ProductionBuilding
 
         if ( preBuilt )
             timeToBuild = 0;
-        giveableCommands = new Command[2];
+        giveableCommands = new Command[1];
         giveableCommands[0] = new Command( "Create villager", 20, 100, ImageHandler.getVillager() );
-        giveableCommands[1] = new Command( "Give gold (devkey)", 0, -10000, ImageHandler.getGold() );
 
         if ( preBuilt )
             setHealth( 700 );

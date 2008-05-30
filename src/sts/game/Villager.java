@@ -29,7 +29,7 @@ public class Villager extends Unit
 
         giveableCommands = new Command[2];
         giveableCommands[0] = new Command( "Build barracks", 90, 750, ImageHandler.getBarracksButton() );
-        giveableCommands[1] = new Command( "Sell into slavery", 20, 0, ImageHandler.getGold() );
+        giveableCommands[1] = new Command( "Sell into slavery", 20, 0, ImageHandler.getSlaveryButton() );
 
         gold = 0;
     }
