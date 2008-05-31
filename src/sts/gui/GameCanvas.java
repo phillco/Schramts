@@ -190,20 +190,22 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                 Set<GameObject> targets = Local.getGame().getObjectsWithinArea( e.getX(), e.getY(), 8, 8 );
                 if ( targets.isEmpty() )
                 {
+                    int x = e.getX();
                     for ( GameObject go : Local.getSelectedObjects() )
                     {
+
                         if ( go instanceof Unit && go.getOwningPlayer() == Local.getLocalPlayer() )
                         {
-                            ( (Unit) go ).setDestination( e.getX(), e.getY() );
-                            //( (Unit) go ).setGoal( (GameObject) null );
+                            ( (Unit) go ).setDestination( x, e.getY() );
+                            //  ( (Unit) go ).setGoal( (GameObject) null );
+                            x += go.getWidth() + 1;
                         }
-                        
                         else if ( go instanceof ProductionBuilding && go.getOwningPlayer() == Local.getLocalPlayer() )
                         {
-                            ( (ProductionBuilding) go ).setRalleyPoint( e.getX(), e.getY());
+                            ( (ProductionBuilding) go ).setRalleyPoint( e.getX(), e.getY() );
                         }
-                        
-                        
+
+
                     }
                 }
                 else

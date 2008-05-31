@@ -44,7 +44,7 @@ public class Main
                 players.add( new Player( Color.green, "Third" ) );
                 players.add( new Player( Color.pink, "Forth" ) );
 
-                startGame( players, defaultPlayer, false );
+                startGame( players, defaultPlayer, true );
                 return;
             }
         }

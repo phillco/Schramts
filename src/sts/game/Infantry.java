@@ -16,19 +16,19 @@ public class Infantry extends Unit
     private static int range = 50;
 
     private static int damage = 1;//one per timestep
-    
+
     private int timeUntilNextShot;
 
     public Infantry( int x, int y, int dx, int dy, Player owner )
     {
-        super( x, y, dx, dy, 150, owner );
+        super( x, y, dx, dy, 12, 16, 150, owner );
         timeUntilNextShot = 3;
     }
 
     @Override
     public void act()
     {
-        if(timeUntilNextShot>0)
+        if ( timeUntilNextShot > 0 )
             --timeUntilNextShot;
         arrived = false;//never assume that you've made it, it could have moved
 
@@ -64,7 +64,7 @@ public class Infantry extends Unit
 
     public void attack( GameObject other )
     {
-        if ( other == null || timeUntilNextShot > 0)
+        if ( other == null || timeUntilNextShot > 0 )
             return;
 
         getOwningPlayer().giveObject( new Bullet( getX(), getY(), this, other ) );
@@ -115,32 +115,32 @@ public class Infantry extends Unit
         shootAtAnyoneInRange();//don't go anywhere, but if anyone strays too close...
 
     }
-    
+
     @Override
     protected void calculateSpeed()
     {
-        if(goal==null || goal.getOwningPlayer() != getOwningPlayer() || destination instanceof Location)
+        if ( goal == null || goal.getOwningPlayer() != getOwningPlayer() || destination instanceof Location )
         {
             super.calculateSpeed();
             return;
         }
         //goal is an object belonging to the same player, circle around it.
-        if(Location.getDistance(getLoc(), goal.getLoc())<range-8)
+        if ( Location.getDistance( getLoc(), goal.getLoc() ) < range - 8 )
         {
             super.calculateSpeed();
-            dx*=-1;
-            dy*=-1;
+            dx *= -1;
+            dy *= -1;
             return;
         }
-        if(Location.getDistance(getLoc(), goal.getLoc())>range+8)
+        if ( Location.getDistance( getLoc(), goal.getLoc() ) > range + 8 )
         {
             super.calculateSpeed();
             return;
         }
-        double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() )+Math.PI/4;
-        dx =  ( getMaxSpeed() * Math.cos( angle ) );
-        dy =  ( getMaxSpeed() * Math.sin( angle ) );
-        
+        double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() ) + Math.PI / 4;
+        dx = ( getMaxSpeed() * Math.cos( angle ) );
+        dy = ( getMaxSpeed() * Math.sin( angle ) );
+
     }
 
     private void shootAtAnyoneInRange()
@@ -199,13 +199,13 @@ public class Infantry extends Unit
     {
         return isClickContainedInRectangle( this, x, y, 8 + width, 13 + height );
     }
-    
+
     @Override
     public void setGoal( GameObject newGoal )
     {
-        if(newGoal != null && newGoal.getOwningPlayer()==Local.getGame().getNature())
+        if ( newGoal != null && newGoal.getOwningPlayer() == Local.getGame().getNature() )
             return;
-        super.setGoal(newGoal);
+        super.setGoal( newGoal );
     }
 
     @Override

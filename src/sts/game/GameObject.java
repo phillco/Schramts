@@ -23,15 +23,19 @@ public abstract class GameObject implements Locatable
      */
     private int maxHealth,  health;
 
+    private int width,  height;
+
     protected Command[] giveableCommands;
 
-    public GameObject( int x, int y, int maxHealth, Player owner )
+    public GameObject( int x, int y, int width, int height, int maxHealth, Player owner )
     {
         this.x = x;
         this.y = y;
         this.owningPlayer = owner;
         giveableCommands = new Command[0];
         this.maxHealth = health = maxHealth;
+        this.height = height;
+        this.width = width;
     }
 
     public void act()
@@ -70,7 +74,7 @@ public abstract class GameObject implements Locatable
 
     public int getX()
     {
-        return (int)x;
+        return (int) x;
     }
 
     public void setX( double x )
@@ -85,7 +89,7 @@ public abstract class GameObject implements Locatable
 
     public int getY()
     {
-        return (int)y;
+        return (int) y;
     }
 
     public void setY( double y )
@@ -150,7 +154,7 @@ public abstract class GameObject implements Locatable
 
     public boolean isClickContained( int x, int y, int width, int height )
     {
-        return false;
+        return isClickContainedInRectangle( this, x, y, width, height );
     }
 
     public static boolean isClickContainedInRectangle( GameObject go, int x, int y, int width, int height )
@@ -162,5 +166,15 @@ public abstract class GameObject implements Locatable
 
     public void giveCommand( Command c )
     {
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public int getHeight()
+    {
+        return height;
     }
 }

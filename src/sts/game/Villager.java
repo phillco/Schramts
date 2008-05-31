@@ -25,7 +25,7 @@ public class Villager extends Unit
 
     public Villager( int x, int y, Player owner )
     {
-        super( x, y, 0, 0, 100, owner );
+        super( x, y, 0, 0, 12, 16, 100, owner );
 
         giveableCommands = new Command[2];
         giveableCommands[0] = new Command( "Build barracks", 90, 750, ImageHandler.getBarracksButton() );

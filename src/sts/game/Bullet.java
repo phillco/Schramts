@@ -11,7 +11,7 @@ public class Bullet extends Unit
 {
     public Bullet( int x, int y, GameObject shooter, GameObject target )
     {
-        super( x, y, 0, 0, 100, shooter.getOwningPlayer() );
+        super( x, y, 0, 0, 0, 0, 100, shooter.getOwningPlayer() );
         setDestination( target );
         setGoal( target );
     }

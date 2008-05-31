@@ -14,23 +14,23 @@ public class Corpse extends GameObject
     private BufferedImage image;
 
     private Color color;
-    
+
     private int timeLeft;
 
     public Corpse( int x, int y, BufferedImage image, Color color )
     {
-        super( x, y, Integer.MAX_VALUE, Game.getInstance().getNature() );
+        super( x, y, image.getWidth(), image.getHeight(), Integer.MAX_VALUE, Game.getInstance().getNature() );
         this.image = image;
         this.color = color;
         timeLeft = 400;
     }
-    
+
     @Override
     public void act()
     {
         super.act();
-        if(timeLeft--<=0)
-            getOwningPlayer().removeObject(this);
+        if ( timeLeft-- <= 0 )
+            getOwningPlayer().removeObject( this );
     }
 
     @Override

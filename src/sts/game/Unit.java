@@ -7,6 +7,7 @@ package sts.game;
 import java.awt.Graphics2D;
 import java.util.Set;
 import sts.Local;
+import sts.Util;
 import sts.gui.ImageHandler;
 
 /**
@@ -29,9 +30,11 @@ public abstract class Unit extends GameObject
 
     protected double dx,  dy;
 
-    public Unit( int x, int y, int dx, int dy, int health, Player player )
+    protected double mySpeedRate = Util.getRandomGenerator().nextDouble() * 0.4 + 0.8;
+
+    public Unit( int x, int y, int dx, int dy, int width, int height, int health, Player player )
     {
-        super( x, y, health, player );
+        super( x, y, width, height, health, player );
         this.dx = dx;
         this.dy = dy;
         arrived = false;
@@ -42,13 +45,13 @@ public abstract class Unit extends GameObject
     {
         move();
 
-        // [PC] Funny but ugly code. Try it and then queue up a bunch of infantry.
+    // [PC] Funny but ugly code. Try it and then queue up a bunch of infantry.
         /*
-        Set<GameObject> onMe = Game.getInstance().getObjectsWithinArea( getX(), getY(), 5, 5 );
-        onMe.remove( this );
-        if ( !onMe.isEmpty() )
-            x += Util.getRandomGenerator().nextMidpointDouble( 16 );
-*/
+    Set<GameObject> onMe = Game.getInstance().getObjectsWithinArea( getX(), getY(), 5, 5 );
+    onMe.remove( this );
+    if ( !onMe.isEmpty() )
+    x += Util.getRandomGenerator().nextMidpointDouble( 16 );
+     */
     }
 
     @Override
@@ -70,8 +73,8 @@ public abstract class Unit extends GameObject
             return;
         }
         double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() ) + Math.PI;
-        dx = ( getMaxSpeed() * Math.cos( angle ) );
-        dy = ( getMaxSpeed() * Math.sin( angle ) );
+        dx = ( getMaxSpeed() * Math.cos( angle ) ) * mySpeedRate;
+        dy = ( getMaxSpeed() * Math.sin( angle ) ) * mySpeedRate;
     }
 
     public void setDestination( int x, int y )

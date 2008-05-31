@@ -13,23 +13,22 @@ public class GoldPile extends GameObject
 
     public GoldPile( int x, int y, Player nature )
     {
-        super( x, y, Integer.MAX_VALUE, nature );
+        super( x, y, 8, 8, Integer.MAX_VALUE, nature );
     }
 
     @Override
     public void act()
     {
-        
     }
-    
+
     public boolean removeGold()
     {
-      
-        if(remainingGold==1)//out of Gold
-            getOwningPlayer().removeObject(this);
-        return --remainingGold>=0;
+
+        if ( remainingGold == 1 )//out of Gold
+            getOwningPlayer().removeObject( this );
+        return --remainingGold >= 0;
     }
-    
+
     public int getGold()
     {
         return remainingGold;
@@ -38,18 +37,18 @@ public class GoldPile extends GameObject
     @Override
     public void draw( Graphics2D g )
     {
-        ImageHandler.drawGold(g, getX(), getY());   
+        ImageHandler.drawGold( g, getX(), getY() );
     }
 
     @Override
     public String getName()
     {
-        return "Gold pile with "+remainingGold +" gold remaining";
+        return "Gold pile with " + remainingGold + " gold remaining";
     }
-    
+
     @Override
     public boolean isClickContained( int x, int y, int width, int height )
     {
         return isClickContainedInRectangle( this, x, y, 8 + width, 8 + height );
-    }        
+    }
 }

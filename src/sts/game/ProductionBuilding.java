@@ -16,13 +16,11 @@ public abstract class ProductionBuilding extends GameObject
 
     protected RallyPoint rallyPoint = null;
 
-    public ProductionBuilding( int x, int y, int timeToBuild, int health, Player player )
+    public ProductionBuilding( int x, int y, int width, int height, int timeToBuild, int health, Player player )
     {
-        super( x, y, health, player );
+        super( x, y, width, height, health, player );
         this.timeToBuild = timeToBuild;
         this.healthRate = (int) Math.ceil( ( (double) health ) / timeToBuild ); // [PC] Not totally accurate due to integer limitations...but oh well. Better early than late.
-
-        // Set to 1.
         setHealth( 1 );
     }
 

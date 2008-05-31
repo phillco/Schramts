@@ -11,7 +11,7 @@ public class RallyPoint extends GameObject
 {
     public RallyPoint( int x, int y, Player owner )
     {
-        super( x, y, Integer.MAX_VALUE, owner );
+        super( x, y, 0, 0, Integer.MAX_VALUE, owner );
     }
 
     @Override
