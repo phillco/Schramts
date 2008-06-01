@@ -21,6 +21,12 @@ public class GoldPile extends GameObject
     @Override
     public void act()
     {
+        if ( miningVillager != null )
+        {
+            if ( !miningVillager.getOwningPlayer().getOwnedObjects().contains( miningVillager ) )
+                miningVillager = null;
+        }
+
     }
 
     public Villager getMiningVillager()

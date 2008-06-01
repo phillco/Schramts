@@ -6,7 +6,6 @@ package sts.game;
 
 import java.awt.Graphics2D;
 import java.util.LinkedList;
-import java.util.Set;
 import sts.Local;
 import sts.Util;
 import sts.gui.ImageHandler;

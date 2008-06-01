@@ -12,7 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
+import sts.Local;
 import sts.Main;
+import sts.game.Game;
 
 /**
  * Loads and stores the game's external graphics resources.
@@ -23,7 +25,7 @@ public class ImageHandler
     /**
      * External images that game objects use.
      */
-    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite,  rallyPoint,  destination,  razedBuilding,  deadVillager,  deadInfantry,  slaveryButton;
+    private static BufferedImage hq,  barracks,  barracksButton,  villager,  villagerWithGold,  infantry,  gold,  constructionSite,  rallyPoint,  destination,  razedBuilding,  deadVillager,  deadInfantry,  slaveryButton,  groundTexture;
 
     /**
      * The images that have been hue shifted already, so that they aren't recalculated.
@@ -53,7 +55,7 @@ public class ImageHandler
             deadInfantry = ImageIO.read( new File( "res/deadWarrior.gif" ) );
             razedBuilding = ImageIO.read( new File( "res/razedBuilding.gif" ) );
             slaveryButton = ImageIO.read( new File( "res/slaveryButton.gif" ) );
-
+            groundTexture = ImageIO.read( new File( "res/ground.gif" ) );
         }
         catch ( IOException iOException )
         {
@@ -105,6 +107,13 @@ public class ImageHandler
     public static void drawGold( Graphics2D g, int x, int y )
     {
         drawImage( gold, g, x, y );
+    }
+
+    public static void drawGround( Graphics2D g )
+    {
+        for ( int x = 0; x < Local.getWindow().getWidth(); x += groundTexture.getWidth() )
+            for ( int y = 0; y < Local.getWindow().getHeight(); y += groundTexture.getHeight() )
+                drawImage( groundTexture, g, x, y );
     }
 
     public static void drawConstructionSite( Graphics2D g, int x, int y, Color color )

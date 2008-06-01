@@ -45,7 +45,7 @@ public class Game
 
         if ( isTurbo )
             for ( Player pl : this.players )
-                pl.addGold( 1900 );
+                pl.addGold( 700 );
         prepareLevel();
         runnerThread.startLoop();
     }
@@ -64,6 +64,7 @@ public class Game
 
     public void draw( Graphics2D g )
     {
+        ImageHandler.drawGround( g );
         nature.draw( g );
         for ( Player p : players )
             p.draw( g );
@@ -76,6 +77,7 @@ public class Game
     {
         boolean hasLocalPlayer = false;
         boolean hasUnit = false;
+        boolean hasInfantry = false;
         Set<GameObject> objects = new HashSet<GameObject>();
         for ( Player p : players )
         {
@@ -94,6 +96,10 @@ public class Game
                     if ( go instanceof Unit )
                         hasUnit = true;
 
+                    // If it's an infantry, mark it.
+                    if ( go instanceof Infantry )
+                        hasInfantry = true;
+
                     objects.add( go );
                 }
             }
@@ -106,13 +112,24 @@ public class Game
             {
                 GameObject go = itr.next();
 
-                // Remove other players' units if any of ours are selected.
-                if ( hasLocalPlayer && go.getOwningPlayer() != Local.getLocalPlayer() )
-                    itr.remove();
+                try
+                {
+                    // Remove other players' units if any of ours are selected.
+                    if ( hasLocalPlayer && go.getOwningPlayer() != Local.getLocalPlayer() )
+                        itr.remove();
 
-                // Remove buildings if units are selected.
-                if ( hasUnit && go instanceof Unit == false )
-                    itr.remove();
+                    // Remove buildings if units are selected.
+                    else if ( hasUnit && go instanceof Unit == false )
+                        itr.remove();
+
+                    // Remove villagers if infantry are selected.
+                    else if ( hasInfantry && go instanceof Infantry == false )
+                        itr.remove();
+                }
+                catch ( IllegalStateException e )
+                {
+                    Main.warning( "IllegalStateException in Game.getObjectsWithinArea.", e );
+                }
             }
         }
 
