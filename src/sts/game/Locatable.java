@@ -11,6 +11,6 @@ package sts.game;
  */
 public interface Locatable {
     
-    public Location getLoc();
+    public Location getLocation();
 
 }

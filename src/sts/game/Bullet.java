@@ -1,7 +1,6 @@
 package sts.game;
 
 import java.awt.Graphics2D;
-import java.util.Set;
 
 /**
  * 
@@ -12,8 +11,7 @@ public class Bullet extends Unit
     public Bullet( int x, int y, GameObject shooter, GameObject target )
     {
         super( x, y, 0, 0, 0, 0, 100, shooter.getOwningPlayer() );
-        setDestination( target );
-        setGoal( target );
+        giveCommand( new Command( false, target ), true );
     }
 
     @Override
@@ -23,11 +21,6 @@ public class Bullet extends Unit
 
         if ( arrived )
             getOwningPlayer().removeObject( this );
-    }
-
-    @Override
-    public void setGoal( Set<GameObject> possible )
-    {
     }
 
     @Override

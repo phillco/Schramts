@@ -11,6 +11,8 @@ public class GoldPile extends GameObject
 {
     int remainingGold = 50;
 
+    private Villager miningVillager;
+
     public GoldPile( int x, int y, Player nature )
     {
         super( x, y, 8, 8, Integer.MAX_VALUE, nature );
@@ -21,9 +23,18 @@ public class GoldPile extends GameObject
     {
     }
 
+    public Villager getMiningVillager()
+    {
+        return miningVillager;
+    }
+
+    public void setMiningVillager( Villager miningVillager )
+    {
+        this.miningVillager = miningVillager;
+    }
+
     public boolean removeGold()
     {
-
         if ( remainingGold == 1 )//out of Gold
             getOwningPlayer().removeObject( this );
         return --remainingGold >= 0;
@@ -37,7 +48,7 @@ public class GoldPile extends GameObject
     @Override
     public void draw( Graphics2D g )
     {
-        ImageHandler.drawGold( g, getX(), getY() );
+        ImageHandler.drawGold( g, getX(), getY() + ( miningVillager == null ? 0 : 1 ) );
     }
 
     @Override

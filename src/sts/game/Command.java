@@ -1,60 +1,56 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package sts.game;
 
-import java.awt.image.BufferedImage;
-
 /**
- *
+ * Any sort of command given to an object.
  * @author Phillip Cohen
  */
 public class Command
 {
-    private String name;
+    /**
+     * Was this command directly given by the player, or automatically generated?
+     */
+    private boolean givenByPlayer;
 
-    private int timeToMake,  cost;
+    private Location location;
 
-    private BufferedImage queuedImage;
+    private GameObject object;
 
-    public Command( String name, int timeToMake, int cost, BufferedImage queuedImage )
+    public Command( boolean givenByPlayer, GameObject object )
     {
-        this.name = name;
-        this.timeToMake = timeToMake;
-        this.queuedImage = queuedImage;
-        this.cost = cost;
+        this.givenByPlayer = givenByPlayer;
+        this.location = object.getLocation();
+        this.object = object;
     }
 
-    public String getName()
+    public Command( boolean givenByPlayer, Location location )
     {
-        return name;
+        this.givenByPlayer = givenByPlayer;
+        this.location = location;
+        this.object = null;
     }
 
-    public BufferedImage getQueuedImage()
+    public boolean isGivenByPlayer()
     {
-        return queuedImage;
+        return givenByPlayer;
     }
 
-    public int getTimeToMake()
+    public Location getLocation()
     {
-        return timeToMake;
+        return location;
     }
 
-    public int getCost()
+    public GameObject getObject()
     {
-        return cost;
+        return object;
     }
 
-    public void setCost( int cost )
+    public boolean isValid()
     {
-        this.cost = cost;
-    }
-
-    public void setName( String name )
-    {
-        this.name = name;
+        return object.getOwningPlayer().getOwnedObjects().contains( object );
     }
     
-    
+    public boolean isGround()
+    {
+        return (object == null);
+    }
 }

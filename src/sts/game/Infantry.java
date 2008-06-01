@@ -3,7 +3,7 @@ package sts.game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Collection;
 import sts.Local;
 import sts.gui.ImageHandler;
 
@@ -28,38 +28,32 @@ public class Infantry extends Unit
     @Override
     public void act()
     {
+        arrived = false;//never assume that you've made it, it could have moved
+        super.act();
+
+        // Reload.
         if ( timeUntilNextShot > 0 )
             --timeUntilNextShot;
-        arrived = false;//never assume that you've made it, it could have moved
 
-        super.act();//move, if necessary
-        //we can't shoot at our target, see if anyone else is around...
-
-        if ( goal == null )
-        {
-            idleBehavior();
-            return;//nobody to attack
-
-        }
-        if ( !( Location.getDistance( this.getLoc(), goal.getLoc() ) < range ) )
+        // No assignment, or we're guarding one of our units.
+        if ( commandQueue.isEmpty() || commandQueue.peek().getObject() == null || commandQueue.peek().getObject().getOwningPlayer() == getOwningPlayer() )
         {
             shootAtAnyoneInRange();
+            return;
         }
-        if ( goal == null || goal.getHealth() <= 0 )//we win!
+
+        // Target is dead - get a new one!
+        if ( commandQueue.peek().getObject().getHealth() <= 0 )
         {
             findNewTarget();
             return;
         }
-        if ( goal.getOwningPlayer() != getOwningPlayer() )//enemy
-        {
-            if ( Location.getDistance( this.getLoc(), goal.getLoc() ) < range )
-                attack( goal );
-        }
-        else // guarding
 
-        {
+        // In range of our target - fire!
+        if ( Location.getDistance( this.getLocation(), commandQueue.peek().getLocation() ) < range )
+            attack( commandQueue.peek().getObject() );
+        else
             shootAtAnyoneInRange();
-        }
     }
 
     public void attack( GameObject other )
@@ -96,51 +90,48 @@ public class Infantry extends Unit
 
     private void findNewTarget()
     {
-        Player p = goal.getOwningPlayer();
-        Class old = goal.getClass();
+        Player p = commandQueue.peek().getObject().getOwningPlayer();
+        Class old = commandQueue.peek().getObject().getClass();
         ArrayList<GameObject> sameType = new ArrayList<GameObject>();
         for ( GameObject go : p.getOwnedObjects() )
         {
-            if ( go.getClass() == old && Location.getDistance( getLoc(), go.getLoc() ) < 8 * range )
+            if ( go.getClass() == old && Location.getDistance( getLocation(), go.getLocation() ) < 8 * range )
                 sameType.add( go );
         }
         if ( !sameType.isEmpty() )
-            setGoal( sameType.get( 0 ) );
+            commandQueue.set( 0, new Command( false, sameType.get( 0 ) ) );
         else
-            goal = null;
-    }
-
-    private void idleBehavior()
-    {
-        shootAtAnyoneInRange();//don't go anywhere, but if anyone strays too close...
-
+            commandQueue.removeFirst();
     }
 
     @Override
     protected void calculateSpeed()
     {
-        if ( goal == null || goal.getOwningPlayer() != getOwningPlayer() || destination instanceof Location )
+        if ( commandQueue.peek().getObject() == null || commandQueue.peek().getObject().getOwningPlayer() != getOwningPlayer() || commandQueue.peek().isGround() )
         {
             super.calculateSpeed();
             return;
         }
-        //goal is an object belonging to the same player, circle around it.
-        if ( Location.getDistance( getLoc(), goal.getLoc() ) < range - 8 )
+
+        // Goal is an object belonging to the same player, circle around it.
+        if ( Location.getDistance( getLocation(), commandQueue.peek().getObject().getLocation() ) < range - 8 )
         {
             super.calculateSpeed();
             dx *= -1;
             dy *= -1;
             return;
         }
-        if ( Location.getDistance( getLoc(), goal.getLoc() ) > range + 8 )
+
+        if ( Location.getDistance( getLocation(), commandQueue.peek().getObject().getLocation() ) > range + 8 )
         {
             super.calculateSpeed();
             return;
         }
-        double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() ) + Math.PI / 4;
-        dx = ( getMaxSpeed() * Math.cos( angle ) );
-        dy = ( getMaxSpeed() * Math.sin( angle ) );
 
+        // [PC] ??
+        double angle = Math.atan2( getY() - commandQueue.peek().getLocation().getY(), getX() - commandQueue.peek().getLocation().getX() ) + Math.PI;
+        dx = ( getMaxSpeed() * Math.cos( angle ) ) * mySpeedRate;
+        dy = ( getMaxSpeed() * Math.sin( angle ) ) * mySpeedRate;
     }
 
     private void shootAtAnyoneInRange()
@@ -153,7 +144,7 @@ public class Infantry extends Unit
 
             for ( GameObject go : p.getOwnedObjects() )
             {
-                if ( Location.getDistance( this.getLoc(), go.getLoc() ) < range )
+                if ( Location.getDistance( this.getLocation(), go.getLocation() ) < range )
                     inRange.add( go );
             }
         }
@@ -161,7 +152,7 @@ public class Infantry extends Unit
         return;
     }
 
-    public GameObject getBestTarget( ArrayList<GameObject> possible )
+    public GameObject getBestTarget( Collection<GameObject> possible )
     {
         if ( possible.isEmpty() )
             return null;//don't bother.
@@ -201,31 +192,25 @@ public class Infantry extends Unit
     }
 
     @Override
-    public void setGoal( GameObject newGoal )
+    public void giveCommand( Command c, boolean urgent )
     {
-        if ( newGoal != null && newGoal.getOwningPlayer() == Local.getGame().getNature() )
-            return;
-        super.setGoal( newGoal );
+        if ( c.isGround() || c.getObject().getOwningPlayer() != Game.getInstance().getNature() )
+            super.giveCommand( c, urgent );
     }
 
     @Override
-    public void setGoal( Set<GameObject> possible )
+    public Command processGroupCommand( GroupCommand command )
     {
-        if ( possible == null || possible.isEmpty() )
-        {
-            setGoal( (GameObject) null );
-            setDestination( null );
-            return;//don't bother...
-
-        }
-        setGoal( getBestTarget( new ArrayList<GameObject>( possible ) ) );
-        if ( goal != null )//we found a target
-        {
-            setDestination( goal );
-            return;
-        }
-        //we only had friendly units, choose one to guard.
-        setGoal( possible.iterator().next() );
-        setDestination( goal );
+        // Just move there.
+        if ( command.getObjects().isEmpty() )
+            return super.processGroupCommand( command );
+        
+        GameObject goal = getBestTarget( command.getObjects() );
+        
+        // No military units, so pick a friendly unit to guard.
+        if ( goal == null )
+            goal = command.getObjects().iterator().next();
+        
+        return new Command( command.isGivenByPlayer(), goal);
     }
 }

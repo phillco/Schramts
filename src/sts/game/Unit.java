@@ -5,6 +5,7 @@
 package sts.game;
 
 import java.awt.Graphics2D;
+import java.util.LinkedList;
 import java.util.Set;
 import sts.Local;
 import sts.Util;
@@ -16,15 +17,7 @@ import sts.gui.ImageHandler;
  */
 public abstract class Unit extends GameObject
 {
-    /**
-     * What this Unit is working on
-     */
-    GameObject goal;
-
-    /**
-     * Where this Unit is going
-     */
-    Locatable destination;
+    protected LinkedList<Command> commandQueue = new LinkedList<Command>();
 
     boolean arrived;
 
@@ -44,22 +37,14 @@ public abstract class Unit extends GameObject
     public void act()
     {
         move();
-
-    // [PC] Funny but ugly code. Try it and then queue up a bunch of infantry.
-        /*
-    Set<GameObject> onMe = Game.getInstance().getObjectsWithinArea( getX(), getY(), 5, 5 );
-    onMe.remove( this );
-    if ( !onMe.isEmpty() )
-    x += Util.getRandomGenerator().nextMidpointDouble( 16 );
-     */
     }
 
     @Override
     public void draw( Graphics2D g )
     {
         // Draw a flag if we're moving to a specific spot.
-        if ( destination != null && goal == null && !arrived && getOwningPlayer() == Local.getLocalPlayer() )
-            ImageHandler.drawDestination( g, destination.getLoc().getX(), destination.getLoc().getY(), getOwningPlayer().getColor() );
+        if ( !commandQueue.isEmpty() && !arrived && getOwningPlayer() == Local.getLocalPlayer() && commandQueue.peek().isGivenByPlayer() )
+            ImageHandler.drawDestination( g, commandQueue.peek().getLocation().getX(), commandQueue.peek().getLocation().getY(), getOwningPlayer().getColor() );
     }
 
     /**
@@ -67,36 +52,54 @@ public abstract class Unit extends GameObject
      */
     protected void calculateSpeed()
     {
-        if ( destination == null )
+        if ( commandQueue.isEmpty() )
         {
             dx = dy = 0;
             return;
         }
-        double angle = Math.atan2( getY() - destination.getLoc().getY(), getX() - destination.getLoc().getX() ) + Math.PI;
+        double angle = Math.atan2( getY() - commandQueue.peek().getLocation().getY(), getX() - commandQueue.peek().getLocation().getX() ) + Math.PI;
         dx = ( getMaxSpeed() * Math.cos( angle ) ) * mySpeedRate;
         dy = ( getMaxSpeed() * Math.sin( angle ) ) * mySpeedRate;
     }
 
-    public void setDestination( int x, int y )
+    public void clearCommands()
     {
-        arrived = false;
-        destination = new Location( x, y );
+        commandQueue.clear();
     }
 
-    public void setDestination( Locatable l )
+    public void giveCommand( Command c, boolean urgent )
     {
-        arrived = false;
-        this.destination = l;
+        if ( c instanceof GroupCommand )
+        {
+            giveCommand( processGroupCommand( (GroupCommand) c ), urgent );
+            return;
+        }
+
+        if ( urgent )
+        {
+            commandQueue.addFirst( c );
+            arrived = false;
+        }
+        else
+            commandQueue.addLast( c );
     }
 
-    public void setGoal( GameObject go )
+    public Command getCurrentCommand()
     {
-        goal = go;
-        //[PC] destination= go;
+        return commandQueue.peek();
+    }
+
+    public void nextCommand()
+    {
+        commandQueue.removeFirst();
         arrived = false;
     }
 
-    public abstract void setGoal( Set<GameObject> possible );
+    public Command processGroupCommand( GroupCommand command )
+    {
+        // Just go there.
+        return new Command( command.isGivenByPlayer(), command.getLocation() );
+    }
 
     /**
      * Returns how fast this object can travel.  Abstract so that each type of unit
@@ -106,20 +109,16 @@ public abstract class Unit extends GameObject
 
     private void move()
     {
-        if ( destination == null )
-        {
-            if ( goal == null )
-                return;
-            destination = goal;
-        }
-        if ( !arrived )
+        if ( !arrived && !commandQueue.isEmpty() )
         {
             calculateSpeed();
-            int destX = destination.getLoc().getX(), destY = destination.getLoc().getY();
+            int destX = commandQueue.peek().getLocation().getX(), destY = commandQueue.peek().getLocation().getY();
+
+            // Arrived yet?
             if ( Math.sqrt( ( getX() - destX ) * ( getX() - destX ) +
                             ( getY() - destY ) * ( getY() - destY ) ) < getMaxSpeed() + 1 )
             {
-                setLocation( destination.getLoc().getX(), destination.getLoc().getY() );
+                setLocation( commandQueue.peek().getLocation().getX(), commandQueue.peek().getLocation().getY() );
                 arrived = true;
             }
             else
@@ -128,20 +127,10 @@ public abstract class Unit extends GameObject
                 y += dy;
             }
         }
-
-
-    }
-
-    public GameObject getGoal()
-    {
-        return goal;
     }
 
     /**
      * Gives <code>this</code> a new velocity, disregarding the old velocity.
-     * 
-     * @param dx The new x velocity
-     * @param dy The new y velocity
      */
     public void setVelocity( int dx, int dy )
     {
@@ -152,13 +141,10 @@ public abstract class Unit extends GameObject
     /**
      * Gives <code>this</code> a new speed, but preserves the sign of dx and dy.
      * If dx or dy is zero, their sign is treated as positive.
-     * 
-     * @param dx The new magnitude of the x velocity
-     * @param dy The new magnitude of the y velocity
      */
     public void setSpeed( int dx, int dy )
     {
-        int signX = 1, signY = 1;
+        int signX = 1,  signY = 1;
         if ( dx < 0 )
             signX = -1;
         if ( dy < 0 )

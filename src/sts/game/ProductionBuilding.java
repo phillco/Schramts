@@ -52,7 +52,6 @@ public abstract class ProductionBuilding extends GameObject
         {
             changeHealth( 1 );
             if ( getHealth() % 10 == 0 )//nothing in this world is free
-
                 getOwningPlayer().addGold( -1 );
         }
     }
@@ -63,7 +62,7 @@ public abstract class ProductionBuilding extends GameObject
     }
 
     @Override
-    public void giveCommand( Command c )
+    public void giveCommand( ProductionCommand c )
     {
         // Not built yet.
         if ( !isBuilt() )
@@ -80,15 +79,12 @@ public abstract class ProductionBuilding extends GameObject
     {
         rallyPoint = new RallyPoint( x, y, getOwningPlayer() );
     }
-    
+
     public void createAndAssignUnit( Unit u )
     {
         if ( rallyPoint != null )
-        {
-            u.setGoal( rallyPoint );
-            u.setDestination( rallyPoint );
-        }
-        
+            u.giveCommand( new Command( false, rallyPoint ), false );
+
         getOwningPlayer().giveObject( u );
     }
 
@@ -107,7 +103,7 @@ public abstract class ProductionBuilding extends GameObject
 
         }
     }
-    
+
     public int queueLength()
     {
         return this.productionQueue.size();
@@ -116,19 +112,19 @@ public abstract class ProductionBuilding extends GameObject
     @Override
     public void draw( Graphics2D g )
     {
-        if ( rallyPoint != null && Local.getSelectedObjects().contains( this) )
+        if ( rallyPoint != null && Local.getSelectedObjects().contains( this ) )
             rallyPoint.draw( g );
     }
 
-    protected abstract void doCreation( Command type );
+    protected abstract void doCreation( ProductionCommand type );
 
     public class ItemInQueue
     {
-        public Command type;
+        public ProductionCommand type;
 
         public int timeLeft;
 
-        public ItemInQueue( Command type, int timeLeft )
+        public ItemInQueue( ProductionCommand type, int timeLeft )
         {
             this.type = type;
             this.timeLeft = timeLeft;

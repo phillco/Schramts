@@ -73,7 +73,7 @@ public class Location implements Locatable
         this.y = y;
     }
 
-    public Location getLoc()
+    public Location getLocation()
     {
         return this;
     }

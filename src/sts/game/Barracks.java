@@ -27,8 +27,8 @@ public class Barracks extends ProductionBuilding
         super.build();
         if ( isBuilt() )
         {
-            giveableCommands = new Command[1];
-            giveableCommands[0] = new Command( "Create infantry", 50, 150, ImageHandler.getInfantry() );
+            productionCommands = new ProductionCommand[1];
+            productionCommands[0] = new ProductionCommand( "Create infantry", 50, 150, ImageHandler.getInfantry() );
         }
     }
 
@@ -53,9 +53,9 @@ public class Barracks extends ProductionBuilding
     }
 
     @Override
-    protected void doCreation( Command type )
+    protected void doCreation( ProductionCommand type )
     {
-        if ( type == giveableCommands[0] )
+        if ( type == productionCommands[0] )
             createAndAssignUnit( new Infantry( getX() + Util.getRandomGenerator().nextInt( 48 ), getY() + 50, 0, 0, getOwningPlayer() ) );
     }
 

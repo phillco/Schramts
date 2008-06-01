@@ -14,6 +14,5 @@ public abstract class AI
     
     public void notifyAboutAttack(int x, int y, GameObject attacker)
     {
-        // System.out.println( "AAAH!" );
     }
 }

@@ -17,7 +17,9 @@ import java.awt.image.BufferStrategy;
 import java.util.Set;
 import sts.Local;
 import sts.game.Command;
+import sts.game.ProductionCommand;
 import sts.game.GameObject;
+import sts.game.GroupCommand;
 import sts.game.ProductionBuilding;
 import sts.game.Unit;
 import sts.game.Location;
@@ -118,7 +120,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                 {
                     // Draw command buttons.
                     int buttonIndex = 0;
-                    for ( Command c : go.getGiveableCommands() )
+                    for ( ProductionCommand c : go.getProductionCommands() )
                     {
                         x = ( 440 - 53 * ( buttonIndex + 1 ) );
                         g.setColor( ( selectedButton == buttonIndex ? Color.white : Color.lightGray ) );
@@ -130,9 +132,9 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                     }
 
                     // Draw button's tooltip.
-                    if ( go != null && selectedButton != -1 && go.getGiveableCommands().length > selectedButton )
+                    if ( go != null && selectedButton != -1 && go.getProductionCommands().length > selectedButton )
                     {
-                        ExtendedGraphics.drawText( g, go.getGiveableCommands()[selectedButton].getName() + ( Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() > 0 ? " (costs " : " (gives " ) + Math.abs( Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() ) + " gold)", 350, getHeight() - 1, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.BOTTOM );
+                        ExtendedGraphics.drawText( g, go.getProductionCommands()[selectedButton].getName() + ( Local.getSelectedObject().getProductionCommands()[selectedButton].getCost() > 0 ? " (costs " : " (gives " ) + Math.abs( Local.getSelectedObject().getProductionCommands()[selectedButton].getCost() ) + " gold)", 350, getHeight() - 1, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.BOTTOM );
                     }
 
                     // Draw queued units.
@@ -178,45 +180,40 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     public void mousePressed( MouseEvent e )
     {
-        if ( selectedButton == -1 )
+        if ( selectedButton != -1 )
+            return;
+
+        // What's there?
+        Set<GameObject> targets = Local.getGame().getObjectsWithinArea( e.getX(), e.getY(), 8, 8 );
+
+        // Left clicked on something; select it.
+        if ( e.getButton() == MouseEvent.BUTTON1 )
         {
-            if ( e.getButton() == MouseEvent.BUTTON1 )
+            Local.setSelectedObjects( targets );
+            box1 = new Location( e.getX(), e.getY() );
+            return;
+        }
+
+
+        // Right clicked.
+        int x = e.getX();
+        for ( GameObject go : Local.getSelectedObjects() )
+        {
+            // Ours to command?
+            if ( go instanceof Unit && go.getOwningPlayer() == Local.getLocalPlayer() )
             {
-                Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( e.getX(), e.getY(), 8, 8 ) );
-                box1 = new Location( e.getX(), e.getY() );
-            }
-            else
-            {
-                Set<GameObject> targets = Local.getGame().getObjectsWithinArea( e.getX(), e.getY(), 8, 8 );
+                Unit u = (Unit) go;
+                u.clearCommands();
+
                 if ( targets.isEmpty() )
-                {
-                    int x = e.getX();
-                    for ( GameObject go : Local.getSelectedObjects() )
-                    {
-
-                        if ( go instanceof Unit && go.getOwningPlayer() == Local.getLocalPlayer() )
-                        {
-                            ( (Unit) go ).setDestination( x, e.getY() );
-                            //  ( (Unit) go ).setGoal( (GameObject) null );
-                            x += go.getWidth() + 1;
-                        }
-                        else if ( go instanceof ProductionBuilding && go.getOwningPlayer() == Local.getLocalPlayer() )
-                        {
-                            ( (ProductionBuilding) go ).setRalleyPoint( e.getX(), e.getY() );
-                        }
-
-
-                    }
-                }
+                    u.giveCommand( new Command( true, new Location( x, e.getY() ) ), true );
                 else
-                {
-                    for ( GameObject go : Local.getSelectedObjects() )
-                    {
-                        if ( go instanceof Unit && go.getOwningPlayer() == Local.getLocalPlayer() )
-                            ( (Unit) go ).setGoal( targets );
-                    }
-                }
-
+                    u.giveCommand( new GroupCommand( true, new Location( x, e.getY() ), targets ), true );
+                x += go.getWidth() + 1;
+            }
+            else if ( go instanceof ProductionBuilding && go.getOwningPlayer() == Local.getLocalPlayer() )
+            {
+                ( (ProductionBuilding) go ).setRalleyPoint( e.getX(), e.getY() );
             }
         }
     }
@@ -224,10 +221,10 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
     public void mouseReleased( MouseEvent e )
     {
         // Button pushed.
-        if ( selectedButton != -1 && Local.getSelectedObjects().size() > 0 && Local.getSelectedObject().getGiveableCommands().length > selectedButton )
+        if ( selectedButton != -1 && Local.getSelectedObjects().size() > 0 && Local.getSelectedObject().getProductionCommands().length > selectedButton )
         {
             //     if ( Local.getLocalPlayer().getGoldAmount() >= Local.getSelectedObject().getGiveableCommands()[selectedButton].getCost() )
-            Local.getSelectedObject().giveCommand( Local.getSelectedObject().getGiveableCommands()[selectedButton] );
+            Local.getSelectedObject().giveCommand( Local.getSelectedObject().getProductionCommands()[selectedButton] );
         }
 
         // Box dragged!

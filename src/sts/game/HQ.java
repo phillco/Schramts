@@ -23,8 +23,8 @@ public class HQ extends ProductionBuilding
 
         if ( preBuilt )
             timeToBuild = 0;
-        giveableCommands = new Command[1];
-        giveableCommands[0] = new Command( "Create villager", 20, 100, ImageHandler.getVillager() );
+        productionCommands = new ProductionCommand[1];
+        productionCommands[0] = new ProductionCommand( "Create villager", 20, 100, ImageHandler.getVillager() );
         
         timeUntilNextShot = 2;
         
@@ -46,7 +46,7 @@ public class HQ extends ProductionBuilding
         if ( other == null || timeUntilNextShot > 0)
             return;
 
-        getOwningPlayer().giveObject( new Bullet( getLoc().getX(), getLoc().getY(), this, other ) );
+        getOwningPlayer().giveObject( new Bullet( getLocation().getX(), getLocation().getY(), this, other ) );
         other.changeHealth( -1 );//don't tell AI, that's only for offensive moves
     }
     
@@ -60,7 +60,7 @@ public class HQ extends ProductionBuilding
 
             for ( GameObject go : p.getOwnedObjects() )
             {
-                if ( Location.getDistance( this.getLoc(), go.getLoc() ) < range )
+                if ( Location.getDistance( this.getLocation(), go.getLocation() ) < range )
                     inRange.add( go );
             }
         }
@@ -107,9 +107,9 @@ public class HQ extends ProductionBuilding
     }
 
     @Override
-    protected void doCreation( Command type )
+    protected void doCreation( ProductionCommand type )
     {
-        if ( type == giveableCommands[0] )
+        if ( type == productionCommands[0] )
             createAndAssignUnit( new Villager( getX() + 30 + Util.getRandomGenerator().nextInt( 30 ) - 15, getY() + 54, getOwningPlayer() ) );
     }
 
@@ -126,7 +126,7 @@ public class HQ extends ProductionBuilding
     }
 
     @Override
-    public Location getLoc()
+    public Location getLocation()
     {
         return new Location( getX() + 32, getY() + 44 );
     }

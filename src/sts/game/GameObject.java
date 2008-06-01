@@ -25,14 +25,14 @@ public abstract class GameObject implements Locatable
 
     private int width,  height;
 
-    protected Command[] giveableCommands;
+    protected ProductionCommand[] productionCommands;
 
     public GameObject( int x, int y, int width, int height, int maxHealth, Player owner )
     {
         this.x = x;
         this.y = y;
         this.owningPlayer = owner;
-        giveableCommands = new Command[0];
+        productionCommands = new ProductionCommand[0];
         this.maxHealth = health = maxHealth;
         this.height = height;
         this.width = width;
@@ -129,25 +129,25 @@ public abstract class GameObject implements Locatable
         return getOwningPlayer().getName() + "'s " + getName() + ", at [" + getX() + "," + getY() + "], health " + health + "/" + maxHealth;
     }
 
-    public Command[] getGiveableCommands()
+    public ProductionCommand[] getProductionCommands()
     {
-        return giveableCommands;
+        return productionCommands;
     }
 
-    public boolean canExecute( Command c )
+    public boolean canExecute( ProductionCommand c )
     {
-        for ( Command giveableC : giveableCommands )
+        for ( ProductionCommand giveableC : productionCommands )
             if ( giveableC == c )
                 return true;
 
         return false;
     }
 
-    public void executeCommand( Command c )
+    public void executeCommand( ProductionCommand c )
     {
     }
 
-    public Location getLoc()
+    public Location getLocation()
     {
         return new Location( getX(), getY() );
     }
@@ -164,7 +164,7 @@ public abstract class GameObject implements Locatable
         return ( okX && okY );
     }
 
-    public void giveCommand( Command c )
+    public void giveCommand( ProductionCommand c )
     {
     }
 

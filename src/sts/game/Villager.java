@@ -13,6 +13,8 @@ import sts.gui.ImageHandler;
  */
 public class Villager extends Unit
 {
+    public final static int CARRYING_CAPACITY = 30;
+
     /**
      * How much gold this Villager is carrying.
      */
@@ -23,13 +25,15 @@ public class Villager extends Unit
      */
     private Location deferredDestination = null;
 
+    private int timeTillNextMine = 30;
+
     public Villager( int x, int y, Player owner )
     {
         super( x, y, 0, 0, 12, 16, 100, owner );
 
-        giveableCommands = new Command[2];
-        giveableCommands[0] = new Command( "Build barracks", 90, 750, ImageHandler.getBarracksButton() );
-        giveableCommands[1] = new Command( "Sell into slavery", 20, 0, ImageHandler.getSlaveryButton() );
+        productionCommands = new ProductionCommand[2];
+        productionCommands[0] = new ProductionCommand( "Build barracks", 90, 750, ImageHandler.getBarracksButton() );
+        productionCommands[1] = new ProductionCommand( "Sell into slavery", 20, 0, ImageHandler.getSlaveryButton() );
 
         gold = 0;
     }
@@ -37,64 +41,76 @@ public class Villager extends Unit
     @Override
     public void act()
     {
-        super.act();//moves if necessary
+        super.act();
 
-        // Reflect global slave trade market.
-        giveableCommands[1].setCost( -Game.getInstance().getSlaveryGold() );
+        // Global slave trade. Update our price.
+        productionCommands[1].setCost( -Game.getInstance().getSlaveryGold() );
 
-        if ( goal == null && destination == null )//nowhere to go and nothing to do
+        // Nothing to do.
+        if ( commandQueue.isEmpty() )
         {
-            idleBehavior();
+            findNewGold();
             return;
         }
-        if ( goal instanceof GoldPile )
-        {
-            goldBehavior();
-            return;
-        }
-        if ( goal instanceof ProductionBuilding )
-        {
-            if ( ( (ProductionBuilding) goal ).isBuilt() )
-            {
-                repairBehavior();
-            }
-            else
-            {
-                buildBehavior();
-            }
-        }
-    }
 
-    private void buildBehavior()
-    {
-        if ( !( goal instanceof ProductionBuilding ) )
+        if ( commandQueue.peek().getObject() instanceof GoldPile && !couldUse( (GoldPile) commandQueue.peek().getObject() ) )
+        {
+            nextCommand();
+            if ( !findNewGold() )
+                giveCommand( new Command( false, getNearestDropoff() ), false );
             return;
+        }
+
         if ( arrived )
-            ( (ProductionBuilding) goal ).build();
+        {
+            // At a gold mine.
+            if ( commandQueue.peek().getObject() instanceof GoldPile )
+            {
+                goldBehavior();
+                return;
+            }
+
+            // At the HQ, with gold.
+            if ( commandQueue.peek().getObject() instanceof HQ && gold > 0 )
+            {
+                dropOffGold();
+                nextCommand();
+                return;
+            }
+
+            // At a building.
+            if ( commandQueue.peek().getObject() instanceof ProductionBuilding )
+            {
+                if ( ( (ProductionBuilding) commandQueue.peek().getObject() ).isBuilt() )
+                    ( (ProductionBuilding) commandQueue.peek().getObject() ).repair();
+                else
+                    ( (ProductionBuilding) commandQueue.peek().getObject() ).build();
+
+                return;
+            }
+        }
     }
 
     private void dropOffGold()
     {
         getOwningPlayer().addGold( gold );
         gold = 0;
-
     }
 
     public boolean findNewGold()//start mining
     {
-        GameObject goldPile = null;
+        GoldPile nearest = null;
         for ( GameObject go : Local.getGame().getNature().getOwnedObjects() )
         {
-            if ( go instanceof GoldPile )
+            if ( go instanceof GoldPile && couldUse( (GoldPile) go ) )
             {
-                if ( goldPile == null || Location.getDistance( this.getLoc(), goldPile.getLoc() ) > Location.getDistance( this.getLoc(), go.getLoc() ) )
-                    goldPile = (GoldPile) go;
+                if ( nearest == null || Location.getDistance( this.getLocation(), nearest.getLocation() ) > Location.getDistance( this.getLocation(), go.getLocation() ) )
+                    nearest = (GoldPile) go;
             }
         }
-        if ( goldPile == null )//E.T. go home
+        if ( nearest == null )//E.T. go home
             return false;
-        setGoal( goldPile );
-        setDestination( goldPile );
+        giveCommand( new Command( false, nearest ), false );
         return true;
     }
 
@@ -106,67 +122,35 @@ public class Villager extends Unit
 
     private void goldBehavior()
     {
-        // :-0 we can't do this
-        if ( !( goal instanceof GoldPile ) )
-            return;
-        if ( !arrived )//the super.act() took care of moving, we can't gather yet
-            return;
-        GoldPile goldPile = (GoldPile) goal;
+        GoldPile goldPile = (GoldPile) commandQueue.peek().getObject();
 
-        //We have gold and have arrived at HQ
-        if ( this.gold > 0 && destination instanceof HQ )
+        // We have enough - return to base.
+        if ( gold >= CARRYING_CAPACITY )
         {
-            //we need to drop off our gold
-            dropOffGold();
-            if ( deferredDestination == null )
-                setDestination( goal );//go back to the gold
-            else
-            {
-                // Just a step on the route.
-                setDestination( deferredDestination );
-                deferredDestination = null;
-                goal = null;
-            }
+            nextCommand();
 
-            return;
-
-        }
-
-        //we know now that we are at the gold pile and we have gold
-        //Return to base
-        if ( this.gold == 10 && destination instanceof GoldPile )
-        {
-            //return to base
-            setDestination( getNearestDropoff() );
+            giveCommand( new Command( false, getNearestDropoff() ), false );
+            giveCommand( new Command( false, goldPile ), false );
+            goldPile.setMiningVillager( null );
             return;
         }
 
-        //The gold Pile is out of gold
-        if ( goldPile.getGold() <= 0 )
-        {
-            if ( !findNewGold() )
-                setDestination( getNearestDropoff() );
-            return;//that's all we can do
-
-        }
-
-        //we are mining!
-        mine();
+        // No problems - mine normally.
+        mine( goldPile );
     }
 
     @Override
-    public void giveCommand( Command c )
+    public void giveCommand( ProductionCommand c )
     {
         if ( getOwningPlayer().getGoldAmount() < c.getCost() )
             return;//can't afford
 
-        if ( c == giveableCommands[0] )
+        if ( c == productionCommands[0] )
         {
             Barracks b = new Barracks( getX(), getY() - 30, getOwningPlayer() );
             getOwningPlayer().giveObject( b );
             getOwningPlayer().addGold( -c.getCost() );
-            setDestination( b );
-            setGoal( b );
+            giveCommand( new Command( true, b ), true );
         }
         else
             getOwningPlayer().addGold( Game.getInstance().sellIntoSlavery( this ) );
@@ -179,36 +163,34 @@ public class Villager extends Unit
         {
             if ( go instanceof HQ )
             {
-                if ( closest == null || Location.getDistance( this.getLoc(), closest.getLoc() ) > Location.getDistance( this.getLoc(), go.getLoc() ) )
+                if ( closest == null || Location.getDistance( this.getLocation(), closest.getLocation() ) > Location.getDistance( this.getLocation(), go.getLocation() ) )
                     closest = go;
             }
         }
         return closest;
     }
 
-    private void idleBehavior()
+    private void mine( GoldPile goldPile )
     {
-        findNewGold();
-    }
-    private int timeTillNextMine = 30;
-
-    private void mine()
-    {
-        if ( !( goal instanceof GoldPile ) )
-            return;
-        if ( timeTillNextMine-- <= 0 )
+        if ( couldUse( goldPile ) )
         {
-            gold += ( (GoldPile) goal ).removeGold() ? 1 : 0;
-            timeTillNextMine = Game.getInstance().isTurbo() ? 1 : 30;
+            goldPile.setMiningVillager( this );
+            if ( timeTillNextMine-- <= 0 )
+            {
+                gold += ( (GoldPile) commandQueue.peek().getObject() ).removeGold() ? 1 : 0;
+                timeTillNextMine = Game.getInstance().isTurbo() ? 1 : 30;
+            }
+        }
+        else
+        {
+            findNewGold();
+            nextCommand();
         }
     }
 
-    private void repairBehavior()
+    private boolean couldUse( GoldPile goldPile )
     {
-        if ( !( goal instanceof ProductionBuilding ) )
-            return;
-        if ( arrived )
-            ( (ProductionBuilding) goal ).repair();
+        return ( goldPile.getMiningVillager() == null || goldPile.getMiningVillager() == this ) && goldPile.getGold() > 0;
     }
 
     @Override
@@ -227,10 +209,10 @@ public class Villager extends Unit
     public void draw( Graphics2D g )
     {
         super.draw( g );
-        
+
         // Draw a flag if we're moving to a specific spot, even if we're dropping off gold first.
-        if ( deferredDestination != null && getOwningPlayer() == Local.getLocalPlayer())
-            ImageHandler.drawDestination( g, deferredDestination.getLoc().getX(), deferredDestination.getLoc().getY(), getOwningPlayer().getColor() );
+        if ( deferredDestination != null && getOwningPlayer() == Local.getLocalPlayer() )
+            ImageHandler.drawDestination( g, deferredDestination.getLocation().getX(), deferredDestination.getLocation().getY(), getOwningPlayer().getColor() );
         Color c = getOwningPlayer().getColor();
 
         if ( Local.getSelectedObjects().contains( this ) )
@@ -244,30 +226,15 @@ public class Villager extends Unit
     }
 
     @Override
-    public void setDestination( int x, int y )
+    public Command processGroupCommand( GroupCommand command )
     {
-        if ( gold > 0 && deferredDestination == null )
-        {
-            super.setDestination( getNearestDropoff() );
-            deferredDestination = new Location( x, y );
-        }
-        else
-            super.setDestination( x, y );
-    }
-
-    @Override
-    public void setGoal( Set<GameObject> possible )
-    {
-        if ( possible == null || possible.isEmpty() )
-        {
-            setGoal( (GameObject) null );
-            setDestination( null );
-            return;//don't bother...
-
-        }
+        System.out.println( "qqq" );
+        Set<GameObject> possible = command.getObjects();
         Set<GameObject> goldMines = new HashSet<GameObject>();
         Set<GameObject> constructionSites = new HashSet<GameObject>();
         Set<GameObject> repair = new HashSet<GameObject>();
+
+        // Split and categorize the list.
         for ( GameObject go : possible )
         {
             if ( go instanceof GoldPile )
@@ -289,24 +256,16 @@ public class Villager extends Unit
                 }
             }
         }
-        if ( goldMines.size() > 0 )
-        {
-            setGoal( goldMines.iterator().next() );
-            setDestination( goal );
-            return;
-        }
-        if ( constructionSites.size() > 0 )
-        {
-            setGoal( constructionSites.iterator().next() );
-            setDestination( goal );
-            return;
-        }
-        if ( repair.size() > 0 )
-        {
-            setGoal( repair.iterator().next() );
-            setDestination( goal );
-            return;
-        }
+        System.out.println( constructionSites.size() );
 
+        // Pick options by priority.
+        if ( !goldMines.isEmpty() )
+            return new Command( command.isGivenByPlayer(), goldMines.iterator().next() );
+        if ( !constructionSites.isEmpty() )
+            return new Command( command.isGivenByPlayer(), constructionSites.iterator().next() );
+        if ( !repair.isEmpty() )
+            return new Command( command.isGivenByPlayer(), repair.iterator().next() );
+
+        return super.processGroupCommand( command );
     }
 }
