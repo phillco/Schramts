@@ -30,6 +30,10 @@ public class Player
 
     private AI helper;
 
+    private int infantryAttack;
+    
+    private int infantryHealth;
+
     /**
      * All of the objects (villagers, buildings, etc) that belong to this player.
      */
@@ -44,6 +48,8 @@ public class Player
     {
         this.color = color;
         this.name = name;
+        infantryAttack = 5;
+        infantryHealth = 150;
         lost = false;
         helper = new PlayingAI( this );
     }
@@ -54,6 +60,8 @@ public class Player
         this.name = name;
         lost = false;
         this.helper = helper;
+        infantryAttack = 5;
+        infantryHealth = 150;
     }
 
     public void act()
@@ -109,6 +117,16 @@ public class Player
     public void lose()
     {
         lost = true;
+    }
+
+    public int getInfantryAttack()
+    {
+        return infantryAttack;
+    }
+
+    public int getInfantryHealth()
+    {
+        return infantryHealth;
     }
 
     @Override
@@ -194,5 +212,15 @@ public class Player
     public boolean hasLost()
     {
         return lost;
+    }
+
+    void changeInfantryAttack( int i )
+    {
+        infantryAttack += i;
+    }
+
+    void changeInfantryHealth( int i )
+    {
+        infantryHealth += i;
     }
 }

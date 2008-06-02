@@ -27,8 +27,10 @@ public class Barracks extends ProductionBuilding
         super.build();
         if ( isBuilt() )
         {
-            productionCommands = new ProductionCommand[1];
+            productionCommands = new ProductionCommand[3];
             productionCommands[0] = new ProductionCommand( "Create infantry", 50, 150, ImageHandler.getInfantry() );
+            productionCommands[1] = new ProductionCommand( "Improve Weapons", 200, 400, ImageHandler.getInfantry() );
+            productionCommands[2] = new ProductionCommand( " Improve Infantry Health", 200, 400, ImageHandler.getInfantry());
         }
     }
 
@@ -56,7 +58,12 @@ public class Barracks extends ProductionBuilding
     protected void doCreation( ProductionCommand type )
     {
         if ( type == productionCommands[0] )
-            createAndAssignUnit( new Infantry( getX() + Util.getRandomGenerator().nextInt( 48 ), getY() + 50, 0, 0, getOwningPlayer() ) );
+            createAndAssignUnit( new Infantry( getX() + Util.getRandomGenerator().nextInt( 48 ),
+                    getY() + 50, 0, 0, getOwningPlayer().getInfantryHealth(), getOwningPlayer() ) );
+        if ( type == productionCommands[1] )
+            getOwningPlayer().changeInfantryAttack( 1 );
+        if ( type == productionCommands[2] )
+            getOwningPlayer().changeInfantryHealth( 50 );
     }
 
     @Override

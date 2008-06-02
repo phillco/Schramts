@@ -14,6 +14,11 @@ public class Bullet extends Unit
         giveCommand( new Command( false, target ), true );
     }
 
+    Bullet( Location loc, GameObject shooter, GameObject other )
+    {
+        this(loc.getX(), loc.getY(), shooter, other);
+    }
+
     @Override
     public void act()
     {

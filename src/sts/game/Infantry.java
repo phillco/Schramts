@@ -15,14 +15,12 @@ public class Infantry extends Unit
 {
     private static int range = 50;
 
-    private static int damage = 1;//one per timestep
-
     private int timeUntilNextShot;
 
-    public Infantry( int x, int y, int dx, int dy, Player owner )
+    public Infantry( int x, int y, int dx, int dy, int health, Player owner )
     {
-        super( x, y, dx, dy, 12, 16, 150, owner );
-        timeUntilNextShot = 3;
+        super( x, y, dx, dy, 12, 16, health, owner );
+        timeUntilNextShot = 15;
     }
 
     @Override
@@ -62,9 +60,10 @@ public class Infantry extends Unit
             return;
 
         getOwningPlayer().giveObject( new Bullet( getX(), getY(), this, other ) );
-        other.changeHealth( -damage, this );
+        other.changeHealth( -getOwningPlayer().getInfantryAttack(), this );
+        timeUntilNextShot = 15;
     }
-
+    
     @Override
     public void draw( Graphics2D g )
     {
@@ -204,13 +203,13 @@ public class Infantry extends Unit
         // Just move there.
         if ( command.getObjects().isEmpty() )
             return super.processGroupCommand( command );
-        
+
         GameObject goal = getBestTarget( command.getObjects() );
-        
+
         // No military units, so pick a friendly unit to guard.
         if ( goal == null )
             goal = command.getObjects().iterator().next();
-        
-        return new Command( command.isGivenByPlayer(), goal);
+
+        return new Command( command.isGivenByPlayer(), goal );
     }
 }

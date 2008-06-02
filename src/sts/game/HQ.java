@@ -15,8 +15,10 @@ public class HQ extends ProductionBuilding
 {
     private int timeUntilNextShot;
 
+    private int timeUntilNextGold;
+
     private double range = 75;
-    
+
     public HQ( int x, int y, Player player, boolean preBuilt )
     {
         super( x, y, 64, 64, 2500, 750, player );
@@ -25,31 +27,39 @@ public class HQ extends ProductionBuilding
             timeToBuild = 0;
         productionCommands = new ProductionCommand[1];
         productionCommands[0] = new ProductionCommand( "Create villager", 20, 100, ImageHandler.getVillager() );
-        
+
         timeUntilNextShot = 2;
-        
+        timeUntilNextGold = 30;
+
         if ( preBuilt )
             setHealth( 700 );
     }
-    
+
     @Override
     public void act()
     {
         super.act();
-        if(timeUntilNextShot>0)
+        if ( timeUntilNextShot > 0 )
             --timeUntilNextShot;
+        if ( timeUntilNextGold > 0 )
+            --timeUntilNextGold;
+        else
+        {
+            getOwningPlayer().addGold(1);
+            timeUntilNextGold = 30;
+        }
         shootAtAnyoneInRange();
     }
 
-    private void attack(GameObject other)
+    private void attack( GameObject other )
     {
-        if ( other == null || timeUntilNextShot > 0)
+        if ( other == null || timeUntilNextShot > 0 )
             return;
 
         getOwningPlayer().giveObject( new Bullet( getLocation().getX(), getLocation().getY(), this, other ) );
         other.changeHealth( -1 );//don't tell AI, that's only for offensive moves
     }
-    
+
     private void shootAtAnyoneInRange()
     {
         ArrayList<GameObject> inRange = new ArrayList<GameObject>();
@@ -92,7 +102,6 @@ public class HQ extends ProductionBuilding
         //don't shoot at anything else, otherwise you'd shoot at bullets.
         return null;
     }
-
 
     @Override
     public void draw( Graphics2D g )

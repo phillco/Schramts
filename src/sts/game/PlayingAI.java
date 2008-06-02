@@ -220,6 +220,11 @@ public class PlayingAI extends AI
     {
         ArrayList<Player> possible = new ArrayList<Player>( Local.getGame().getPlayers() );
         possible.remove( owner );
+        if( possible.isEmpty() )
+        {
+            targetPlayer = null;
+            return;
+        }
         targetPlayer = possible.get( (int) ( Math.random() * possible.size() ) );
     }
 
