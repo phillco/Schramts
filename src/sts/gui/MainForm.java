@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.DefaultListModel;
 import sts.Main;
-import sts.Util;
+import sts.game.Game;
 import sts.game.InertAI;
 import sts.game.Player;
 
@@ -213,10 +213,10 @@ private void startGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         String s = (String) data.getElementAt( i );
 
         if ( s.equals( "CPU" ) )
-            players.add( new Player( Util.getRandomColor(), s ) );
+            players.add( new Player( Game.getPlayerColor( i ), s ) );
         else
         {
-            localPlayer = new Player( Util.getRandomColor(), s, new InertAI() );
+            localPlayer = new Player( Game.getPlayerColor( i ), s, new InertAI() );
             players.add( localPlayer );
         }
     }
@@ -243,7 +243,7 @@ private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_addActionPerformed
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-new HelpAboutForm();
+    new HelpAboutForm();
 }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -25,7 +25,7 @@ public class Villager extends Unit
      */
     private Location deferredDestination = null;
 
-    private int timeTillNextMine = 30;
+    private int timeTillNextMine = 0;
 
     public Villager( int x, int y, Player owner )
     {
@@ -178,7 +178,7 @@ public class Villager extends Unit
             if ( timeTillNextMine-- <= 0 )
             {
                 gold += ( (GoldPile) commandQueue.peek().getObject() ).removeGold() ? 1 : 0;
-                timeTillNextMine = Game.getInstance().isTurbo() ? 1 : 30;
+                timeTillNextMine = Game.getInstance().isTurbo() ? 1 : 5;
             }
         }
         else
@@ -228,7 +228,6 @@ public class Villager extends Unit
     @Override
     public Command processGroupCommand( GroupCommand command )
     {
-        System.out.println( "qqq" );
         Set<GameObject> possible = command.getObjects();
         Set<GameObject> goldMines = new HashSet<GameObject>();
         Set<GameObject> constructionSites = new HashSet<GameObject>();
@@ -256,7 +255,6 @@ public class Villager extends Unit
                 }
             }
         }
-        System.out.println( constructionSites.size() );
 
         // Pick options by priority.
         if ( !goldMines.isEmpty() )

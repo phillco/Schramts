@@ -19,7 +19,7 @@ public class HQ extends ProductionBuilding
     
     public HQ( int x, int y, Player player, boolean preBuilt )
     {
-        super( x, y, 64, 64, 1200, 750, player );
+        super( x, y, 64, 64, 2500, 750, player );
 
         if ( preBuilt )
             timeToBuild = 0;

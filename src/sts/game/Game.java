@@ -32,6 +32,11 @@ public class Game
 
     private boolean isTurbo;
 
+    private final static Color[] PLAYER_COLORS =
+    {
+        Color.blue, Color.red, Color.green, Color.cyan, Color.MAGENTA, Color.yellow, Color.pink, Color.GRAY
+    };
+
     public static Game getInstance()
     {
         return instance;
@@ -347,5 +352,10 @@ public class Game
         {
             return enabled;
         }
+    }
+
+    public static Color getPlayerColor( int index )
+    {
+        return PLAYER_COLORS[index % PLAYER_COLORS.length];
     }
 }
