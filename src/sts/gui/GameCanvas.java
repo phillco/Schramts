@@ -40,11 +40,17 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     private Location box1 = null,  box2 = null;
 
-    private int youAreHereTimer = 90;
+    private int youAreHereTimer = 130;
+    
+    public static final int DEFAULT_WIDTH = 1000;
+    
+    public  static final int DEFAULT_HEIGHT = 800;
+    
+    
 
     public GameCanvas()
     {
-        setSize( Local.getGame().getLevelWidth(), Local.getGame().getLevelHeight() + 100 );
+        setSize( 800, 600 );
         setVisible( true );
         addMouseListener( this );
         addMouseMotionListener( this );
@@ -250,6 +256,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
     public void mouseMoved( MouseEvent e )
     {
         selectedButton = -1;
+        //Local.setViewingX( Local.getViewingX() + 5);
 
         // Selecting a button?
         if ( e.getY() > getHeight() - 60 && e.getY() < getHeight() - 15 && e.getX() > 440 - ( 53 * 4 ) && e.getX() < 440 )
@@ -257,6 +264,5 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             selectedButton = ( 440 - e.getX() ) / 53;
             return;
         }
-
     }
 }

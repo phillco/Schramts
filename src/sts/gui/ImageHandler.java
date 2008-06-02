@@ -111,8 +111,8 @@ public class ImageHandler
 
     public static void drawGround( Graphics2D g )
     {
-        for ( int x = 0; x < Local.getWindow().getWidth(); x += groundTexture.getWidth() )
-            for ( int y = 0; y < Local.getWindow().getHeight(); y += groundTexture.getHeight() )
+        for ( int x = 0; x < Game.getInstance().getLevelWidth(); x += groundTexture.getWidth() )
+            for ( int y = 0; y < Game.getInstance().getLevelHeight(); y += groundTexture.getHeight() )
                 drawImage( groundTexture, g, x, y );
     }
 
@@ -123,7 +123,12 @@ public class ImageHandler
 
     private static void drawImage( Image i, Graphics2D g, int x, int y )
     {
-        g.drawImage( i, x, y, null );
+        x -= Local.getViewingX();
+        y -= Local.getViewingY();
+
+        if ( x + i.getWidth( null ) > 0 && x < GameCanvas.DEFAULT_WIDTH + i.getWidth( null ) )
+            if ( y + i.getHeight( null ) > 0 && y < GameCanvas.DEFAULT_HEIGHT  + i.getHeight( null ))
+                g.drawImage( i, x, y, null );
     }
 
     public static BufferedImage getRazedBuilding()
@@ -185,7 +190,7 @@ public class ImageHandler
         BufferedImage ret = new BufferedImage( img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB );
 
         //figure out what color you want
-        float targetHue, targetSat;
+        float targetHue,   targetSat;
         {//I want these variables to go out of scope soon so I can reuse names
 
             int red = target.getRed();
@@ -222,8 +227,10 @@ public class ImageHandler
                 int rgb;//the new argb representation of the current pixel
 
                 if ( hsb[1] > .01 )//not grayscale, don't change
+
                     rgb = img.getRGB( x, y );
                 else if ( red == 255 && red == green && green == blue )//don't change white
+
                     rgb = 0;
                 else
                     rgb = ( Color.HSBtoRGB( targetHue, targetSat, hsb[2] ) );
