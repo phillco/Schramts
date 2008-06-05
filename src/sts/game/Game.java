@@ -18,7 +18,7 @@ import sts.gui.ImageHandler;
  */
 public class Game
 {
-    private final static int LEVEL_WIDTH = 1000,  LEVEL_HEIGHT = 600;
+    private final static int LEVEL_WIDTH = 1500,  LEVEL_HEIGHT = 1500;
 
     private ConcurrentLinkedQueue<Player> players;
 

@@ -69,65 +69,68 @@ public class ImageHandler
         return new Color( 255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue() );
     }
 
-    public static void drawImage( Graphics2D g, int x, int y, Color c, BufferedImage i )
+    public static void drawImage( Graphics2D g, int x, int y, Color c, BufferedImage i, boolean gameCoordinates )
     {
-        drawImage( hueShift( i, c ), g, x, y );
+        drawImage( hueShift( i, c ), g, x, y, gameCoordinates );
     }
 
     public static void drawHQ( Graphics2D g, int x, int y, Color c )
     {
-        drawImage( hueShift( hq, c ), g, x, y );
+        drawImage( hueShift( hq, c ), g, x, y, true );
     }
 
     public static void drawBarracks( Graphics2D g, int x, int y, Color c )
     {
-        drawImage( hueShift( barracks, c ), g, x, y );
+        drawImage( hueShift( barracks, c ), g, x, y, true );
     }
 
     public static void drawVillager( Graphics2D g, int x, int y, Color c, boolean hasGold )
     {
-        drawImage( hueShift( hasGold ? villagerWithGold : villager, c ), g, x, y );
+        drawImage( hueShift( hasGold ? villagerWithGold : villager, c ), g, x, y, true );
     }
 
     public static void drawInfantry( Graphics2D g, int x, int y, Color c )
     {
-        drawImage( hueShift( infantry, c ), g, x, y );
+        drawImage( hueShift( infantry, c ), g, x, y, true );
     }
 
     public static void drawRalleyPoint( Graphics2D g, int x, int y, Color c )
     {
-        drawImage( hueShift( rallyPoint, c ), g, x, y );
+        drawImage( hueShift( rallyPoint, c ), g, x, y, true );
     }
 
     public static void drawDestination( Graphics2D g, int x, int y, Color c )
     {
-        drawImage( hueShift( destination, c ), g, x, y );
+        drawImage( hueShift( destination, c ), g, x, y, true );
     }
 
     public static void drawGold( Graphics2D g, int x, int y )
     {
-        drawImage( gold, g, x, y );
+        drawImage( gold, g, x, y, true );
     }
 
     public static void drawGround( Graphics2D g )
     {
         for ( int x = 0; x < Game.getInstance().getLevelWidth(); x += groundTexture.getWidth() )
             for ( int y = 0; y < Game.getInstance().getLevelHeight(); y += groundTexture.getHeight() )
-                drawImage( groundTexture, g, x, y );
+                drawImage( groundTexture, g, x, y, true );
     }
 
     public static void drawConstructionSite( Graphics2D g, int x, int y, Color color )
     {
-        drawImage( hueShift( constructionSite, color ), g, x, y );
+        drawImage( hueShift( constructionSite, color ), g, x, y, true );
     }
 
-    private static void drawImage( Image i, Graphics2D g, int x, int y )
+    private static void drawImage( Image i, Graphics2D g, int x, int y, boolean gameCoordinates )
     {
-        x -= Local.getViewingX();
-        y -= Local.getViewingY();
+        if ( gameCoordinates )
+        {
+            x -= Local.getViewingX();
+            y -= Local.getViewingY();
+        }
 
         if ( x + i.getWidth( null ) > 0 && x < GameCanvas.DEFAULT_WIDTH + i.getWidth( null ) )
-            if ( y + i.getHeight( null ) > 0 && y < GameCanvas.DEFAULT_HEIGHT  + i.getHeight( null ))
+            if ( y + i.getHeight( null ) > 0 && y < GameCanvas.DEFAULT_HEIGHT + i.getHeight( null ) )
                 g.drawImage( i, x, y, null );
     }
 
@@ -190,7 +193,7 @@ public class ImageHandler
         BufferedImage ret = new BufferedImage( img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB );
 
         //figure out what color you want
-        float targetHue,   targetSat;
+        float targetHue, targetSat;
         {//I want these variables to go out of scope soon so I can reuse names
 
             int red = target.getRed();
@@ -227,10 +230,8 @@ public class ImageHandler
                 int rgb;//the new argb representation of the current pixel
 
                 if ( hsb[1] > .01 )//not grayscale, don't change
-
                     rgb = img.getRGB( x, y );
                 else if ( red == 255 && red == green && green == blue )//don't change white
-
                     rgb = 0;
                 else
                     rgb = ( Color.HSBtoRGB( targetHue, targetSat, hsb[2] ) );

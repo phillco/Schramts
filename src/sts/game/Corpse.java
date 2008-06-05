@@ -36,7 +36,7 @@ public class Corpse extends GameObject
     @Override
     public void draw( Graphics2D g )
     {
-        ImageHandler.drawImage( g, getX(), getY(), color, image );
+        ImageHandler.drawImage( g, getX(), getY(), color, image, true );
     }
 
     @Override

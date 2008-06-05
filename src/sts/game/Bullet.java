@@ -1,6 +1,7 @@
 package sts.game;
 
 import java.awt.Graphics2D;
+import sts.Local;
 
 /**
  * 
@@ -38,7 +39,7 @@ public class Bullet extends Unit
     public void draw( Graphics2D g )
     {
         g.setColor( getOwningPlayer().getColor() );
-        g.fillOval( getX(), getY(), 2, 2 );
+        g.fillOval( getX() - Local.getViewingX(), getY() - Local.getViewingY(), 2, 2 );
     }
 
     @Override

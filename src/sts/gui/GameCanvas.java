@@ -17,6 +17,7 @@ import java.awt.image.BufferStrategy;
 import java.util.Set;
 import sts.Local;
 import sts.game.Command;
+import sts.game.Game;
 import sts.game.ProductionCommand;
 import sts.game.GameObject;
 import sts.game.GroupCommand;
@@ -41,12 +42,10 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
     private Location box1 = null,  box2 = null;
 
     private int youAreHereTimer = 130;
-    
+
     public static final int DEFAULT_WIDTH = 1000;
-    
-    public  static final int DEFAULT_HEIGHT = 800;
-    
-    
+
+    public static final int DEFAULT_HEIGHT = 800;
 
     public GameCanvas()
     {
@@ -133,7 +132,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                         g.fillRect( x, y + 40, 45, 45 );
                         g.setColor( Color.darkGray );
                         g.drawRect( x, y + 40, 45, 45 );
-                        ImageHandler.drawImage( g, x + 9, y + 49, go.getOwningPlayer().getColor(), c.getQueuedImage() );
+                        ImageHandler.drawImage( g, x + 9, y + 49, go.getOwningPlayer().getColor(), c.getQueuedImage(), false );
                         buttonIndex++;
                     }
 
@@ -161,7 +160,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
                             Color c = Color.getHSBColor( targetHue, targetSat, ( ( (float) i.timeLeft ) / i.type.getTimeToMake() ) );
 
-                            ImageHandler.drawImage( g, x, y + 30, c, i.type.getQueuedImage() );
+                            ImageHandler.drawImage( g, x, y + 30, c, i.type.getQueuedImage(), false );
                             x -= 15;
                         }
                     }
@@ -190,7 +189,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             return;
 
         // What's there?
-        Set<GameObject> targets = Local.getGame().getObjectsWithinArea( e.getX(), e.getY(), 8, 8 );
+        Set<GameObject> targets = Local.getGame().getObjectsWithinArea( e.getX() + Local.getViewingX(), e.getY() + Local.getViewingY(), 8, 8 );
 
         // Left clicked on something; select it.
         if ( e.getButton() == MouseEvent.BUTTON1 )
@@ -202,7 +201,8 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
 
         // Right clicked.
-        int x = e.getX();
+        int x = e.getX() + Local.getViewingX();
+        int y = e.getY() + Local.getViewingY();
         for ( GameObject go : Local.getSelectedObjects() )
         {
             // Ours to command?
@@ -212,10 +212,15 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
                 u.clearCommands();
 
                 if ( targets.isEmpty() )
-                    u.giveCommand( new Command( true, new Location( x, e.getY() ) ), true );
+                    u.giveCommand( new Command( true, new Location( x, y ) ), true );
                 else
-                    u.giveCommand( new GroupCommand( true, new Location( x, e.getY() ), targets ), true );
+                    u.giveCommand( new GroupCommand( true, new Location( x, y ), targets ), true );
                 x += go.getWidth() + 1;
+                if ( ( x - ( e.getX() + Local.getViewingX() ) ) / ( go.getWidth() + 1 ) > 6 )
+                {
+                    x = e.getX() + Local.getViewingX();
+                    y += go.getHeight() + 1;
+                }
             }
             else if ( go instanceof ProductionBuilding && go.getOwningPlayer() == Local.getLocalPlayer() )
             {
@@ -235,7 +240,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
         // Box dragged!
         if ( box1 != null && box2 != null )
-            Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( Math.max( box1.getX(), box2.getX() ), Math.max( box1.getY(), box2.getY() ), Math.abs( box2.getX() - box1.getX() ), Math.abs( box2.getY() - box1.getY() ) ) );
+            Local.setSelectedObjects( Local.getGame().getObjectsWithinArea( Math.max( box1.getX(), box2.getX() ) + Local.getViewingX(), Math.max( box1.getY(), box2.getY() ) + Local.getViewingY(), Math.abs( box2.getX() - box1.getX() ), Math.abs( box2.getY() - box1.getY() ) ) );
         box1 = box2 = null;
     }
 
@@ -256,7 +261,23 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
     public void mouseMoved( MouseEvent e )
     {
         selectedButton = -1;
-        //Local.setViewingX( Local.getViewingX() + 5);
+
+        int dX = 0, dY = 0;
+
+        if ( e.getX() > getWidth() - 200 )
+            dX = (int) ( Math.pow( Math.max( 0, e.getX() - ( getWidth() - 200 ) ), 1 ) / 4 );
+        else if ( e.getX() < 200 )
+            dX = (int) ( Math.pow( Math.max( 0, 200 - e.getX() ), 1 ) / -4 );
+
+        if ( e.getY() > getHeight() - 200 )
+            dY = (int) ( Math.pow( Math.max( 0, e.getY() - ( getHeight() - 200 ) ), 1 ) / 4 );
+        else if ( e.getY() < 200 )
+            dY = (int) ( Math.pow( Math.max( 0, 200 - e.getY() ), 1 ) / -4 );
+
+
+        Local.setViewingX( Math.max( 0, Math.min( Local.getViewingX() + dX, Game.getInstance().getLevelWidth() - getWidth() ) ) );
+        Local.setViewingY( Math.max( 0, Math.min( Local.getViewingY() + dY, Game.getInstance().getLevelHeight() - getHeight() ) ) );
+
 
         // Selecting a button?
         if ( e.getY() > getHeight() - 60 && e.getY() < getHeight() - 15 && e.getX() > 440 - ( 53 * 4 ) && e.getX() < 440 )
