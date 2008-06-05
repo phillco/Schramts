@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 import sts.game.Game;
 import sts.game.GameObject;
+import sts.game.HQ;
 import sts.game.Player;
 import sts.gui.MainWindow;
 
@@ -77,6 +78,18 @@ public class Local
         Local.selectedObjects = selectedObjects;
     }
 
+    public static void setSelectedObject( GameObject go )
+    {
+        selectedObjects = new HashSet<GameObject>();
+        selectedObjects.add( go );
+
+      //  if ( go.getLocation().getX() - getViewingX() > getViewingWidth() || go.getLocation().getX() - getViewingX() <= 0 )
+            setViewingX( go.getX() - getViewingWidth() / 2 );
+
+      //  if ( go.getLocation().getY() - getViewingY() > getWiewingHeight() || go.getLocation().getY() - getViewingY() <= 0 )
+            setViewingY( go.getY() - getWiewingHeight() / 2 );
+    }
+
     public static int getViewingX()
     {
         return viewingX;
@@ -89,12 +102,12 @@ public class Local
 
     public static void setViewingX( int viewingX )
     {
-        Local.viewingX = viewingX;
+        Local.viewingX = Math.max( 0, Math.min( viewingX, Game.getInstance().getLevelWidth() - getViewingWidth() ) );
     }
 
     public static void setViewingY( int viewingY )
     {
-        Local.viewingY = viewingY;
+        Local.viewingY = Math.max( 0, Math.min( viewingY, Game.getInstance().getLevelHeight() - getWiewingHeight() ) );
     }
 
     public static int getViewingWidth()

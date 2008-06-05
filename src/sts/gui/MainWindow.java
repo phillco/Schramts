@@ -9,6 +9,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.SwingUtilities;
 import sts.Main;
 import sts.Settings;
 
@@ -29,6 +30,15 @@ public class MainWindow extends Frame
         panel = new GameCanvas();
         add( panel );
         pack();
+
+        // [PC] This trick gives the canvas focus, so it immediately can receive key events.
+        SwingUtilities.invokeLater( new Runnable()
+                            {
+                                public void run()
+                                {
+                                    panel.requestFocusInWindow();
+                                }
+                            } );
 
         updateFullscreen();
     }

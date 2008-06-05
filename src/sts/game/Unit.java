@@ -106,7 +106,7 @@ public abstract class Unit extends GameObject
      */
     public abstract int getMaxSpeed();
 
-    private void move()
+    protected void move()
     {
         if ( !arrived && !commandQueue.isEmpty() )
         {

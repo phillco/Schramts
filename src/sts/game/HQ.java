@@ -110,9 +110,13 @@ public class HQ extends ProductionBuilding
         Color c = getOwningPlayer().getColor();
 
         if ( Local.getSelectedObjects().contains( this ) )
+        {
             c = ImageHandler.getOppositeColor( c );
+            g.setColor( c );
+            g.drawRect( getX() - Local.getViewingX(), getY() - Local.getViewingY(), getWidth(), getHeight());
+        }
 
-        ImageHandler.drawHQ( g, getX(), getY(), c );
+        ImageHandler.drawHQ( g, getX(), getY(), getOwningPlayer().getColor() );
     }
 
     @Override

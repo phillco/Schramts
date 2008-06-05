@@ -11,14 +11,16 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.util.Set;
 import sts.Local;
+import sts.Main;
 import sts.game.Command;
-import sts.game.Game;
 import sts.game.ProductionCommand;
 import sts.game.GameObject;
 import sts.game.GroupCommand;
@@ -30,7 +32,7 @@ import sts.game.Location;
  * The hackiness of this class compares favorably with the national debt.
  * @author Phillip Cohen
  */
-public class GameCanvas extends Canvas implements MouseListener, MouseMotionListener
+public class GameCanvas extends Canvas implements MouseListener, MouseMotionListener, KeyListener
 {
     private Font hudFont = new Font( "Verdana", Font.ITALIC, 12 );
 
@@ -72,6 +74,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
         setVisible( true );
         addMouseListener( this );
         addMouseMotionListener( this );
+        addKeyListener( this );
     }
 
     @Override
@@ -133,7 +136,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             g.setFont( hudFont );
             g.setColor( Color.darkGray );
             ExtendedGraphics.drawText( g, Local.getLocalPlayer().getGoldAmount() + " gold", x + 4, y + 42, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
-            g.drawString( lastFPS + " FPS", 8, getHeight() - 8);
+            g.drawString( lastFPS + " FPS", 8, getHeight() - 8 );
 
             // Draw the selected object's properties.
             if ( Local.getSelectedObjects().size() > 0 )
@@ -301,8 +304,8 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             dY = (int) ( Math.pow( Math.max( 0, 200 - e.getY() ), 1 ) / -4 );
 
 
-        Local.setViewingX( Math.max( 0, Math.min( Local.getViewingX() + dX, Game.getInstance().getLevelWidth() - getWidth() ) ) );
-        Local.setViewingY( Math.max( 0, Math.min( Local.getViewingY() + dY, Game.getInstance().getLevelHeight() - getHeight() ) ) );
+        Local.setViewingX( Local.getViewingX() + dX );
+        Local.setViewingY( Local.getViewingY() + dY );
 
 
         // Selecting a button?
@@ -311,6 +314,27 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             selectedButton = ( 440 - e.getX() ) / 53;
             return;
         }
+    }
+
+    public void keyTyped( KeyEvent e )
+    {
+    }
+
+    public void keyPressed( KeyEvent e )
+    {
+        switch ( e.getKeyCode() )
+        {
+            case KeyEvent.VK_ESCAPE:
+                Main.quit();
+                break;
+            case KeyEvent.VK_T:
+                Local.setSelectedObject( Local.getLocalPlayer().getHQ() );
+                break;
+        }
+    }
+
+    public void keyReleased( KeyEvent e )
+    {
     }
 
     @Override

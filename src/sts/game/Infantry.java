@@ -26,7 +26,7 @@ public class Infantry extends Unit
     @Override
     public void act()
     {
-        arrived = false;//never assume that you've made it, it could have moved
+        arrived = false; // Never assume that you've made it; the target could have moved.
         super.act();
 
         // Reload.
@@ -63,7 +63,7 @@ public class Infantry extends Unit
         other.changeHealth( -getOwningPlayer().getInfantryAttack(), this );
         timeUntilNextShot = 15;
     }
-    
+
     @Override
     public void draw( Graphics2D g )
     {
@@ -101,6 +101,19 @@ public class Infantry extends Unit
             commandQueue.set( 0, new Command( false, sameType.get( 0 ) ) );
         else
             commandQueue.removeFirst();
+    }
+
+    @Override
+    protected void move()
+    {
+        // Stop once we get in range (so we don't step right on top of them).
+        if ( !arrived && !commandQueue.isEmpty() && Location.getDistance( this.getLocation(), commandQueue.peek().getLocation() ) < range )
+        {
+            arrived = true;
+            dx = dy = 0;
+        }
+        else
+            super.move();
     }
 
     @Override
