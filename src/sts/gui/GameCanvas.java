@@ -6,6 +6,7 @@ package sts.gui;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -47,9 +48,27 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
     public static final int DEFAULT_HEIGHT = 800;
 
+    /**
+     * The current amount of FPS. Updated in <code>paint</code>.
+     * @since December 18, 2007
+     */
+    int lastFPS = 0;
+
+    /**
+     * The number of times that the paint method has been called, for FPS.
+     * @since January 10, 2008
+     */
+    int paintCount = 0;
+
+    /**
+     * The time stored at the beginning of the last call to paint; Used for FPS.
+     * @since December 15, 2007
+     */
+    long timeOfLastRepaint;
+
     public GameCanvas()
     {
-        setSize( 800, 600 );
+        setSize( DEFAULT_WIDTH, DEFAULT_HEIGHT );
         setVisible( true );
         addMouseListener( this );
         addMouseMotionListener( this );
@@ -70,6 +89,13 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
      */
     private void draw( Graphics2D g )
     {
+        // Calculate FPS.
+        if ( ++paintCount % 10 == 0 )
+        {
+            long timeSinceLast = -timeOfLastRepaint + ( timeOfLastRepaint = System.currentTimeMillis() );
+            if ( timeSinceLast > 0 )
+                lastFPS = (int) ( 10000.0 / timeSinceLast );
+        }
         Local.getGame().draw( g );
 
         drawHUD( g, 0, getHeight() - 100 );
@@ -107,13 +133,13 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             g.setFont( hudFont );
             g.setColor( Color.darkGray );
             ExtendedGraphics.drawText( g, Local.getLocalPlayer().getGoldAmount() + " gold", x + 4, y + 42, ExtendedGraphics.HorizontalAlign.LEFT, ExtendedGraphics.VerticleAlign.TOP );
+            g.drawString( lastFPS + " FPS", 8, getHeight() - 8);
 
             // Draw the selected object's properties.
             if ( Local.getSelectedObjects().size() > 0 )
             {
                 GameObject go = Local.getSelectedObject();
                 ExtendedGraphics.drawText( g, go.getOwningPlayer().getName() + "'s " + go.getName(), 430, getHeight() - 70, ExtendedGraphics.HorizontalAlign.RIGHT, ExtendedGraphics.VerticleAlign.TOP );
-
 
                 // Draw healthbar.
                 g.fillRect( 300, getHeight() - 10, (int) ( 130 * ( (double) go.getHealth() ) / go.getMaxHealth() ), 8 );
@@ -285,5 +311,19 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
             selectedButton = ( 440 - e.getX() ) / 53;
             return;
         }
+    }
+
+    @Override
+    public void setSize( int width, int height )
+    {
+        super.setSize( width, height );
+        Local.setViewingArea( width, height );
+    }
+
+    @Override
+    public void setSize( Dimension d )
+    {
+        super.setSize( d );
+        Local.setViewingArea( d.width, d.height );
     }
 }

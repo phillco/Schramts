@@ -24,8 +24,8 @@ public class Local
     private static MainWindow window;
 
     private static Set<GameObject> selectedObjects = new HashSet<GameObject>();
-    
-    private static int viewingX = 0,  viewingY = 0;
+
+    private static int viewingX = 0,  viewingY = 0,  viewingWidth = 0,  wiewingHeight = 0;
 
     public static void setUp( Game gameInstance, Player localPlayerInstance )
     {
@@ -96,6 +96,20 @@ public class Local
     {
         Local.viewingY = viewingY;
     }
-    
-    
+
+    public static int getViewingWidth()
+    {
+        return viewingWidth;
+    }
+
+    public static int getWiewingHeight()
+    {
+        return wiewingHeight;
+    }
+
+    public static void setViewingArea( int viewingWidth, int viewingHeight )
+    {
+        Local.viewingWidth = viewingWidth;
+        Local.wiewingHeight = viewingHeight;
+    }
 }

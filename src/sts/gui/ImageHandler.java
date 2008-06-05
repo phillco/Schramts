@@ -129,8 +129,8 @@ public class ImageHandler
             y -= Local.getViewingY();
         }
 
-        if ( x + i.getWidth( null ) > 0 && x < GameCanvas.DEFAULT_WIDTH + i.getWidth( null ) )
-            if ( y + i.getHeight( null ) > 0 && y < GameCanvas.DEFAULT_HEIGHT + i.getHeight( null ) )
+        if ( x + i.getWidth( null ) > 0 && x <= Local.getViewingWidth() + i.getWidth( null ) )
+            if ( y + i.getHeight( null ) > 0 && y < Local.getWiewingHeight() + i.getHeight( null ) )
                 g.drawImage( i, x, y, null );
     }
 
